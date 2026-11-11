@@ -1,0 +1,39 @@
+- generic [ref=f11e3]:
+  - banner [ref=f11e5]:
+    - generic [ref=f11e6]:
+      - link [ref=f11e7] [cursor=pointer]:
+        - /url: /
+      - navigation "Navegação principal" [ref=f11e11]:
+        - list [ref=f11e12]:
+          - listitem [ref=f11e13]:
+            - link "Início" [ref=f11e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f11e15]:
+            - link "Minha conta" [ref=f11e16] [cursor=pointer]:
+              - /url: /conta
+          - listitem [ref=f11e17]:
+            - button "Sair" [ref=f11e18]
+  - main [ref=f11e19]:
+    - generic [ref=f11e21]:
+      - generic [ref=f11e22]:
+        - heading "Criar conta" [level=1] [ref=f11e23]
+        - paragraph [ref=f11e24]: Leva menos de um minuto. Você entra automaticamente após o cadastro.
+      - generic [ref=f11e25]:
+        - generic [ref=f11e26]:
+          - generic [ref=f11e27]: E-mail
+          - textbox "E-mail" [ref=f11e28]:
+            - /placeholder: voce@exemplo.com
+        - generic [ref=f11e29]:
+          - generic [ref=f11e30]: Senha
+          - textbox "Senha Mínimo de 8 caracteres, com ao menos uma maiúscula, uma minúscula e um número." [ref=f11e31]:
+            - /placeholder: Crie uma senha
+          - generic [ref=f11e32]: Mínimo de 8 caracteres, com ao menos uma maiúscula, uma minúscula e um número.
+        - button [ref=f11e33]
+        - paragraph [ref=f11e34]: Já tem conta? Entrar
+  - contentinfo [ref=f11e36]:
+    - generic [ref=f11e37]:
+      - paragraph [ref=f11e38]: GameMatch — descoberta de jogos gratuitos.
+      - paragraph [ref=f11e39]:
+        - generic [ref=f11e40]: Dados fornecidos por
+        - link "FreeToGame.com" [ref=f11e41] [cursor=pointer]:
+          - /url: https://www.freetogame.com

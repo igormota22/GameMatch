@@ -26,21 +26,64 @@
           />
         </svg>
       </span>
-      <span>GameMatch</span>
+      <span class="hidden sm:inline">GameMatch</span>
     </a>
 
     <nav aria-label="Navegação principal">
-      <ul class="flex items-center gap-1 text-sm">
+      <ul class="flex items-center gap-1 text-xs sm:text-sm">
         <li>
           <a
             routerLink="/"
             routerLinkActive="bg-slate-800 text-white"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="rounded-md px-3 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white"
+            class="rounded-md px-2 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white sm:px-3"
           >
             Início
           </a>
         </li>
+
+        @if (autenticado()) {
+          <li>
+            <a
+              routerLink="/conta"
+              routerLinkActive="bg-slate-800 text-white"
+              class="rounded-md px-2 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white sm:px-3"
+            >
+              Minha conta
+            </a>
+          </li>
+          <li class="hidden max-w-40 truncate px-2 text-slate-500 md:block">
+            {{ usuario()?.email }}
+          </li>
+          <li>
+            <button
+              type="button"
+              (click)="sair()"
+              class="rounded-md px-2 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white sm:px-3"
+            >
+              Sair
+            </button>
+          </li>
+        } @else {
+          <li>
+            <a
+              routerLink="/entrar"
+              routerLinkActive="bg-slate-800 text-white"
+              class="rounded-md px-2 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white sm:px-3"
+            >
+              Entrar
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/criar-conta"
+              routerLinkActive="bg-slate-800 text-white"
+              class="rounded-md px-2 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white sm:px-3"
+            >
+              Criar conta
+            </a>
+          </li>
+        }
       </ul>
     </nav>
   </div>

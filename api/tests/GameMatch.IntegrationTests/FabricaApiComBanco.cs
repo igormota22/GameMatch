@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using GameMatch.Infrastructure.Persistencia;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Testcontainers.PostgreSql;
 
@@ -38,6 +41,10 @@ public sealed class FabricaApiComBanco : WebApplicationFactory<Program>, IAsyncL
         }
 
         Environment.SetEnvironmentVariable("ConnectionStrings__GameMatch", StringConexao);
+
+        using var escopo = Services.CreateScope();
+        var contexto = escopo.ServiceProvider.GetRequiredService<GameMatchDbContext>();
+        await contexto.Database.MigrateAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

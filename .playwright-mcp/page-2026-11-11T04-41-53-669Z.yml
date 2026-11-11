@@ -1,0 +1,50 @@
+- generic [ref=f16e3]:
+  - banner [ref=f16e5]:
+    - generic [ref=f16e6]:
+      - link "GameMatch" [ref=f16e7] [cursor=pointer]:
+        - /url: /
+      - navigation "Navegação principal" [ref=f16e12]:
+        - list [ref=f16e13]:
+          - listitem [ref=f16e14]:
+            - link "Início" [ref=f16e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f16e16]:
+            - link "Minha conta" [ref=f16e17] [cursor=pointer]:
+              - /url: /conta
+          - listitem [ref=f16e18]: runbook.1794372091068@teste.com
+          - listitem [ref=f16e19]:
+            - button "Sair" [ref=f16e20]
+  - main [ref=f16e21]:
+    - generic [ref=f16e34]:
+      - generic [ref=f16e35]:
+        - generic [ref=f16e36]:
+          - heading "Minha conta" [level=1] [ref=f16e37]
+          - paragraph [ref=f16e38]: Seus dados de acesso ao GameMatch.
+        - button "Sair" [ref=f16e39]
+      - generic [ref=f16e40]:
+        - heading "Dados da conta" [level=2] [ref=f16e41]
+        - generic [ref=f16e53]:
+          - generic [ref=f16e54]:
+            - term [ref=f16e55]: E-mail
+            - definition [ref=f16e56]: runbook.1794372091068@teste.com
+          - generic [ref=f16e57]:
+            - term [ref=f16e58]: Conta criada em
+            - definition [ref=f16e59]: 11 de novembro de 2026
+      - generic [ref=f16e43]:
+        - heading "Alterar senha" [level=2] [ref=f16e44]
+        - generic [ref=f16e45]:
+          - generic [ref=f16e46]: Senha atual
+          - textbox "Senha atual" [ref=f16e47]
+        - generic [ref=f16e48]:
+          - generic [ref=f16e49]: Nova senha
+          - textbox "Nova senha Mínimo de 8 caracteres, com ao menos uma maiúscula, uma minúscula e um número." [ref=f16e50]
+          - generic [ref=f16e51]: Mínimo de 8 caracteres, com ao menos uma maiúscula, uma minúscula e um número.
+        - paragraph [ref=f16e60]: Senha alterada com sucesso.
+        - button "Alterar senha" [ref=f16e52]
+  - contentinfo [ref=f16e23]:
+    - generic [ref=f16e24]:
+      - paragraph [ref=f16e25]: GameMatch — descoberta de jogos gratuitos.
+      - paragraph [ref=f16e26]:
+        - generic [ref=f16e27]: Dados fornecidos por
+        - link "FreeToGame.com" [ref=f16e28] [cursor=pointer]:
+          - /url: https://www.freetogame.com

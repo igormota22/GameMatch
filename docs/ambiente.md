@@ -35,6 +35,8 @@ A ferramenta `dotnet-ef` é local ao repositório e fica registrada em
 | `POSTGRES_PORT` | `docker-compose.yml` | Não; padrão `5432` |
 | `ConnectionStrings__GameMatch` | API | Sim, exceto se usar user-secrets |
 | `ConnectionStrings__GameMatchTeste` | Fallback dos testes de integração | Não |
+| `Jwt__Chave` | API | Sim, exceto se usar user-secrets; mínimo de 32 caracteres |
+| `Jwt__ExpiracaoMinutos` | API | Não; padrão `60` |
 | `Cors__AllowedOrigins__0` | API | Não; padrão `http://localhost:4200` |
 | `ASPNETCORE_ENVIRONMENT` | API | Não; o perfil `http` define `Development` |
 
@@ -87,6 +89,32 @@ dotnet user-secrets set "ConnectionStrings:GameMatch" "Host=localhost;Port=5432;
 Sem a configuração, a API encerra na inicialização com uma mensagem que
 identifica a variável ausente.
 
+### Configurar a chave JWT
+
+A assinatura dos tokens usa `Jwt:Chave`. O `appsettings.json` versionado traz
+apenas o placeholder vazio; o valor real nunca é commitado.
+
+Em Development, use user-secrets:
+
+```powershell
+dotnet user-secrets set "Jwt:Chave" "<chave com pelo menos 32 caracteres>" --project api/src/GameMatch.Api
+```
+
+Em outros ambientes, defina a variável `Jwt__Chave`:
+
+```powershell
+$env:Jwt__Chave = "<chave com pelo menos 32 caracteres>"
+```
+
+```bash
+export Jwt__Chave="<chave com pelo menos 32 caracteres>"
+```
+
+Sem a chave, a API encerra na inicialização com a mensagem
+`A chave de assinatura 'Jwt:Chave' não foi configurada.` e a indicação de
+`Jwt__Chave` ou `dotnet user-secrets`. Os testes de integração definem uma chave
+própria, exclusiva do ambiente de teste.
+
 ## 3. Aplicar as migrations
 
 ```powershell
@@ -94,8 +122,10 @@ dotnet tool restore
 dotnet ef database update --project api/src/GameMatch.Infrastructure --startup-project api/src/GameMatch.Api
 ```
 
-O comando cria as tabelas `registros_sistema` e `__EFMigrationsHistory` no banco
-`gamematch`.
+O comando cria as tabelas de identidade (`AspNetUsers`, `AspNetRoles`,
+`AspNetUserRoles`, `AspNetUserClaims`, `AspNetRoleClaims`, `AspNetUserLogins`,
+`AspNetUserTokens`), além de `registros_sistema` e `__EFMigrationsHistory` no
+banco `gamematch`.
 
 ## 4. Executar a API
 
@@ -110,6 +140,18 @@ A API responde em `http://localhost:5080`:
 | Saúde | `http://localhost:5080/health` | Todos |
 | Swagger UI | `http://localhost:5080/swagger` | Development |
 | Documento OpenAPI | `http://localhost:5080/openapi/v1.json` | Development |
+
+Endpoints de conta:
+
+| Método | Rota | Autenticação | Resposta |
+|---|---|---|---|
+| `POST` | `/contas` | Pública | `201` com token e dados do usuário |
+| `POST` | `/contas/login` | Pública | `200` com token; `401` para credenciais inválidas |
+| `GET` | `/conta` | Bearer | `200` com e-mail e data de criação |
+| `PUT` | `/conta/senha` | Bearer | `204`; `400` se a senha atual estiver incorreta |
+
+As regras de senha são: mínimo de 8 caracteres, ao menos uma letra maiúscula,
+uma minúscula e um dígito. Os erros são devolvidos em PT-BR como ProblemDetails.
 
 Encerre com `Ctrl+C`.
 
@@ -185,6 +227,19 @@ cd web
 npm start
 ```
 
+Rotas de conta:
+
+| Rota | Acesso | Conteúdo |
+|---|---|---|
+| `/entrar` | Pública | Login com e-mail e senha |
+| `/criar-conta` | Pública | Cadastro com login automático |
+| `/conta` | Autenticada | Dados da conta, alterar senha e sair |
+
+O token é gravado em `localStorage`, enviado pelo interceptor como
+`Authorization: Bearer <token>` e validado pelo `autenticadoGuard`. Sem sessão,
+`/conta` redireciona para `/entrar?destino=/conta`; a sessão persiste após
+recarregar a página.
+
 ### Proxy de desenvolvimento
 
 `web/proxy.conf.json` encaminha `/api` para `http://localhost:5080` e remove o
@@ -228,3 +283,4 @@ registre `tailwindcss` e `autoprefixer` em `.postcssrc.json`.
 | Porta `5432` ocupada | Outro PostgreSQL local | Troque `POSTGRES_PORT` no `.env` e na string de conexão |
 | Builds travando | Sincronização do OneDrive | Pause a sincronização ou mova o projeto para `C:\dev\GameMatch` |
 | Testcontainers indisponível | Docker parado | Inicie o Docker ou defina `ConnectionStrings__GameMatchTeste` |
+| `A chave de assinatura 'Jwt:Chave' não foi configurada` | Chave JWT ausente | Defina `Jwt__Chave` ou use `dotnet user-secrets set "Jwt:Chave" ...` |

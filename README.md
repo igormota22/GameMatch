@@ -92,9 +92,15 @@ docker compose ps
 ```powershell
 $env:ConnectionStrings__GameMatch = "Host=localhost;Port=5432;Database=gamematch;Username=gamematch;Password=<senha definida no .env>"
 dotnet tool restore
+dotnet user-secrets set "Jwt:Chave" "<chave com pelo menos 32 caracteres>" --project api/src/GameMatch.Api
 dotnet ef database update --project api/src/GameMatch.Infrastructure --startup-project api/src/GameMatch.Api
 dotnet run --project api/src/GameMatch.Api --launch-profile http
 ```
+
+A chave JWT é obrigatória e não é versionada: `appsettings.json` traz apenas o
+placeholder vazio. Em Development, use o `dotnet user-secrets` acima; em outros
+ambientes, defina `Jwt__Chave`. Sem a chave, a API encerra na inicialização com
+uma mensagem em português.
 
 A API responde em `http://localhost:5080`. Verifique
 `http://localhost:5080/health` e, em Development,
@@ -116,6 +122,29 @@ A configuração fica em `web/proxy.conf.json` e é aplicada por
 
 Com a API parada, o shell continua carregando e exibe o status da API como
 indisponível; nenhuma chamada quebra a navegação.
+
+### Contas e sessão
+
+Rotas do frontend:
+
+| Rota | Acesso | Conteúdo |
+|---|---|---|
+| `/entrar` | Público | Login com e-mail e senha |
+| `/criar-conta` | Público | Cadastro com login automático |
+| `/conta` | Autenticado | Dados da conta, alteração de senha e saída |
+
+Endpoints da API:
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `POST` | `/contas` | Cria a conta e devolve o token |
+| `POST` | `/contas/login` | Autentica e devolve o token |
+| `GET` | `/conta` | Dados da conta autenticada |
+| `PUT` | `/conta/senha` | Altera a senha, exigindo a senha atual |
+
+O token fica em `localStorage`, é enviado pelo interceptor como
+`Authorization: Bearer <token>` e o guard redireciona visitantes de `/conta`
+para `/entrar?destino=/conta`. A sessão persiste após recarregar a página.
 
 ### Executar os testes
 

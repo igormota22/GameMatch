@@ -1,0 +1,49 @@
+- generic [ref=f7e3]:
+  - banner [ref=f7e5]:
+    - generic [ref=f7e6]:
+      - link "GameMatch" [ref=f7e7] [cursor=pointer]:
+        - /url: /
+      - navigation "Navegação principal" [ref=f7e12]:
+        - list [ref=f7e13]:
+          - listitem [ref=f7e14]:
+            - link "Início" [ref=f7e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f7e48]:
+            - link "Minha conta" [ref=f7e49] [cursor=pointer]:
+              - /url: /conta
+          - listitem [ref=f7e50]: navegador.1794371879284@teste.com
+          - listitem [ref=f7e51]:
+            - button "Sair" [ref=f7e52]
+  - main [ref=f7e20]:
+    - generic [ref=f7e54]:
+      - generic [ref=f7e55]:
+        - generic [ref=f7e56]:
+          - heading "Minha conta" [level=1] [ref=f7e57]
+          - paragraph [ref=f7e58]: Seus dados de acesso ao GameMatch.
+        - button "Sair" [ref=f7e59]
+      - generic [ref=f7e60]:
+        - heading "Dados da conta" [level=2] [ref=f7e61]
+        - generic [ref=f7e62]:
+          - generic [ref=f7e63]:
+            - term [ref=f7e64]: E-mail
+            - definition [ref=f7e65]: navegador.1794371879284@teste.com
+          - generic [ref=f7e66]:
+            - term [ref=f7e67]: Conta criada em
+            - definition [ref=f7e68]: 11 de novembro de 2026
+      - generic [ref=f7e69]:
+        - heading "Alterar senha" [level=2] [ref=f7e70]
+        - generic [ref=f7e71]:
+          - generic [ref=f7e72]: Senha atual
+          - textbox "Senha atual" [ref=f7e73]
+        - generic [ref=f7e74]:
+          - generic [ref=f7e75]: Nova senha
+          - textbox "Nova senha Mínimo de 8 caracteres, com ao menos uma maiúscula, uma minúscula e um número." [ref=f7e76]
+          - generic [ref=f7e77]: Mínimo de 8 caracteres, com ao menos uma maiúscula, uma minúscula e um número.
+        - button "Alterar senha" [ref=f7e78]
+  - contentinfo [ref=f7e38]:
+    - generic [ref=f7e39]:
+      - paragraph [ref=f7e40]: GameMatch — descoberta de jogos gratuitos.
+      - paragraph [ref=f7e41]:
+        - generic [ref=f7e42]: Dados fornecidos por
+        - link "FreeToGame.com" [ref=f7e43] [cursor=pointer]:
+          - /url: https://www.freetogame.com

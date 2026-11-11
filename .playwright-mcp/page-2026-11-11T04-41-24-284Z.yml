@@ -1,0 +1,32 @@
+- generic [ref=f13e3]:
+  - banner [ref=f13e5]:
+    - generic [ref=f13e6]:
+      - link "GameMatch" [ref=f13e7] [cursor=pointer]:
+        - /url: /
+      - navigation "Navegação principal" [ref=f13e12]:
+        - list [ref=f13e13]:
+          - listitem [ref=f13e14]:
+            - link "Início" [ref=f13e15] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f13e16]:
+            - link "Minha conta" [ref=f13e17] [cursor=pointer]:
+              - /url: /conta
+          - listitem [ref=f13e18]: navegador.1794371879284@teste.com
+          - listitem [ref=f13e19]:
+            - button "Sair" [ref=f13e20]
+  - main [ref=f13e21]:
+    - generic [ref=f13e23]:
+      - generic [ref=f13e24]:
+        - paragraph [ref=f13e25]: Fundação do GameMatch
+        - heading "Descubra seu próximo jogo gratuito" [level=1] [ref=f13e26]
+        - paragraph [ref=f13e27]: A base da plataforma está pronta. Em breve você poderá criar seu perfil, explorar o catálogo e receber recomendações personalizadas.
+      - generic [ref=f13e28]:
+        - heading "Status da API" [level=2] [ref=f13e29]
+        - paragraph [ref=f13e30]
+  - contentinfo [ref=f13e33]:
+    - generic [ref=f13e34]:
+      - paragraph [ref=f13e35]: GameMatch — descoberta de jogos gratuitos.
+      - paragraph [ref=f13e36]:
+        - generic [ref=f13e37]: Dados fornecidos por
+        - link "FreeToGame.com" [ref=f13e38] [cursor=pointer]:
+          - /url: https://www.freetogame.com

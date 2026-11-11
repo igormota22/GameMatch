@@ -1,3 +1,4 @@
+using GameMatch.Api.Autenticacao;
 using GameMatch.Api.Diagnostico;
 using GameMatch.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,8 @@ builder.Services.AddProblemDetails(opcoes =>
     };
 });
 builder.Services.AdicionarInfraestrutura(stringConexao);
+builder.Services.AdicionarAutenticacaoJwt(builder.Configuration);
+builder.Services.AddSingleton<GeradorTokenJwt>();
 builder.Services.AddHealthChecks()
     .AddCheck<VerificacaoSaudePostgres>("postgresql");
 
@@ -93,6 +96,7 @@ app.UseStatusCodePages(async contexto =>
 });
 app.UseHttpsRedirection();
 app.UseCors("Frontend");
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

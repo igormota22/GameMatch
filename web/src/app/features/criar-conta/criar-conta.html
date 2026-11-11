@@ -1,0 +1,67 @@
+<section class="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-12 sm:px-6">
+  <div>
+    <h1 class="text-2xl font-bold text-white sm:text-3xl">Criar conta</h1>
+    <p class="mt-2 text-sm text-slate-400">
+      Leva menos de um minuto. Você entra automaticamente após o cadastro.
+    </p>
+  </div>
+
+  <form
+    class="flex flex-col gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6"
+    [formGroup]="formulario"
+    (ngSubmit)="enviar()"
+    novalidate
+  >
+    <label class="flex flex-col gap-1 text-sm text-slate-200">
+      <span>E-mail</span>
+      <input
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+        placeholder="voce@exemplo.com"
+      />
+      @if (formulario.controls.email.touched && formulario.controls.email.invalid) {
+        <span class="text-xs text-rose-400">Informe um e-mail válido.</span>
+      }
+    </label>
+
+    <label class="flex flex-col gap-1 text-sm text-slate-200">
+      <span>Senha</span>
+      <input
+        type="password"
+        formControlName="senha"
+        autocomplete="new-password"
+        class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+        placeholder="Crie uma senha"
+      />
+      <span class="text-xs text-slate-500">
+        Mínimo de 8 caracteres, com ao menos uma maiúscula, uma minúscula e um número.
+      </span>
+      @if (formulario.controls.senha.touched && formulario.controls.senha.invalid) {
+        <span class="text-xs text-rose-400">A senha precisa ter pelo menos 8 caracteres.</span>
+      }
+    </label>
+
+    @if (erro()) {
+      <p class="rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-300">
+        {{ erro() }}
+      </p>
+    }
+
+    <button
+      type="submit"
+      [disabled]="enviando()"
+      class="rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {{ enviando() ? 'Criando conta...' : 'Criar conta' }}
+    </button>
+
+    <p class="text-center text-sm text-slate-400">
+      Já tem conta?
+      <a routerLink="/entrar" class="font-semibold text-emerald-400 hover:text-emerald-300">
+        Entrar
+      </a>
+    </p>
+  </form>
+</section>

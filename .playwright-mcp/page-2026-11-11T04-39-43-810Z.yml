@@ -1,0 +1,23 @@
+- generic [ref=f10e3]:
+  - banner [ref=f10e5]:
+    - generic [ref=f10e6]:
+      - link [ref=f10e7] [cursor=pointer]:
+        - /url: /
+      - navigation "Navegação principal" [ref=f10e11]:
+        - list [ref=f10e12]:
+          - listitem [ref=f10e13]:
+            - link "Início" [ref=f10e14] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f10e15]:
+            - link "Minha conta" [ref=f10e16] [cursor=pointer]:
+              - /url: /conta
+          - listitem [ref=f10e17]:
+            - button "Sair" [ref=f10e18]
+  - main [ref=f10e19]
+  - contentinfo [ref=f10e21]:
+    - generic [ref=f10e22]:
+      - paragraph [ref=f10e23]: GameMatch — descoberta de jogos gratuitos.
+      - paragraph [ref=f10e24]:
+        - generic [ref=f10e25]: Dados fornecidos por
+        - link "FreeToGame.com" [ref=f10e26] [cursor=pointer]:
+          - /url: https://www.freetogame.com
