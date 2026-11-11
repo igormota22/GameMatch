@@ -1,0 +1,38 @@
+schema: prd
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+context: |
+  Fluxo de planejamento do GameMatch: cada change tem um único PRD em `prd.md`,
+  consolidado pelo schema `prd`. O PRD reúne problema, escopo, requisitos,
+  decisões técnicas, riscos e tarefas.
+
+  Nenhuma implementação começa antes da revisão e aprovação explícita do PRD
+  pelo desenvolvedor (seção "Aprovação" com status "Aprovado"). Ao criar uma
+  nova change, gere o PRD completo e pare; não implemente na mesma etapa.
+
+  Não crie proposal.md, specs/, design.md nem tasks.md: o PRD é a fonte única
+  da verdade da change. Como os requisitos ficam no PRD, toda change declara
+  `skip_specs: true` no `.openspec.yaml` para manter `openspec validate` e
+  `openspec archive` coerentes. Textos de interface em PT-BR; identificadores
+  de domínio, métodos e variáveis em português, seguindo as convenções da
+  linguagem.
+
+# Per-artifact rules (optional)
+rules:
+  prd:
+    - Escreva o PRD em português (PT-BR).
+    - Consolide todo o planejamento em um único arquivo `prd.md`.
+    - Inclua a seção "Aprovação" com status "Pendente" até a revisão do desenvolvedor.
+    - Use `### Requirement:` e `#### Scenario:` (WHEN/THEN) para requisitos testáveis.
+    - Toda tarefa de implementação deve ser um checkbox `- [ ] X.Y ...` com a forma de verificação; use checkbox apenas na seção "Tarefas".
+    - Preserve como `- [x]` as tarefas já concluídas ao atualizar o PRD.
+
+# Per-operation guidance (optional)
+operations:
+  apply:
+    guidance:
+      - Confirme que a seção "Aprovação" do PRD está como "Aprovado" antes de editar código.
+      - Atualize o checkbox da tarefa no PRD assim que a verificação dela passar.

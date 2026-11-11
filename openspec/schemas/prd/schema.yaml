@@ -1,0 +1,60 @@
+name: prd
+version: 1
+description: Workflow de PRD único - um único PRD revisado por change, sem artefatos separados
+artifacts:
+  - id: prd
+    generates: prd.md
+    description: PRD consolidado com contexto, escopo, requisitos, design, riscos e tarefas
+    template: prd.md
+    instruction: |
+      Crie um único PRD em `prd.md` que consolide todo o planejamento da change.
+
+      Não crie `proposal.md`, `specs/`, `design.md` nem `tasks.md`: o schema
+      `prd` tem apenas este artefato e a implementação só começa depois da
+      revisão e aprovação explícita do PRD.
+
+      Seções obrigatórias:
+      - **Identificação**: nome da change, status do PRD, data e responsável.
+      - **Problema e objetivo**: por que a change existe e qual resultado entrega.
+      - **Escopo**: o que muda, o que fica de fora e capacidades afetadas.
+      - **Requisitos**: contratos de comportamento observável. Use
+        `### Requirement: <nome>` e, para cada requisito, ao menos um
+        `#### Scenario: <nome>` com passos WHEN/THEN. Escreva requisitos
+        testáveis, sem nomes de classes ou detalhes de implementação.
+      - **Decisões técnicas**: escolhas de arquitetura, alternativas
+        consideradas e o motivo da escolha.
+      - **Riscos e trade-offs**: risco -> mitigação.
+      - **Plano de execução e rollback**: ordem de execução e como desfazer.
+      - **Tarefas**: checklist rastreável no formato `- [ ] X.Y ...`. Cada
+        tarefa deve declarar como verificar a conclusão. Preserve o estado das
+        tarefas já concluídas com `- [x]`. Use checkbox apenas nesta seção; nas
+        demais, use bullets simples para não inflar o progresso.
+      - **Critérios de aceite**: como saber que a change terminou.
+      - **Aprovação**: status (`Pendente` ou `Aprovado`), revisor e data.
+        Enquanto o status for `Pendente`, não inicie a implementação.
+
+      Regras:
+      - Escreva em português (PT-BR).
+      - Referencie o código, a documentação e as specs existentes que embasam
+        o plano; distinga o que foi observado do que é proposta.
+      - Mantenha o PRD como fonte única da verdade da change.
+      - Como os requisitos vivem no PRD e não em `specs/`, garanta que o
+        `.openspec.yaml` da change declare `skip_specs: true` para que
+        `openspec validate` e `openspec archive` aceitem o fluxo.
+    requires: []
+
+apply:
+  requires: [prd]
+  tracks: prd.md
+  instruction: |
+    Antes de implementar, leia `prd.md` e confirme que a seção **Aprovação**
+    está como `Aprovado` e assinada pelo desenvolvedor.
+
+    Se o status for `Pendente` ou a seção estiver ausente, pare e peça a
+    revisão do PRD. Não implemente, não marque tarefas e não altere o PRD sem
+    autorização.
+
+    Depois da aprovação, trabalhe pelas tarefas na ordem do PRD, marcando cada
+    checkbox concluído e executando a verificação descrita na própria tarefa.
+    Pause se encontrar bloqueio ou precisar mudar escopo: mudanças de escopo
+    voltam para revisão do PRD.

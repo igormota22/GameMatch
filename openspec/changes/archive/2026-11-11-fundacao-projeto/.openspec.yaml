@@ -1,0 +1,5 @@
+schema: prd
+created: 2026-11-09
+# O schema `prd` consolida os requisitos no próprio prd.md e não usa specs/ separadas.
+# O marcador mantém `openspec validate` e `openspec archive` coerentes com esse fluxo.
+skip_specs: true
