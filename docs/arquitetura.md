@@ -15,8 +15,10 @@ O GameMatch é um monorepo com três blocos executáveis:
 
 O catálogo da FreeToGame será sincronizado para o PostgreSQL a partir de um
 snapshot local em [`seed/`](../seed/README.md), para que a demonstração funcione
-sem depender da API externa. Nesta fase a integração ainda não existe; apenas a
-atribuição à FreeToGame é exibida no rodapé do shell web.
+sem depender da API externa. No MVP não há chamada em tempo real à FreeToGame:
+o catálogo é carregado por um comando manual de sincronização (ver
+[DT-11](tdd.md)). Os requisitos de produto estão em
+[`docs/prd.md`](prd.md) e as decisões técnicas em [`docs/tdd.md`](tdd.md).
 
 ## Estrutura do monorepo
 
@@ -32,7 +34,7 @@ GameMatch/
 |   +-- tests/
 |       +-- GameMatch.UnitTests/
 |       +-- GameMatch.IntegrationTests/
-+-- web/                     # aplicação Angular (fase 3)
++-- web/                     # aplicação Angular
 +-- seed/                    # snapshot local do catálogo
 +-- docs/                    # documentação técnica e operacional
 +-- openspec/                # mudanças e especificações do projeto
@@ -75,7 +77,7 @@ camadas e é o único ponto de composição da aplicação.
 | `Infrastructure` | `DbContext`, migrations, repositórios e clientes externos | Regras de negócio |
 | `Api` | Controllers, autenticação, Swagger, CORS e injeção de dependência | Regras de negócio e SQL |
 
-## Camadas do frontend (fase 3)
+## Camadas do frontend
 
 ```
 web/src/app/
@@ -85,8 +87,10 @@ web/src/app/
 +-- features/  # uma pasta por funcionalidade
 ```
 
-As rotas serão carregadas de forma lazy por feature. A fundação entrega apenas a
-rota pública `/` com o shell e uma página placeholder, além da rota 404.
+As rotas são carregadas de forma lazy por feature. Hoje existem as rotas
+públicas `/`, `/entrar` e `/criar-conta`, a rota autenticada `/conta` e a rota
+404. As próximas features (perfil gamer, catálogo, recomendações, favoritos e
+avaliações) seguem o roadmap do [TDD](tdd.md).
 
 ## Decisões da fundação
 
@@ -120,11 +124,11 @@ de compilação em [`Directory.Build.props`](../Directory.Build.props).
 | PostgreSQL | `5432` | Sobrescrevível por `.env` |
 
 A string de conexão da API é lida de `ConnectionStrings:GameMatch`, por variável
-de ambiente ou user-secrets. O frontend encaminhará `/api` para a API por meio
-de um proxy de desenvolvimento, evitando CORS artificial.
+de ambiente ou user-secrets. O frontend encaminha `/api` para a API por meio de
+um proxy de desenvolvimento, evitando CORS artificial.
 
-O passo a passo operacional completo será consolidado em `docs/ambiente.md` nas
-tarefas de backend e frontend. Nesta fase, o comando disponível é:
+O passo a passo operacional completo está em [`docs/ambiente.md`](ambiente.md).
+Para compilar a solução:
 
 ```bash
 dotnet build api/GameMatch.sln
@@ -132,11 +136,18 @@ dotnet build api/GameMatch.sln
 
 ## Evolução por fases
 
-1. **Fundação** (change `fundacao-projeto`): repositório, solution, banco,
-   shell web, testes e documentação.
-2. **Identidade e contas**: cadastro, login e perfil gamer.
-3. **Catálogo**: sincronização da FreeToGame, snapshot local, pesquisa e filtros.
-4. **Recomendações**: compatibilidade, explicação e favoritos.
+O roadmap técnico detalhado, com pré-requisitos, entregáveis e critérios de
+saída, está na seção 8 do [TDD](tdd.md):
 
-Cada fase é um change OpenSpec próprio, com proposta, especificação, design e
-tarefas verificáveis.
+| Fase | Escopo | Prioridade |
+|---|---|---|
+| F1 | Perfil gamer | P0 |
+| F2 | Catálogo e sincronização do snapshot | P0 |
+| F3 | Recomendações e Modo Descoberta | P1 |
+| F4 | Favoritos e avaliações | P1 |
+| F5 | Verificação do MVP | — |
+
+As fases já concluídas (fundação e identidade/contas) estão nas changes
+arquivadas em `openspec/changes/archive/`. Cada fase nova é uma change OpenSpec
+própria (proposal, specs, design quando necessário e tasks verificáveis),
+conforme o fluxo descrito em `openspec/config.yaml`.

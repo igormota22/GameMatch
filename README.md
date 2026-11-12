@@ -24,7 +24,8 @@ O principal diferencial do GameMatch é apresentar não apenas uma lista de jogo
 - **Modo Descoberta:** recomendações baseadas na experiência que o jogador deseja encontrar no momento.
 - **Favoritos:** gerenciamento de jogos de interesse.
 - **Avaliações:** registro de avaliações pessoais dos jogos.
-- **Histórico:** acompanhamento dos jogos avaliados e explorados.
+- **Histórico:** acompanhamento dos jogos avaliados e explorados (evolução
+  pós-MVP).
 
 ## Público-alvo
 
@@ -50,6 +51,10 @@ Jogadores que desejam descobrir novos jogos gratuitos, encontrar experiências c
 
 ## Arquitetura e documentação
 
+- [PRD](docs/prd.md): requisitos de produto, regras de negócio e critérios de
+  aceite do MVP.
+- [TDD](docs/tdd.md): decisões técnicas, contratos, dados, testes e roadmap de
+  implementação.
 - [Arquitetura da fundação](docs/arquitetura.md): camadas da API, estrutura do
   monorepo, decisões técnicas e portas locais.
 - [Snapshot do catálogo](seed/README.md): formato previsto dos dados offline da
@@ -156,16 +161,18 @@ npm test -- --watch=false
 
 ## Sistema de recomendação
 
-O GameMatch contará com um algoritmo próprio de recomendação baseado nas preferências cadastradas pelo jogador.
-
-A compatibilidade será calculada considerando características como:
+O GameMatch usa um algoritmo próprio de recomendação baseado nas preferências
+cadastradas pelo jogador. A compatibilidade é calculada considerando
+características como:
 
 - Gêneros favoritos.
 - Plataformas de interesse.
 - Estilos de gameplay.
 - Preferências de experiência.
 
-Cada recomendação apresentará uma pontuação de compatibilidade, acompanhada de uma explicação dos fatores que contribuíram para o resultado.
+Cada recomendação traz uma pontuação de compatibilidade, acompanhada da
+explicação dos fatores que contribuíram para o resultado. A fórmula, os pesos e
+os contratos estão em [docs/tdd.md](docs/tdd.md).
 
 ## Escopo inicial (MVP)
 
@@ -173,10 +180,11 @@ A primeira versão da aplicação contempla:
 
 - Cadastro e autenticação de usuários.
 - Configuração do perfil gamer.
-- Integração com a FreeToGame API.
+- Catálogo sincronizado a partir do snapshot local da FreeToGame.
 - Catálogo com pesquisa e filtros.
 - Sistema de recomendações personalizadas.
 - Pontuação e explicação de compatibilidade.
+- Modo Descoberta.
 - Gerenciamento de jogos favoritos.
 - Avaliação de jogos.
 
