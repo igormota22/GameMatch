@@ -1,38 +1,49 @@
-schema: prd
+schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
+# Contexto do projeto (opcional)
+# Inclua apenas restrições que devem orientar os artefatos e fluxos do OpenSpec.
 context: |
-  Fluxo de planejamento do GameMatch: cada change tem um único PRD em `prd.md`,
-  consolidado pelo schema `prd`. O PRD reúne problema, escopo, requisitos,
-  decisões técnicas, riscos e tarefas.
+  Fluxo de planejamento do GameMatch:
 
-  Nenhuma implementação começa antes da revisão e aprovação explícita do PRD
-  pelo desenvolvedor (seção "Aprovação" com status "Aprovado"). Ao criar uma
-  nova change, gere o PRD completo e pare; não implemente na mesma etapa.
+  1. `docs/prd.md` — requisitos de produto (RF, regras de negócio RB, requisitos
+     não funcionais RNF e critérios de aceite CA).
+  2. `docs/tdd.md` — decisões técnicas (DT), contratos, dados, riscos e roadmap
+     de implementação (fases F1–F5).
+  3. Change OpenSpec = SDD (Spec-Driven Development): `proposal.md` (escopo
+     rastreável aos IDs do PRD/TDD), `specs/` (deltas de requisitos), `design.md`
+     apenas quando houver decisão local relevante e `tasks.md` (tarefas
+     verificáveis). Revise as especificações antes de implementar.
+  4. Pull Request da feature branch para a `main`, usando
+     `.github/pull_request_template.md`.
 
-  Não crie proposal.md, specs/, design.md nem tasks.md: o PRD é a fonte única
-  da verdade da change. Como os requisitos ficam no PRD, toda change declara
-  `skip_specs: true` no `.openspec.yaml` para manter `openspec validate` e
-  `openspec archive` coerentes. Textos de interface em PT-BR; identificadores
-  de domínio, métodos e variáveis em português, seguindo as convenções da
-  linguagem.
+  PRD e TDD são documentos globais e vivos: reutilize e atualize os existentes
+  em vez de recriá-los a cada change. Nenhuma implementação começa antes das
+  especificações da change serem revisadas e aprovadas. Textos de interface em
+  PT-BR; identificadores de domínio, métodos e variáveis em português,
+  seguindo as convenções da linguagem.
 
-# Per-artifact rules (optional)
+# Regras por artefato (opcional)
 rules:
-  prd:
-    - Escreva o PRD em português (PT-BR).
-    - Consolide todo o planejamento em um único arquivo `prd.md`.
-    - Inclua a seção "Aprovação" com status "Pendente" até a revisão do desenvolvedor.
+  proposal:
+    - Em português (PT-BR).
+    - Descreva o escopo da change e referencie os RF/CA do `docs/prd.md` e as DT do `docs/tdd.md` afetados.
+    - Não recrie requisitos nem decisões globais; aponte para os documentos existentes.
+  specs:
+    - Em português (PT-BR).
     - Use `### Requirement:` e `#### Scenario:` (WHEN/THEN) para requisitos testáveis.
-    - Toda tarefa de implementação deve ser um checkbox `- [ ] X.Y ...` com a forma de verificação; use checkbox apenas na seção "Tarefas".
-    - Preserve como `- [x]` as tarefas já concluídas ao atualizar o PRD.
+    - Todo requisito novo ou alterado deve ser rastreável a um RF do PRD.
+  design:
+    - Em português (PT-BR).
+    - Registre apenas decisões locais da change; decisões globais pertencem ao `docs/tdd.md`.
+  tasks:
+    - Em português (PT-BR).
+    - Cada tarefa deve ser um checkbox `- [ ] X.Y ...` com a forma de verificação.
+    - Agrupe as tarefas por fase do roadmap do TDD quando aplicável.
 
-# Per-operation guidance (optional)
+# Orientações por operação (opcional)
 operations:
   apply:
     guidance:
-      - Confirme que a seção "Aprovação" do PRD está como "Aprovado" antes de editar código.
-      - Atualize o checkbox da tarefa no PRD assim que a verificação dela passar.
+      - Confirme que as especificações e tarefas da change foram revisadas antes de editar código.
+      - Se a implementação alterar uma decisão registrada, atualize `docs/tdd.md` (e `docs/prd.md` se o requisito mudar) no mesmo PR.
+      - Marque cada tarefa (`- [x]`) assim que a verificação dela passar.
