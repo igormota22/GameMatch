@@ -7,10 +7,121 @@
       Descubra seu próximo jogo gratuito
     </h1>
     <p class="mt-4 text-base leading-relaxed text-slate-300">
-      A base da plataforma está pronta. Em breve você poderá criar seu perfil,
-      explorar o catálogo e receber recomendações personalizadas.
+      A base da plataforma está pronta. Crie seu perfil gamer e, em breve, explore
+      o catálogo e receba recomendações personalizadas.
     </p>
   </div>
+
+  @if (autenticado()) {
+    <div
+      class="flex flex-col gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6"
+    >
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 class="text-base font-semibold text-white">Seu perfil</h2>
+          <p class="mt-1 text-sm text-slate-400">
+            Preferências usadas para personalizar suas recomendações.
+          </p>
+        </div>
+
+        @if (!carregandoPerfil() && !erroPerfil()) {
+          <span
+            class="rounded-full border px-3 py-1 text-xs font-medium"
+            [class.border-emerald-500/40]="completo()"
+            [class.bg-emerald-500/10]="completo()"
+            [class.text-emerald-300]="completo()"
+            [class.border-amber-500/40]="!completo()"
+            [class.bg-amber-500/10]="!completo()"
+            [class.text-amber-300]="!completo()"
+          >
+            {{ completo() ? 'Perfil completo' : 'Perfil incompleto' }}
+          </span>
+        }
+      </div>
+
+      @if (carregandoPerfil()) {
+        <p class="text-sm text-slate-400" role="status">Carregando seu perfil...</p>
+      } @else if (erroPerfil()) {
+        <div
+          class="rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
+          role="alert"
+        >
+          <p>{{ erroPerfil() }}</p>
+          <a
+            routerLink="/perfil"
+            class="mt-2 inline-block font-medium text-rose-200 underline underline-offset-2 hover:text-white"
+          >
+            Abrir perfil
+          </a>
+        </div>
+      } @else if (perfil(); as dados) {
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-400">
+            Jogador
+          </p>
+          <p class="mt-1 text-lg font-semibold text-white">
+            {{ nomeExibicao() || 'Jogador' }}
+          </p>
+        </div>
+
+        @if (semPreferencias()) {
+          <p
+            class="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200"
+            role="status"
+          >
+            Você ainda não informou preferências. Configure seu perfil para
+            habilitar recomendações personalizadas.
+          </p>
+        } @else if (!completo()) {
+          <p
+            class="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200"
+            role="status"
+          >
+            Informe ao menos um gênero e uma plataforma para completar o perfil.
+          </p>
+        }
+
+        <dl class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Gêneros favoritos
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.generos) }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Plataformas
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.plataformas) }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Estilos de gameplay
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.estilos) }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Preferências de experiência
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.experiencias) }}</dd>
+          </div>
+        </dl>
+
+        <div>
+          <a
+            routerLink="/perfil"
+            class="inline-block rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+          >
+            {{ completo() ? 'Ver perfil completo' : 'Configurar perfil' }}
+          </a>
+        </div>
+      }
+    </div>
+  }
 
   <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6">
     <h2 class="text-base font-semibold text-white">Status da API</h2>
