@@ -1,0 +1,28 @@
+[
+  {
+    "id": 9001,
+    "title": "Aurora Tactics",
+    "thumbnail": "https://cdn.example/aurora.jpg",
+    "short_description": "Skirmish battles in deep space.",
+    "game_url": "https://www.freetogame.com/g/9001/aurora-tactics",
+    "genre": "Strategy",
+    "platform": "PC (Windows)",
+    "publisher": "Aurora Studio",
+    "developer": "Aurora Studio",
+    "release_date": "2024-01-01",
+    "freetogame_profile_url": "https://www.freetogame.com/aurora-tactics"
+  },
+  {
+    "id": 9002,
+    "title": "Blue Racer",
+    "thumbnail": "https://cdn.example/blue-racer.jpg",
+    "short_description": "Arcade racing in the browser.",
+    "game_url": "https://www.freetogame.com/g/9002/blue-racer",
+    "genre": "Racing",
+    "platform": "Web Browser",
+    "publisher": "Blue Team",
+    "developer": "Blue Team",
+    "release_date": "2023-05-10",
+    "freetogame_profile_url": "https://www.freetogame.com/blue-racer"
+  }
+]

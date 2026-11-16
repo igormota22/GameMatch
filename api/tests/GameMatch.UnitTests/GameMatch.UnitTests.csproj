@@ -18,6 +18,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\GameMatch.Domain\GameMatch.Domain.csproj" />
     <ProjectReference Include="..\..\src\GameMatch.Application\GameMatch.Application.csproj" />
+    <ProjectReference Include="..\..\src\GameMatch.Seed\GameMatch.Seed.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Catalogo\Fixtures\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-# Tasks
+﻿# Tasks
 
 ## 1. Domínio e persistência do catálogo
 
@@ -10,16 +10,16 @@
 
 ## 2. CLI e coleta do snapshot
 
-- [ ] 2.1 Criar o projeto console `api/src/GameMatch.Seed` (`net10.0`), adicionar `Microsoft.Extensions.Hosting` e `Microsoft.Extensions.Http` ao `Directory.Packages.props`, referenciar `GameMatch.Infrastructure` e incluir o projeto na solução com `dotnet sln api/GameMatch.sln add`; verificar com `dotnet build api/GameMatch.sln`.
-- [ ] 2.2 Implementar a resolução de configuração (string de conexão por `--string-conexao`, `ConnectionStrings__GameMatch` ou `appsettings.json`) e o despacho dos subcomandos `coletar` e `sync`, com mensagem de uso e código de saída não zero para comando ausente ou conexão não configurada; verificar executando o CLI sem argumentos e com comando inválido.
-- [ ] 2.3 Implementar o coletor: `GET /api/games`, iteração das tags candidatas de `Coleta:TagsCandidatas` via `/api/filter?tag=<tag>`, `User-Agent` identificando o projeto, timeout, tolerância a tag com erro ou vazia e escrita atômica dos três arquivos; verificar com testes unitários usando `HttpMessageHandler` fake para sucesso, tag 500 e falha de rede.
+- [x] 2.1 Criar o projeto console `api/src/GameMatch.Seed` (`net10.0`), adicionar `Microsoft.Extensions.Hosting` e `Microsoft.Extensions.Http` ao `Directory.Packages.props`, referenciar `GameMatch.Infrastructure` e incluir o projeto na solução com `dotnet sln api/GameMatch.sln add`; verificar com `dotnet build api/GameMatch.sln`.
+- [x] 2.2 Implementar a resolução de configuração (string de conexão por `--string-conexao`, `ConnectionStrings__GameMatch` ou `appsettings.json`) e o despacho dos subcomandos `coletar` e `sync`, com mensagem de uso e código de saída não zero para comando ausente ou conexão não configurada; verificar executando o CLI sem argumentos e com comando inválido.
+- [x] 2.3 Implementar o coletor: `GET /api/games`, iteração das tags candidatas de `Coleta:TagsCandidatas` via `/api/filter?tag=<tag>`, `User-Agent` identificando o projeto, timeout, tolerância a tag com erro ou vazia e escrita atômica dos três arquivos; verificar com testes unitários usando `HttpMessageHandler` fake para sucesso, tag 500 e falha de rede.
 - [ ] 2.4 Executar `dotnet run --project api/src/GameMatch.Seed -- coletar` e versionar `seed/jogos.json`, `seed/tags.json` e `seed/metadados.json`; verificar que `metadados.json` registra a data, `totalJogos` igual ao tamanho do array de jogos, `totalTags` igual às chaves do mapa e as tags ignoradas.
 - [ ] 2.5 Atualizar `seed/README.md` com o estado atual, os esquemas dos três arquivos e o procedimento de atualização (coletar → sincronizar); verificar que os comandos documentados executam como estão escritos.
 - [ ] 2.6 Atualizar `docs/tdd.md` §5.4 e o entregável da F2 em §8 com o comando `coletar`, o esquema do snapshot e os fatos observados da fonte (416 jogos, gênero/plataforma únicos, tags candidatas e indisponíveis); verificar que o texto coincide com os arquivos gerados.
 
 ## 3. Sincronização do catálogo
 
-- [ ] 3.1 Implementar a leitura e a validação do snapshot (arquivo ausente, JSON malformado, `id`/`title` ausentes, id externo duplicado, `coletadoEm` ausente) e o tratamento de tag órfã como aviso; verificar com testes unitários sobre fixtures em `api/tests/GameMatch.UnitTests/Catalogo/Fixtures`.
+- [x] 3.1 Implementar a leitura e a validação do snapshot (arquivo ausente, JSON malformado, `id`/`title` ausentes, id externo duplicado, `coletadoEm` ausente) e o tratamento de tag órfã como aviso; verificar com testes unitários sobre fixtures em `api/tests/GameMatch.UnitTests/Catalogo/Fixtures`.
 - [ ] 3.2 Implementar a sincronização transacional com upsert por `IdExterno`, substituição das características de cada jogo e resumo com inseridos, atualizados, tags ignoradas e data de coleta; verificar com teste de integração que executa o `sync` duas vezes sobre o mesmo diretório de fixtures e confirma que não há duplicatas e que a segunda execução reporta atualizações.
 - [ ] 3.3 Garantir que snapshot inválido aborta antes da transação e preserva o banco; verificar com teste de integração que compara as contagens de `jogos` e `jogos_caracteristicas` antes e depois de uma sincronização com JSON inválido.
 - [ ] 3.4 Documentar em `docs/ambiente.md` os comandos `coletar` e `sync`, a variável de conexão exigida e a limpeza manual de jogos removidos da fonte; verificar que os comandos documentados executam como escritos.
