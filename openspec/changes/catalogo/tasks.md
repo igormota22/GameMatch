@@ -2,11 +2,11 @@
 
 ## 1. Domínio e persistência do catálogo
 
-- [ ] 1.1 Criar `Jogo` (`IdExterno` único, `Titulo`, `Descricao`, `Thumbnail`, `Desenvolvedor`, `UrlFonte`, `SincronizadoEm`), `JogoCaracteristica` e o enum `TipoCaracteristica` (`Genero = 1`, `Plataforma = 2`, `Estilo = 3`) em `GameMatch.Domain`; verificar com `dotnet build api/GameMatch.sln`.
-- [ ] 1.2 Configurar EF para `jogos` e `jogos_caracteristicas` (chave composta `(jogo_id, tipo, valor)`, FK em cascata, índice único em `id_externo`, índice `(tipo, valor)`, enum como inteiro) e registrar os `DbSet`s no `GameMatchDbContext`; verificar que o model snapshot inclui as duas entidades.
-- [ ] 1.3 Gerar a migration `CatalogoJogos` e conferir o script com `dotnet ef migrations script --project api/src/GameMatch.Infrastructure --startup-project api/src/GameMatch.Api`; verificar que o script cria as tabelas, os índices e a FK com `ON DELETE CASCADE`.
-- [ ] 1.4 Aplicar a migration no PostgreSQL local com `dotnet ef database update --project api/src/GameMatch.Infrastructure --startup-project api/src/GameMatch.Api`; verificar no banco as tabelas, a chave composta e o índice único.
-- [ ] 1.5 Atualizar a lista de tabelas criadas em `docs/ambiente.md` (`jogos` e `jogos_caracteristicas`) e conferir que o comando de migrations documentado continua executando como escrito.
+- [x] 1.1 Criar `Jogo` (`IdExterno` único, `Titulo`, `Descricao`, `Thumbnail`, `Desenvolvedor`, `UrlFonte`, `SincronizadoEm`), `JogoCaracteristica` e o enum `TipoCaracteristica` (`Genero = 1`, `Plataforma = 2`, `Estilo = 3`) em `GameMatch.Domain`; verificar com `dotnet build api/GameMatch.sln`.
+- [x] 1.2 Configurar EF para `jogos` e `jogos_caracteristicas` (chave composta `(jogo_id, tipo, valor)`, FK em cascata, índice único em `id_externo`, índice `(tipo, valor)`, enum como inteiro) e registrar os `DbSet`s no `GameMatchDbContext`; verificar que o model snapshot inclui as duas entidades.
+- [x] 1.3 Gerar a migration `CatalogoJogos` e conferir o script com `dotnet ef migrations script --project api/src/GameMatch.Infrastructure --startup-project api/src/GameMatch.Api`; verificar que o script cria as tabelas, os índices e a FK com `ON DELETE CASCADE`.
+- [x] 1.4 Aplicar a migration no PostgreSQL local com `dotnet ef database update --project api/src/GameMatch.Infrastructure --startup-project api/src/GameMatch.Api`; verificar no banco as tabelas, a chave composta e o índice único.
+- [x] 1.5 Atualizar a lista de tabelas criadas em `docs/ambiente.md` (`jogos` e `jogos_caracteristicas`) e conferir que o comando de migrations documentado continua executando como escrito.
 
 ## 2. CLI e coleta do snapshot
 

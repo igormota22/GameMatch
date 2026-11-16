@@ -13,6 +13,10 @@ public sealed class GameMatchDbContext(DbContextOptions<GameMatchDbContext> opti
 
     public DbSet<PreferenciaPerfil> PerfisPreferencias => Set<PreferenciaPerfil>();
 
+    public DbSet<Jogo> Jogos => Set<Jogo>();
+
+    public DbSet<JogoCaracteristica> JogosCaracteristicas => Set<JogoCaracteristica>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

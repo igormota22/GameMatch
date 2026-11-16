@@ -22,6 +22,85 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("GameMatch.Domain.Entidades.Jogo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("descricao");
+
+                    b.Property<string>("Desenvolvedor")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("desenvolvedor");
+
+                    b.Property<string>("IdExterno")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("id_externo");
+
+                    b.Property<DateTimeOffset>("SincronizadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sincronizado_em");
+
+                    b.Property<string>("Thumbnail")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("thumbnail");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("titulo");
+
+                    b.Property<string>("UrlFonte")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("url_fonte");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdExterno")
+                        .IsUnique();
+
+                    b.ToTable("jogos", (string)null);
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.JogoCaracteristica", b =>
+                {
+                    b.Property<int>("JogoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("jogo_id");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("integer")
+                        .HasColumnName("tipo");
+
+                    b.Property<string>("Valor")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("valor");
+
+                    b.HasKey("JogoId", "Tipo", "Valor");
+
+                    b.HasIndex("Tipo", "Valor");
+
+                    b.ToTable("jogos_caracteristicas", (string)null);
+                });
+
             modelBuilder.Entity("GameMatch.Domain.Entidades.PerfilGamer", b =>
                 {
                     b.Property<string>("UsuarioId")
@@ -278,6 +357,15 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("GameMatch.Domain.Entidades.JogoCaracteristica", b =>
+                {
+                    b.HasOne("GameMatch.Domain.Entidades.Jogo", null)
+                        .WithMany("Caracteristicas")
+                        .HasForeignKey("JogoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GameMatch.Domain.Entidades.PerfilGamer", b =>
                 {
                     b.HasOne("GameMatch.Domain.Entidades.Usuario", null)
@@ -345,6 +433,11 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.Jogo", b =>
+                {
+                    b.Navigation("Caracteristicas");
                 });
 
             modelBuilder.Entity("GameMatch.Domain.Entidades.PerfilGamer", b =>

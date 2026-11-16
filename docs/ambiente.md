@@ -125,7 +125,8 @@ dotnet ef database update --project api/src/GameMatch.Infrastructure --startup-p
 O comando cria as tabelas de identidade (`AspNetUsers`, `AspNetRoles`,
 `AspNetUserRoles`, `AspNetUserClaims`, `AspNetRoleClaims`, `AspNetUserLogins`,
 `AspNetUserTokens`), além de `registros_sistema`, `perfis_gamer`,
-`perfis_preferencias` e `__EFMigrationsHistory` no banco `gamematch`.
+`perfis_preferencias`, `jogos`, `jogos_caracteristicas` e
+`__EFMigrationsHistory` no banco `gamematch`.
 
 ## 4. Executar a API
 

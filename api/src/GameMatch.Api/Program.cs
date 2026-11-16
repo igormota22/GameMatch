@@ -1,5 +1,6 @@
 using GameMatch.Api.Autenticacao;
 using GameMatch.Api.Diagnostico;
+using GameMatch.Application.Catalogo;
 using GameMatch.Application.Perfil;
 using GameMatch.Infrastructure;
 using GameMatch.Infrastructure.Persistencia.Repositorios;
@@ -45,6 +46,8 @@ builder.Services.AddProblemDetails(opcoes =>
 builder.Services.AdicionarInfraestrutura(stringConexao);
 builder.Services.AddScoped<IPerfilRepositorio, PerfilRepositorio>();
 builder.Services.AddScoped<ServicoPerfil>();
+builder.Services.AddScoped<ICatalogoRepositorio, CatalogoRepositorio>();
+builder.Services.AddScoped<ServicoCatalogo>();
 builder.Services.AdicionarAutenticacaoJwt(builder.Configuration);
 builder.Services.AddSingleton<GeradorTokenJwt>();
 builder.Services.AddHealthChecks()
