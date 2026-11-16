@@ -140,7 +140,9 @@ internal static class AplicacaoCli
 
     /// <summary>
     /// Usa o diretório <c>seed/</c> da raiz do repositório; se a raiz não for
-    /// encontrada, cai para <c>seed/</c> no diretório atual.
+    /// encontrada, cai para <c>seed/</c> no diretório atual. A raiz é
+    /// identificada pelo diretório <c>.git</c>, porque a solução também existe
+    /// em <c>api/</c>.
     /// </summary>
     private static string DiretorioPadraoSnapshot()
     {
@@ -148,7 +150,7 @@ internal static class AplicacaoCli
 
         while (atual is not null)
         {
-            if (File.Exists(Path.Combine(atual.FullName, "GameMatch.sln")))
+            if (Directory.Exists(Path.Combine(atual.FullName, ".git")))
             {
                 return Path.Combine(atual.FullName, "seed");
             }

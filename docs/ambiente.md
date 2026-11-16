@@ -128,6 +128,31 @@ O comando cria as tabelas de identidade (`AspNetUsers`, `AspNetRoles`,
 `perfis_preferencias`, `jogos`, `jogos_caracteristicas` e
 `__EFMigrationsHistory` no banco `gamematch`.
 
+### Snapshot do catálogo
+
+O catálogo é populado pelo CLI `GameMatch.Seed` a partir do snapshot versionado
+em `seed/`; a API e a interface web nunca escrevem nesse diretório.
+
+```powershell
+# Gera seed/jogos.json, seed/tags.json e seed/metadados.json a partir da FreeToGame
+# (exige internet; a coleta leva cerca de 30 s)
+dotnet run --project api/src/GameMatch.Seed -- coletar
+
+# Popula ou atualiza o banco a partir do snapshot (exige a string de conexão)
+$env:ConnectionStrings__GameMatch = "Host=localhost;Port=5432;Database=gamematch;Username=gamematch;Password=gamematch-dev"
+dotnet run --project api/src/GameMatch.Seed -- sync
+```
+
+O `sync` valida o snapshot antes de abrir a transação e é idempotente: rodar
+duas vezes o mesmo snapshot insere na primeira e apenas atualiza na segunda.
+Jogos que deixam de existir na fonte permanecem no banco, porque a
+sincronização só faz upsert; para removê-los, apague pelos identificadores
+externos ausentes no snapshot (as características saem em cascata):
+
+```sql
+DELETE FROM jogos WHERE id_externo NOT IN ('1', '2', '3'); -- ids do snapshot atual
+```
+
 ## 4. Executar a API
 
 ```powershell

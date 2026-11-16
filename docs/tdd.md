@@ -323,6 +323,12 @@ indisponível sem quebrar navegação (RNF-05, comportamento já previsto).
 
 ### 5.4 Integração com o snapshot (DT-11)
 
+- `GameMatch.Seed coletar` (implementado em F2): consulta `GET /api/games` e
+  uma chamada `GET /api/filter?tag=<tag>` por tag candidata configurada em
+  `Coleta:TagsCandidatas`; grava `seed/jogos.json`, `seed/tags.json` e
+  `seed/metadados.json` de forma atômica (arquivo temporário + troca) e só
+  substitui o snapshot anterior quando a fonte responde. Tags com erro ou sem
+  jogos são omitidas do mapa e registradas em `metadados.json`.
 - `GameMatch.Seed sync`: lê `seed/jogos.json`, `seed/tags.json`,
   `seed/metadados.json`; faz **upsert** por `IdExterno` (INV-03); substitui
   características por transação; imprime resumo (inseridos/atualizados) e
@@ -331,6 +337,16 @@ indisponível sem quebrar navegação (RNF-05, comportamento já previsto).
   a aplicação nunca escreve em `seed/`.
 - Falha de formato do JSON → aborta com mensagem clara e **não** altera o
   banco (transação única).
+- Esquema do snapshot: `jogos.json` é o array do payload da fonte (snake_case,
+  `id` único); `tags.json` é `{"tags": {"<tag>": [ids externos]}}`;
+  `metadados.json` traz `coletadoEm`, `totalJogos`, `totalTags`,
+  `tagsIgnoradas`, `origem` e `versaoFormato` (atual: `1`).
+- Fatos observados da fonte na coleta de 2026-11-16: 416 jogos; `genre` e
+  `platform` vêm como strings únicas (1 gênero e 1 plataforma por jogo); a API
+  não expõe a lista de tags (`/api/tags` devolve o HTML da SPA), então a
+  coleta percorre 32 tags candidatas conhecidas — 30 retornam jogos e
+  `third-person` e `zombies` respondem `500`. `publisher` e `release_date`
+  ficam apenas no snapshot, fora do modelo e do contrato.
 
 ### 5.5 Frontend — rotas novas
 
@@ -407,7 +423,7 @@ Sem cronograma/datas (não confirmados); ordem por dependência. Marco **MVP**
 | Fase | Escopo (PRD) | Pré-requisitos | Entregáveis | Critério de saída |
 |---|---|---|---|---|
 | **F1 — Perfil gamer** (P0) | RF-05, RF-06 (DT-06) | Fundação + contas existentes | Migrations das preferências; endpoints `GET/PUT /perfil`; UI `/perfil`; unit + integração | TC-01 verde; CA-06/07 manual |
-| **F2 — Catálogo** (P0) | RF-07..09 (DT-11, DT-15) | Snapshot em `seed/` (D-1) | Projeto `GameMatch.Seed` + sync; entidade `Jogo`; endpoints `/catalogo*`; UI `/catalogo` com pesquisa, filtros e estado vazio | TC-02 verde; `sync` popula banco de forma idempotente |
+| **F2 — Catálogo** (P0) | RF-07..09 (DT-11, DT-15) | Snapshot em `seed/` (D-1) | Projeto `GameMatch.Seed` (`coletar`/`sync`) e snapshot versionado (416 jogos, 30 tags); entidade `Jogo`; endpoints `/catalogo*`; UI `/catalogo` com pesquisa, filtros e estado vazio | TC-02 verde; `sync` popula banco de forma idempotente |
 | **F3 — Recomendações + Modo Descoberta** (P1) | RF-10..15 (DT-07..10, DT-12..14) | F1 e F2 | `CalculadoraCompatibilidade` no `Domain`; endpoints `/recomendacoes*`; UI `/recomendacoes` com explicação, CTA de perfil incompleto e seletor de experiência | TC-03..TC-06 verdes; CA-11..CA-15 manual |
 | **F4 — Favoritos e avaliações** (P1) | RF-16..18 (DT-12) | F2 | Endpoints `/favoritos`, `/avaliacoes`; UI; ligação com exclusão nas recomendações | TC-07 verde; CA-16/17 manual |
 | **F5 — Verificação do MVP** | RNF-03/05/07/08, CA-18..20 | F1..F4 | Revisão de acessibilidade básica, verificação do rodapé, suítes completas, atualização de `docs/ambiente.md` | TC-08 verde; checklist do PRD §5.1 aprovado → **marco MVP** |
