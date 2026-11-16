@@ -88,9 +88,9 @@ web/src/app/
 ```
 
 As rotas são carregadas de forma lazy por feature. Hoje existem as rotas
-públicas `/`, `/entrar` e `/criar-conta`, a rota autenticada `/conta` e a rota
-404. As próximas features (perfil gamer, catálogo, recomendações, favoritos e
-avaliações) seguem o roadmap do [TDD](tdd.md).
+públicas `/`, `/entrar` e `/criar-conta`, as rotas autenticadas `/conta` e
+`/perfil` e a rota 404. As próximas features (catálogo, recomendações,
+favoritos e avaliações) seguem o roadmap do [TDD](tdd.md).
 
 ## Decisões da fundação
 
