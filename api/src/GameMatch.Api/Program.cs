@@ -1,6 +1,8 @@
 using GameMatch.Api.Autenticacao;
 using GameMatch.Api.Diagnostico;
+using GameMatch.Application.Perfil;
 using GameMatch.Infrastructure;
+using GameMatch.Infrastructure.Persistencia.Repositorios;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +43,8 @@ builder.Services.AddProblemDetails(opcoes =>
     };
 });
 builder.Services.AdicionarInfraestrutura(stringConexao);
+builder.Services.AddScoped<IPerfilRepositorio, PerfilRepositorio>();
+builder.Services.AddScoped<ServicoPerfil>();
 builder.Services.AdicionarAutenticacaoJwt(builder.Configuration);
 builder.Services.AddSingleton<GeradorTokenJwt>();
 builder.Services.AddHealthChecks()

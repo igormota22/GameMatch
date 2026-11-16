@@ -9,6 +9,10 @@ public sealed class GameMatchDbContext(DbContextOptions<GameMatchDbContext> opti
 {
     public DbSet<RegistroSistema> RegistrosSistema => Set<RegistroSistema>();
 
+    public DbSet<PerfilGamer> PerfisGamer => Set<PerfilGamer>();
+
+    public DbSet<PreferenciaPerfil> PerfisPreferencias => Set<PreferenciaPerfil>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
