@@ -167,7 +167,7 @@ A API responde em `http://localhost:5080`:
 | Swagger UI | `http://localhost:5080/swagger` | Development |
 | Documento OpenAPI | `http://localhost:5080/openapi/v1.json` | Development |
 
-Endpoints de conta:
+Endpoints de conta, perfil e catálogo:
 
 | Método | Rota | Autenticação | Resposta |
 |---|---|---|---|
@@ -177,6 +177,13 @@ Endpoints de conta:
 | `PUT` | `/conta/senha` | Bearer | `204`; `400` se a senha atual estiver incorreta |
 | `GET` | `/perfil` | Bearer | `200` com preferências, `completo` e `atualizadoEm` |
 | `PUT` | `/perfil` | Bearer | `200` com o perfil atualizado; `422` se gêneros ou plataformas estiverem ausentes |
+| `GET` | `/catalogo` | Bearer | `200` com `items`, `pagina`, `tamanho` e `total`; `400` para `pagina`/`tamanho` inválidos |
+| `GET` | `/catalogo/filtros` | Bearer | `200` com as listas distintas de gêneros, plataformas e tags |
+| `GET` | `/catalogo/{id}` | Bearer | `200` com o detalhe do jogo e `urlFonte`; `404` se não existir |
+
+`GET /catalogo` aceita `pagina` (padrão `1`), `tamanho` (padrão `24`, máximo
+`100`), `busca` (título, sem diferenciar caixa), `genero`, `plataforma` e `tag`;
+os filtros são combinados com E lógico.
 
 As regras de senha são: mínimo de 8 caracteres, ao menos uma letra maiúscula,
 uma minúscula e um dígito. Os erros são devolvidos em PT-BR como ProblemDetails.
