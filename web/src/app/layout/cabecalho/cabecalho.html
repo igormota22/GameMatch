@@ -45,6 +45,15 @@
         @if (autenticado()) {
           <li>
             <a
+              routerLink="/perfil"
+              routerLinkActive="bg-slate-800 text-white"
+              class="rounded-md px-2 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white sm:px-3"
+            >
+              Perfil
+            </a>
+          </li>
+          <li>
+            <a
               routerLink="/conta"
               routerLinkActive="bg-slate-800 text-white"
               class="rounded-md px-2 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white sm:px-3"

@@ -35,4 +35,13 @@ describe('autenticadoGuard', () => {
     expect(resultado instanceof UrlTree).toBe(true);
     expect((resultado as UrlTree).toString()).toBe('/entrar?destino=%2Fconta');
   });
+
+  it('redireciona o visitante de /perfil para /entrar?destino=/perfil', () => {
+    const estadoPerfil = { url: '/perfil' } as RouterStateSnapshot;
+
+    const resultado = TestBed.runInInjectionContext(() => autenticadoGuard(rota, estadoPerfil));
+
+    expect(resultado instanceof UrlTree).toBe(true);
+    expect((resultado as UrlTree).toString()).toBe('/entrar?destino=%2Fperfil');
+  });
 });

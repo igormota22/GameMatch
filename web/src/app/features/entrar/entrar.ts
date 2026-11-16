@@ -64,6 +64,6 @@ export class Entrar {
       return destino;
     }
 
-    return '/conta';
+    return '/';
   }
 }
