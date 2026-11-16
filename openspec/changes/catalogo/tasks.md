@@ -20,8 +20,8 @@
 ## 3. Sincronização do catálogo
 
 - [x] 3.1 Implementar a leitura e a validação do snapshot (arquivo ausente, JSON malformado, `id`/`title` ausentes, id externo duplicado, `coletadoEm` ausente) e o tratamento de tag órfã como aviso; verificar com testes unitários sobre fixtures em `api/tests/GameMatch.UnitTests/Catalogo/Fixtures`.
-- [ ] 3.2 Implementar a sincronização transacional com upsert por `IdExterno`, substituição das características de cada jogo e resumo com inseridos, atualizados, tags ignoradas e data de coleta; verificar com teste de integração que executa o `sync` duas vezes sobre o mesmo diretório de fixtures e confirma que não há duplicatas e que a segunda execução reporta atualizações.
-- [ ] 3.3 Garantir que snapshot inválido aborta antes da transação e preserva o banco; verificar com teste de integração que compara as contagens de `jogos` e `jogos_caracteristicas` antes e depois de uma sincronização com JSON inválido.
+- [x] 3.2 Implementar a sincronização transacional com upsert por `IdExterno`, substituição das características de cada jogo e resumo com inseridos, atualizados, tags ignoradas e data de coleta; verificar com teste de integração que executa o `sync` duas vezes sobre o mesmo diretório de fixtures e confirma que não há duplicatas e que a segunda execução reporta atualizações.
+- [x] 3.3 Garantir que snapshot inválido aborta antes da transação e preserva o banco; verificar com teste de integração que compara as contagens de `jogos` e `jogos_caracteristicas` antes e depois de uma sincronização com JSON inválido.
 - [x] 3.4 Documentar em `docs/ambiente.md` os comandos `coletar` e `sync`, a variável de conexão exigida e a limpeza manual de jogos removidos da fonte; verificar que os comandos documentados executam como escritos.
 
 ## 4. Aplicação e API do catálogo

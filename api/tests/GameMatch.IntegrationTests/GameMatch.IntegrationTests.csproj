@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\GameMatch.Api\GameMatch.Api.csproj" />
+    <ProjectReference Include="..\..\src\GameMatch.Seed\GameMatch.Seed.csproj" />
   </ItemGroup>
 
 </Project>
