@@ -24,7 +24,7 @@ describe('Cabecalho', () => {
     expect(texto).not.toContain('Sair');
   });
 
-  it('exibe o estado autenticado com acesso à conta e saída', async () => {
+  it('exibe o estado autenticado com acesso ao perfil, à conta e saída', async () => {
     TestBed.inject(SessaoService).iniciar({
       token: 'token-teste',
       expiraEm: new Date(Date.now() + 60_000).toISOString(),
@@ -36,6 +36,7 @@ describe('Cabecalho', () => {
 
     const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
+    expect(texto).toContain('Perfil');
     expect(texto).toContain('Minha conta');
     expect(texto).toContain('jogador@teste.com');
     expect(texto).toContain('Sair');

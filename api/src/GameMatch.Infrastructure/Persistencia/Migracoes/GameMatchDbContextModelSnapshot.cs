@@ -22,6 +22,41 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("GameMatch.Domain.Entidades.PerfilGamer", b =>
+                {
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("text")
+                        .HasColumnName("usuario_id");
+
+                    b.Property<DateTimeOffset>("AtualizadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("atualizado_em");
+
+                    b.HasKey("UsuarioId");
+
+                    b.ToTable("perfis_gamer", (string)null);
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.PreferenciaPerfil", b =>
+                {
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("text")
+                        .HasColumnName("usuario_id");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("integer")
+                        .HasColumnName("tipo");
+
+                    b.Property<string>("Valor")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("valor");
+
+                    b.HasKey("UsuarioId", "Tipo", "Valor");
+
+                    b.ToTable("perfis_preferencias", (string)null);
+                });
+
             modelBuilder.Entity("GameMatch.Domain.Entidades.RegistroSistema", b =>
                 {
                     b.Property<string>("Chave")
@@ -243,6 +278,24 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("GameMatch.Domain.Entidades.PerfilGamer", b =>
+                {
+                    b.HasOne("GameMatch.Domain.Entidades.Usuario", null)
+                        .WithOne()
+                        .HasForeignKey("GameMatch.Domain.Entidades.PerfilGamer", "UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.PreferenciaPerfil", b =>
+                {
+                    b.HasOne("GameMatch.Domain.Entidades.PerfilGamer", null)
+                        .WithMany("Preferencias")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -292,6 +345,11 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.PerfilGamer", b =>
+                {
+                    b.Navigation("Preferencias");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,260 @@
+<section class="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-12 sm:px-6">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-white sm:text-3xl">Perfil gamer</h1>
+      <p class="mt-2 text-sm text-slate-400">
+        @if (modoEdicao()) {
+          Atualize seus gêneros, plataformas, estilos e experiências para receber
+          recomendações compatíveis com você.
+        } @else {
+          Estas são as preferências que o GameMatch usa para personalizar suas
+          recomendações.
+        }
+      </p>
+    </div>
+
+    @if (!carregando() && !erroCarga()) {
+      <span
+        class="rounded-full border px-3 py-1 text-xs font-medium"
+        [class.border-emerald-500/40]="completo()"
+        [class.bg-emerald-500/10]="completo()"
+        [class.text-emerald-300]="completo()"
+        [class.border-amber-500/40]="!completo()"
+        [class.bg-amber-500/10]="!completo()"
+        [class.text-amber-300]="!completo()"
+      >
+        {{ completo() ? 'Perfil completo' : 'Perfil incompleto' }}
+      </span>
+    }
+  </div>
+
+  @if (carregando()) {
+    <p
+      class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400"
+      role="status"
+    >
+      Carregando seu perfil...
+    </p>
+  } @else if (erroCarga()) {
+    <div
+      class="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
+      role="alert"
+    >
+      <p>{{ erroCarga() }}</p>
+      <button
+        type="button"
+        class="mt-3 rounded-md border border-rose-400/60 px-3 py-2 text-sm font-medium transition hover:bg-rose-500/10"
+        (click)="carregar()"
+      >
+        Tentar novamente
+      </button>
+    </div>
+  } @else if (perfil(); as dados) {
+    @if (mensagem()) {
+      <p
+        class="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300"
+        role="status"
+      >
+        {{ mensagem() }}
+      </p>
+    }
+
+    @if (modoEdicao()) {
+      <form
+        class="flex flex-col gap-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6"
+        [formGroup]="formulario"
+        (ngSubmit)="salvar()"
+        novalidate
+      >
+        <fieldset class="flex flex-col gap-5">
+          <legend class="text-base font-semibold text-white">Preferências</legend>
+          <p class="text-xs text-slate-500">
+            Campos com * são obrigatórios. Use uma linha por valor.
+          </p>
+
+          <div class="flex flex-col gap-1 text-sm text-slate-200">
+            <label for="generos" class="font-medium">Gêneros favoritos *</label>
+            <textarea
+              id="generos"
+              formControlName="generos"
+              rows="4"
+              aria-describedby="generos-ajuda generos-erro"
+              class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+            ></textarea>
+            <p id="generos-ajuda" class="text-xs text-slate-500">
+              Exemplos: RPG, Ação, Estratégia.
+            </p>
+            @if (formulario.controls.generos.touched && formulario.controls.generos.invalid) {
+              <p id="generos-erro" class="text-xs text-rose-400" role="alert">
+                Informe ao menos um gênero.
+              </p>
+            }
+          </div>
+
+          <div class="flex flex-col gap-1 text-sm text-slate-200">
+            <label for="plataformas" class="font-medium">Plataformas *</label>
+            <textarea
+              id="plataformas"
+              formControlName="plataformas"
+              rows="3"
+              aria-describedby="plataformas-ajuda plataformas-erro"
+              class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+            ></textarea>
+            <p id="plataformas-ajuda" class="text-xs text-slate-500">
+              Exemplos: PC (Windows), Web Browser.
+            </p>
+            @if (
+              formulario.controls.plataformas.touched && formulario.controls.plataformas.invalid
+            ) {
+              <p id="plataformas-erro" class="text-xs text-rose-400" role="alert">
+                Informe ao menos uma plataforma.
+              </p>
+            }
+          </div>
+
+          <div class="flex flex-col gap-1 text-sm text-slate-200">
+            <label for="estilos" class="font-medium">Estilos de gameplay</label>
+            <textarea
+              id="estilos"
+              formControlName="estilos"
+              rows="3"
+              aria-describedby="estilos-ajuda"
+              class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+            ></textarea>
+            <p id="estilos-ajuda" class="text-xs text-slate-500">
+              Opcional. Exemplos: turn-based, fantasia, mundo aberto.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-1 text-sm text-slate-200">
+            <label for="experiencias" class="font-medium">Preferências de experiência</label>
+            <textarea
+              id="experiencias"
+              formControlName="experiencias"
+              rows="3"
+              aria-describedby="experiencias-ajuda"
+              class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+            ></textarea>
+            <p id="experiencias-ajuda" class="text-xs text-slate-500">
+              Opcional. Exemplos: exploração, competição, cooperação.
+            </p>
+          </div>
+        </fieldset>
+
+        @if (erroSalvar()) {
+          <p
+            class="rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
+            role="alert"
+          >
+            {{ erroSalvar() }}
+          </p>
+        }
+
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <p class="text-xs text-slate-500">
+            @if (atualizadoEm(); as atualizado) {
+              Atualizado em {{ formatarData(atualizado) }}.
+            } @else {
+              Perfil ainda não salvo.
+            }
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+            <button
+              type="button"
+              class="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
+              (click)="cancelarEdicao()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="enviando()"
+              class="rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {{ enviando() ? 'Salvando...' : 'Salvar perfil' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    } @else {
+      <div
+        class="flex flex-col gap-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6"
+      >
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-400">
+            Jogador
+          </p>
+          <p class="mt-1 text-xl font-semibold text-white">
+            {{ nomeExibicao() || 'Jogador' }}
+          </p>
+        </div>
+
+        @if (semPreferencias()) {
+          <p
+            class="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200"
+            role="status"
+          >
+            Você ainda não informou preferências. Use “Editar perfil” para
+            configurar seu perfil e habilitar recomendações personalizadas.
+          </p>
+        } @else if (!completo()) {
+          <p
+            class="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200"
+            role="status"
+          >
+            Informe ao menos um gênero e uma plataforma para completar o perfil.
+          </p>
+        }
+
+        <dl class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Gêneros favoritos
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.generos) }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Plataformas
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.plataformas) }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Estilos de gameplay
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.estilos) }}</dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Preferências de experiência
+            </dt>
+            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.experiencias) }}</dd>
+          </div>
+        </dl>
+
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <p class="text-xs text-slate-500">
+            @if (atualizadoEm(); as atualizado) {
+              Atualizado em {{ formatarData(atualizado) }}.
+            } @else {
+              Perfil ainda não salvo.
+            }
+          </p>
+
+          <button
+            type="button"
+            class="rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+            (click)="iniciarEdicao()"
+          >
+            Editar perfil
+          </button>
+        </div>
+      </div>
+    }
+  }
+</section>

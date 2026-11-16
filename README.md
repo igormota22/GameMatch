@@ -137,6 +137,7 @@ Rotas do frontend:
 | `/entrar` | Público | Login com e-mail e senha |
 | `/criar-conta` | Público | Cadastro com login automático |
 | `/conta` | Autenticado | Dados da conta, alteração de senha e saída |
+| `/perfil` | Autenticado | Preferências do perfil gamer em modo de leitura e edição |
 
 Endpoints da API:
 
@@ -146,10 +147,14 @@ Endpoints da API:
 | `POST` | `/contas/login` | Autentica e devolve o token |
 | `GET` | `/conta` | Dados da conta autenticada |
 | `PUT` | `/conta/senha` | Altera a senha, exigindo a senha atual |
+| `GET` | `/perfil` | Preferências do perfil gamer autenticado |
+| `PUT` | `/perfil` | Cria ou substitui as preferências do perfil |
 
 O token fica em `localStorage`, é enviado pelo interceptor como
-`Authorization: Bearer <token>` e o guard redireciona visitantes de `/conta`
-para `/entrar?destino=/conta`. A sessão persiste após recarregar a página.
+`Authorization: Bearer <token>` e o guard redireciona visitantes de `/conta` e
+`/perfil` para `/entrar` preservando o destino. A sessão persiste após
+recarregar a página. Após o login sem destino informado, o usuário volta para a
+home, que exibe o resumo do perfil.
 
 ### Executar os testes
 

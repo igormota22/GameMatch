@@ -124,8 +124,8 @@ dotnet ef database update --project api/src/GameMatch.Infrastructure --startup-p
 
 O comando cria as tabelas de identidade (`AspNetUsers`, `AspNetRoles`,
 `AspNetUserRoles`, `AspNetUserClaims`, `AspNetRoleClaims`, `AspNetUserLogins`,
-`AspNetUserTokens`), além de `registros_sistema` e `__EFMigrationsHistory` no
-banco `gamematch`.
+`AspNetUserTokens`), além de `registros_sistema`, `perfis_gamer`,
+`perfis_preferencias` e `__EFMigrationsHistory` no banco `gamematch`.
 
 ## 4. Executar a API
 
@@ -149,6 +149,8 @@ Endpoints de conta:
 | `POST` | `/contas/login` | Pública | `200` com token; `401` para credenciais inválidas |
 | `GET` | `/conta` | Bearer | `200` com e-mail e data de criação |
 | `PUT` | `/conta/senha` | Bearer | `204`; `400` se a senha atual estiver incorreta |
+| `GET` | `/perfil` | Bearer | `200` com preferências, `completo` e `atualizadoEm` |
+| `PUT` | `/perfil` | Bearer | `200` com o perfil atualizado; `422` se gêneros ou plataformas estiverem ausentes |
 
 As regras de senha são: mínimo de 8 caracteres, ao menos uma letra maiúscula,
 uma minúscula e um dígito. Os erros são devolvidos em PT-BR como ProblemDetails.
@@ -227,18 +229,19 @@ cd web
 npm start
 ```
 
-Rotas de conta:
+Rotas de conta e perfil:
 
 | Rota | Acesso | Conteúdo |
 |---|---|---|
 | `/entrar` | Pública | Login com e-mail e senha |
 | `/criar-conta` | Pública | Cadastro com login automático |
 | `/conta` | Autenticada | Dados da conta, alterar senha e sair |
+| `/perfil` | Autenticada | Preferências do perfil gamer e indicador de completude |
 
 O token é gravado em `localStorage`, enviado pelo interceptor como
 `Authorization: Bearer <token>` e validado pelo `autenticadoGuard`. Sem sessão,
-`/conta` redireciona para `/entrar?destino=/conta`; a sessão persiste após
-recarregar a página.
+`/conta` redireciona para `/entrar?destino=/conta` e `/perfil` redireciona para
+`/entrar?destino=/perfil`; a sessão persiste após recarregar a página.
 
 ### Proxy de desenvolvimento
 

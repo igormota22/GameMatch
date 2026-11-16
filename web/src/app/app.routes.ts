@@ -25,6 +25,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/conta/conta').then((modulo) => modulo.Conta),
   },
   {
+    path: 'perfil',
+    title: 'GameMatch — Perfil gamer',
+    canActivate: [autenticadoGuard],
+    loadComponent: () => import('./features/perfil/perfil').then((modulo) => modulo.Perfil),
+  },
+  {
     path: '**',
     title: 'GameMatch — Página não encontrada',
     loadComponent: () =>
