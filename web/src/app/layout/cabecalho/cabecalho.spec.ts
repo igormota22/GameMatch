@@ -21,10 +21,11 @@ describe('Cabecalho', () => {
     expect(texto).toContain('GameMatch');
     expect(texto).toContain('Entrar');
     expect(texto).toContain('Criar conta');
+    expect(texto).not.toContain('Catálogo');
     expect(texto).not.toContain('Sair');
   });
 
-  it('exibe o estado autenticado com acesso ao perfil, à conta e saída', async () => {
+  it('exibe o estado autenticado com acesso ao catálogo, perfil, conta e saída', async () => {
     TestBed.inject(SessaoService).iniciar({
       token: 'token-teste',
       expiraEm: new Date(Date.now() + 60_000).toISOString(),
@@ -36,6 +37,7 @@ describe('Cabecalho', () => {
 
     const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
+    expect(texto).toContain('Catálogo');
     expect(texto).toContain('Perfil');
     expect(texto).toContain('Minha conta');
     expect(texto).toContain('jogador@teste.com');

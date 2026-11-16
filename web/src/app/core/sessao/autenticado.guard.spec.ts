@@ -44,4 +44,13 @@ describe('autenticadoGuard', () => {
     expect(resultado instanceof UrlTree).toBe(true);
     expect((resultado as UrlTree).toString()).toBe('/entrar?destino=%2Fperfil');
   });
+
+  it('redireciona o visitante de /catalogo para /entrar?destino=/catalogo', () => {
+    const estadoCatalogo = { url: '/catalogo' } as RouterStateSnapshot;
+
+    const resultado = TestBed.runInInjectionContext(() => autenticadoGuard(rota, estadoCatalogo));
+
+    expect(resultado instanceof UrlTree).toBe(true);
+    expect((resultado as UrlTree).toString()).toBe('/entrar?destino=%2Fcatalogo');
+  });
 });

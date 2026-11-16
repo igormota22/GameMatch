@@ -31,6 +31,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/perfil/perfil').then((modulo) => modulo.Perfil),
   },
   {
+    path: 'catalogo',
+    title: 'GameMatch — Catálogo',
+    canActivate: [autenticadoGuard],
+    loadComponent: () =>
+      import('./features/catalogo/catalogo').then((modulo) => modulo.Catalogo),
+  },
+  {
     path: '**',
     title: 'GameMatch — Página não encontrada',
     loadComponent: () =>

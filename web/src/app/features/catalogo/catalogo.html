@@ -1,0 +1,188 @@
+<section class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 lg:px-8">
+  <header class="max-w-2xl">
+    <p class="text-sm font-semibold uppercase tracking-wide text-emerald-400">Catálogo</p>
+    <h1 class="mt-2 text-2xl font-bold text-white sm:text-3xl">
+      Jogos gratuitos para descobrir
+    </h1>
+    <p class="mt-2 text-sm text-slate-400">
+      Pesquise pelo título e combine filtros de gênero, plataforma e tag para
+      encontrar seu próximo jogo.
+    </p>
+  </header>
+
+  <form class="grid gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6" [formGroup]="formulario">
+    <div class="flex flex-col gap-1 text-sm text-slate-200">
+      <label for="busca" class="font-medium">Buscar por título</label>
+      <input
+        id="busca"
+        type="search"
+        formControlName="busca"
+        placeholder="Ex.: aurora"
+        class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+      />
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-3">
+      <div class="flex flex-col gap-1 text-sm text-slate-200">
+        <label for="genero" class="font-medium">Gênero</label>
+        <select
+          id="genero"
+          formControlName="genero"
+          class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+        >
+          <option value="">Todos</option>
+          @for (genero of filtros().generos; track genero) {
+            <option [value]="genero">{{ genero }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-1 text-sm text-slate-200">
+        <label for="plataforma" class="font-medium">Plataforma</label>
+        <select
+          id="plataforma"
+          formControlName="plataforma"
+          class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+        >
+          <option value="">Todas</option>
+          @for (plataforma of filtros().plataformas; track plataforma) {
+            <option [value]="plataforma">{{ plataforma }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-1 text-sm text-slate-200">
+        <label for="tag" class="font-medium">Tag</label>
+        <select
+          id="tag"
+          formControlName="tag"
+          class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+        >
+          <option value="">Todas</option>
+          @for (tag of filtros().tags; track tag) {
+            <option [value]="tag">{{ tag }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <div class="flex flex-wrap items-baseline justify-between gap-2">
+    <h2 #lista tabindex="-1" class="text-base font-semibold text-white outline-none">
+      Jogos do catálogo
+    </h2>
+    @if (!carregando() && !erro()) {
+      <p class="text-sm text-slate-400" aria-live="polite">{{ contagem() }}</p>
+    }
+  </div>
+
+  @if (carregando()) {
+    <p class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400" role="status">
+      Carregando o catálogo...
+    </p>
+  } @else if (erro()) {
+    <div class="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300" role="alert">
+      <p>{{ erro() }}</p>
+      <button
+        type="button"
+        class="mt-3 rounded-md border border-rose-400/60 px-3 py-2 text-sm font-medium transition hover:bg-rose-500/10"
+        (click)="carregar()"
+      >
+        Tentar novamente
+      </button>
+    </div>
+  } @else if (buscaSemResultados()) {
+    <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-6 text-sm text-slate-300" role="status">
+      <p>Nenhum jogo encontrado para a busca e os filtros aplicados.</p>
+      <button
+        type="button"
+        class="mt-3 rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+        (click)="limparFiltros()"
+      >
+        Limpar filtros
+      </button>
+    </div>
+  } @else if (semResultados()) {
+    <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-6 text-sm text-slate-300" role="status">
+      <p>
+        Não há jogos no catálogo. Peça ao operador para sincronizar o snapshot
+        antes de navegar.
+      </p>
+    </div>
+  } @else if (pagina(); as resultado) {
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Jogos do catálogo">
+      @for (jogo of resultado.items; track jogo.id) {
+        <li class="flex flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
+          <img
+            [src]="jogo.thumbnail"
+            [alt]="'Capa de ' + jogo.titulo"
+            loading="lazy"
+            class="aspect-video w-full object-cover"
+          />
+          <div class="flex flex-1 flex-col gap-3 p-4">
+            <div>
+              <h3 class="text-base font-semibold text-white">{{ jogo.titulo }}</h3>
+              <p class="mt-1 text-xs text-slate-400">{{ jogo.desenvolvedor }}</p>
+            </div>
+
+            <ul class="flex flex-wrap gap-1" [attr.aria-label]="'Gêneros de ' + jogo.titulo">
+              @for (genero of jogo.generos; track genero) {
+                <li class="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-300">
+                  {{ genero }}
+                </li>
+              }
+            </ul>
+
+            <ul class="flex flex-wrap gap-1" [attr.aria-label]="'Plataformas de ' + jogo.titulo">
+              @for (plataforma of jogo.plataformas; track plataforma) {
+                <li class="rounded-full border border-slate-700 bg-slate-950 px-2 py-0.5 text-xs text-slate-300">
+                  {{ plataforma }}
+                </li>
+              }
+            </ul>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <nav
+      aria-label="Paginação do catálogo"
+      class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4"
+    >
+      <button
+        type="button"
+        [disabled]="!temAnterior()"
+        class="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+        (click)="anterior()"
+      >
+        Anterior
+      </button>
+
+      <p class="text-sm text-slate-300">
+        Página {{ numeroPagina() }} de {{ totalPaginas() }}
+      </p>
+
+      <button
+        type="button"
+        [disabled]="!temProxima()"
+        class="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+        (click)="proxima()"
+      >
+        Próxima
+      </button>
+    </nav>
+  }
+
+  <p class="text-xs text-slate-500">
+    Dados fornecidos por
+    <a
+      [href]="urlFreetogame"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="font-medium text-emerald-400 transition hover:text-emerald-300"
+    >
+      FreeToGame.com
+    </a>
+    .
+  </p>
+</section>

@@ -138,6 +138,7 @@ Rotas do frontend:
 | `/criar-conta` | Público | Cadastro com login automático |
 | `/conta` | Autenticado | Dados da conta, alteração de senha e saída |
 | `/perfil` | Autenticado | Preferências do perfil gamer em modo de leitura e edição |
+| `/catalogo` | Autenticado | Catálogo com pesquisa, filtros de gênero, plataforma e tag e paginação |
 
 Endpoints da API:
 
@@ -149,12 +150,22 @@ Endpoints da API:
 | `PUT` | `/conta/senha` | Altera a senha, exigindo a senha atual |
 | `GET` | `/perfil` | Preferências do perfil gamer autenticado |
 | `PUT` | `/perfil` | Cria ou substitui as preferências do perfil |
+| `GET` | `/catalogo` | Catálogo paginado com busca e filtros |
+| `GET` | `/catalogo/filtros` | Gêneros, plataformas e tags disponíveis no catálogo |
+| `GET` | `/catalogo/{id}` | Detalhe do jogo com características e URL da fonte |
+
+O catálogo é populado a partir do snapshot versionado em `seed/` pelos comandos
+`dotnet run --project api/src/GameMatch.Seed -- coletar` (gera o snapshot a
+partir da FreeToGame) e `dotnet run --project api/src/GameMatch.Seed -- sync`
+(upsert idempotente no banco). A aplicação nunca escreve em `seed/`; consulte
+[`seed/README.md`](seed/README.md) e
+[`docs/ambiente.md`](docs/ambiente.md) para o procedimento completo.
 
 O token fica em `localStorage`, é enviado pelo interceptor como
-`Authorization: Bearer <token>` e o guard redireciona visitantes de `/conta` e
-`/perfil` para `/entrar` preservando o destino. A sessão persiste após
-recarregar a página. Após o login sem destino informado, o usuário volta para a
-home, que exibe o resumo do perfil.
+`Authorization: Bearer <token>` e o guard redireciona visitantes de `/conta`,
+`/perfil` e `/catalogo` para `/entrar` preservando o destino. A sessão persiste
+após recarregar a página. Após o login sem destino informado, o usuário volta
+para a home, que exibe o resumo do perfil.
 
 ### Executar os testes
 

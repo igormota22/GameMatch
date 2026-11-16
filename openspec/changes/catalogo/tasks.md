@@ -36,13 +36,13 @@
 
 ## 5. Frontend do catálogo
 
-- [ ] 5.1 Criar `CatalogoService` em `core/servicos` com tipos do contrato, `listar(filtros)` e `obterFiltros()`; verificar com testes de `HttpTestingController` para URL, parâmetros de busca/paginação e método.
-- [ ] 5.2 Criar `features/catalogo` com busca debounced, selects de gênero, plataforma e tag que voltam à página 1, grade de cards (imagem com `alt` e `loading="lazy"`, título, gêneros, plataformas, desenvolvedor), paginação com total e estados de carregamento e erro; verificar com testes do componente para carga, resultados, troca de filtro, paginação e erro da API.
-- [ ] 5.3 Distinguir catálogo vazio (sem filtros) de busca sem resultados, com a ação “Limpar filtros” que restaura a listagem completa; verificar com testes do componente para cada estado e para o clique em limpar.
-- [ ] 5.4 Garantir acessibilidade da tela (labels, navegação por teclado, `aria-live` com a contagem de resultados e foco na lista ao paginar) e conferir a atribuição FreeToGame no rodapé; verificar por inspeção do HTML renderizado nos testes e no navegador.
-- [ ] 5.5 Adicionar a rota autenticada `/catalogo` em `app.routes.ts` e o link “Catálogo” no cabeçalho para usuários autenticados; verificar com os testes de guarda, rota e cabeçalho, incluindo o redirecionamento de visitante para `/entrar?destino=%2Fcatalogo`.
-- [ ] 5.6 Atualizar a tabela de rotas do `README.md` e a árvore de projetos de `docs/arquitetura.md` com `features/catalogo` e `/catalogo`; verificar que a documentação coincide com `app.routes.ts`.
-- [ ] 5.7 Executar `npm test -- --watch=false` e `npm run build` em `web/`; verificar que a suíte e o build terminam sem erros.
+- [x] 5.1 Criar `CatalogoService` em `core/servicos` com tipos do contrato, `listar(filtros)` e `obterFiltros()`; verificar com testes de `HttpTestingController` para URL, parâmetros de busca/paginação e método.
+- [x] 5.2 Criar `features/catalogo` com busca debounced, selects de gênero, plataforma e tag que voltam à página 1, grade de cards (imagem com `alt` e `loading="lazy"`, título, gêneros, plataformas, desenvolvedor), paginação com total e estados de carregamento e erro; verificar com testes do componente para carga, resultados, troca de filtro, paginação e erro da API.
+- [x] 5.3 Distinguir catálogo vazio (sem filtros) de busca sem resultados, com a ação “Limpar filtros” que restaura a listagem completa; verificar com testes do componente para cada estado e para o clique em limpar.
+- [x] 5.4 Garantir acessibilidade da tela (labels, navegação por teclado, `aria-live` com a contagem de resultados e foco na lista ao paginar) e conferir a atribuição FreeToGame no rodapé; verificar por inspeção do HTML renderizado nos testes e no navegador.
+- [x] 5.5 Adicionar a rota autenticada `/catalogo` em `app.routes.ts` e o link “Catálogo” no cabeçalho para usuários autenticados; verificar com os testes de guarda, rota e cabeçalho, incluindo o redirecionamento de visitante para `/entrar?destino=%2Fcatalogo`.
+- [x] 5.6 Atualizar a tabela de rotas do `README.md` e a árvore de projetos de `docs/arquitetura.md` com `features/catalogo` e `/catalogo`; verificar que a documentação coincide com `app.routes.ts`.
+- [x] 5.7 Executar `npm test -- --watch=false` e `npm run build` em `web/`; verificar que a suíte e o build terminam sem erros.
 
 ## 6. Verificação integrada da F2
 

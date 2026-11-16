@@ -262,7 +262,7 @@ cd web
 npm start
 ```
 
-Rotas de conta e perfil:
+Rotas de conta, perfil e catálogo:
 
 | Rota | Acesso | Conteúdo |
 |---|---|---|
@@ -270,11 +270,12 @@ Rotas de conta e perfil:
 | `/criar-conta` | Pública | Cadastro com login automático |
 | `/conta` | Autenticada | Dados da conta, alterar senha e sair |
 | `/perfil` | Autenticada | Preferências do perfil gamer e indicador de completude |
+| `/catalogo` | Autenticada | Catálogo com busca, filtros de gênero, plataforma e tag e paginação |
 
 O token é gravado em `localStorage`, enviado pelo interceptor como
 `Authorization: Bearer <token>` e validado pelo `autenticadoGuard`. Sem sessão,
-`/conta` redireciona para `/entrar?destino=/conta` e `/perfil` redireciona para
-`/entrar?destino=/perfil`; a sessão persiste após recarregar a página.
+`/conta`, `/perfil` e `/catalogo` redirecionam para `/entrar?destino=<rota>`; a
+sessão persiste após recarregar a página.
 
 ### Proxy de desenvolvimento
 
