@@ -46,10 +46,10 @@
 
 ## 6. Verificação integrada da F2
 
-- [ ] 6.1 Executar `dotnet test api/GameMatch.sln` e `npm test -- --watch=false`; verificar que todas as suítes passam.
-- [ ] 6.2 Executar `sync` duas vezes seguidas sobre o snapshot versionado e consultar os três endpoints; verificar que o catálogo permanece sem duplicatas e que a paginação, a busca e os filtros respondem conforme o contrato.
-- [ ] 6.3 Validar no navegador CA-08, CA-09 e CA-10: catálogo sincronizado com atribuição visível, busca e filtros combinados, catálogo vazio antes da sincronização e busca sem resultados com “Limpar filtros”; registrar evidência no PR.
-- [ ] 6.4 Conferir que `seed/` permanece inalterado após usar a API e a interface e que a aplicação não escreve no diretório; verificar comparando `git status seed/` antes e depois do uso.
+- [x] 6.1 Executar `dotnet test api/GameMatch.sln` e `npm test -- --watch=false`; verificar que todas as suítes passam.
+- [x] 6.2 Executar `sync` duas vezes seguidas sobre o snapshot versionado e consultar os três endpoints; verificar que o catálogo permanece sem duplicatas e que a paginação, a busca e os filtros respondem conforme o contrato.
+- [x] 6.3 Validar no navegador CA-08, CA-09 e CA-10: catálogo sincronizado com atribuição visível, busca e filtros combinados, catálogo vazio antes da sincronização e busca sem resultados com “Limpar filtros”; registrar evidência no PR.
+- [x] 6.4 Conferir que `seed/` permanece inalterado após usar a API e a interface e que a aplicação não escreve no diretório; verificar comparando `git status seed/` antes e depois do uso.
 
 ## Workflow follow-up
 
