@@ -135,13 +135,17 @@ Itens confirmados pelo solicitante como MVP:
 ### J-2 — Configurar perfil gamer
 
 1. Usuário autenticado acessa a configuração do perfil.
-2. Informa **obrigatoriamente** gêneros favoritos e plataformas de interesse.
-3. Opcionalmente informa estilos de gameplay, preferências de experiência e
+2. Escolhe **obrigatoriamente** gêneros favoritos e plataformas de interesse
+   entre as opções do catálogo sincronizado.
+3. Opcionalmente escolhe estilos de gameplay (tags do catálogo) e informa o
    tempo de sessão típico.
 4. Salva; as preferências passam a alimentar as recomendações.
 5. **Ausência de dados:** sem preferências obrigatórias preenchidas, as
    recomendações ficam **indisponíveis**, com aviso pedindo a configuração do
    perfil (decisão do solicitante).
+6. **Vocabulário:** a interface oferece apenas valores existentes no catálogo
+   e a API rejeita preferências fora dele (RB-16); valores legados podem ser
+   removidos, mas não recriados.
 
 ### J-3 — Explorar o catálogo e pesquisar
 
@@ -156,7 +160,8 @@ Itens confirmados pelo solicitante como MVP:
 
 1. Com perfil preenchido, o usuário abre a seção de recomendações.
 2. Para cada jogo, o sistema exibe: pontuação de compatibilidade e explicação
-   dos fatores que contribuíram (gêneros, plataformas, estilos, experiência).
+   dos fatores que contribuíram (gêneros, plataformas, estilos e, no Modo
+   Descoberta, a experiência escolhida).
 3. **Sem perfil preenchido:** recomendações indisponíveis (J-2.4).
 4. **Sem catálogo sincronizado:** estado vazio indicando indisponibilidade.
 
@@ -204,7 +209,7 @@ Itens confirmados pelo solicitante como MVP:
 
 | ID | Requisito | Prioridade | Regra de negócio / dependência |
 |---|---|---|---|
-| RF-05 | O sistema deve permitir cadastrar e editar o perfil gamer com gêneros favoritos (obrigatório), plataformas (obrigatório), estilos de gameplay, preferências de experiência e tempo de sessão típico (opcionais) | P0 | RB-05, RB-06 |
+| RF-05 | O sistema deve permitir cadastrar e editar o perfil gamer escolhendo gêneros favoritos (obrigatório), plataformas (obrigatório) e estilos de gameplay (opcional) entre as opções do catálogo sincronizado, além do tempo de sessão típico (opcional) | P0 | RB-05, RB-06, RB-16 |
 | RF-06 | O sistema deve exigir as preferências mínimas (gêneros e plataformas) para disponibilizar recomendações | P1 | RB-07; depende de RF-05 |
 
 ### Catálogo, pesquisa e filtros
@@ -219,7 +224,7 @@ Itens confirmados pelo solicitante como MVP:
 
 | ID | Requisito | Prioridade | Regra de negócio / dependência |
 |---|---|---|---|
-| RF-10 | O sistema deve calcular uma pontuação de compatibilidade (0–100) entre o perfil do usuário e cada jogo, considerando gêneros favoritos, plataformas de interesse, estilos de gameplay e preferências de experiência | P1 | RB-07, RB-10; fórmula e pesos: A definir (§13-Q1) |
+| RF-10 | O sistema deve calcular uma pontuação de compatibilidade (0–100) entre o perfil do usuário e cada jogo, considerando gêneros favoritos, plataformas de interesse e estilos de gameplay; no Modo Descoberta, a experiência escolhida entra como fator adicional | P1 | RB-07, RB-10, RB-13; fórmula e pesos: TDD DT-07 |
 | RF-11 | O sistema deve exibir, para cada recomendação, a explicação dos fatores que contribuíram para a pontuação | P1 | RB-11 |
 | RF-12 | O sistema deve ordenar recomendações por pontuação de compatibilidade | P1 | RB-10 |
 | RF-13 | O sistema deve exibir aviso e ocultar recomendações enquanto as preferências mínimas não forem preenchidas | P1 | RB-07 |
@@ -248,16 +253,17 @@ Itens confirmados pelo solicitante como MVP:
 | RB-03 | A senha só pode ser alterada pelo próprio usuário autenticado informando a senha atual |
 | RB-04 | Rotas autenticadas exigem sessão válida; visitantes são redirecionados para `/entrar` com parâmetro de destino |
 | RB-05 | O perfil gamer pertence a um único usuário e pode ser editado a qualquer momento; alterações passam a valer nas próximas recomendações |
-| RB-06 | Campos obrigatórios do perfil: gêneros favoritos e plataformas. Opcionais: estilos de gameplay, preferências de experiência, tempo de sessão típico |
+| RB-06 | Campos obrigatórios do perfil: gêneros favoritos e plataformas. Opcionais: estilos de gameplay e tempo de sessão típico; gêneros, plataformas e estilos são escolhidos entre as opções do catálogo sincronizado (RB-16) |
 | RB-07 | Recomendações só ficam disponíveis com as preferências mínimas (RB-06) preenchidas; sem elas, exibe-se aviso de configuração do perfil |
 | RB-08 | O catálogo é composto por jogos gratuitos obtidos da FreeToGame (via snapshot local, §11), com atribuição da fonte exibida na interface |
 | RB-09 | Pesquisa e filtros operam sobre os campos disponíveis no catálogo sincronizado (nome, gênero, plataforma, etc.); combinam-se entre si |
-| RB-10 | A pontuação de compatibilidade varia de 0 a 100 e considera quatro fatores: gêneros favoritos, plataformas de interesse, estilos de gameplay e preferências de experiência; **pesos e fórmula exata: A definir** (§13-Q1) |
+| RB-10 | A pontuação de compatibilidade varia de 0 a 100 e considera, no fluxo padrão, três fatores: gêneros favoritos, plataformas de interesse e estilos de gameplay; no Modo Descoberta, a experiência escolhida entra como quarto fator. **Pesos e fórmula exata: DT-07 do TDD** |
 | RB-11 | Toda recomendação exibe os fatores que contribuíram para a pontuação, em linguagem compreensível ao usuário |
 | RB-12 | Dados de jogos não são criados pelos usuários; alterações no catálogo vêm apenas da sincronização da fonte |
 | RB-13 | O Modo Descoberta usa opções predefinidas de experiência selecionadas pelo usuário e cruza-as com o perfil do usuário; **conteúdo da lista de opções: A definir** (§13-Q3) |
 | RB-14 | Um jogo pode ser favoritado uma única vez por usuário; remover o favorito não afeta avaliações; não há limite de favoritos |
 | RB-15 | Cada usuário avalia um jogo no máximo uma vez, com nota de 1 a 5 estrelas; a avaliação pode ser alterada ou removida |
+| RB-16 | As preferências de gênero, plataforma e estilo usam exclusivamente o vocabulário do catálogo sincronizado: a API rejeita valores ausentes no catálogo e a interface oferece apenas essas opções; valores legados fora do catálogo permanecem visíveis e removíveis, mas não podem ser recriados |
 
 ## 9. Requisitos não funcionais
 
@@ -296,7 +302,8 @@ Itens confirmados pelo solicitante como MVP:
 
 - **CA-06** (RF-05): Dado um usuário autenticado, quando ele salva o perfil
   sem gêneros ou sem plataformas, então a validação impede o salvamento;
-  preenchendo ambos, o perfil é salvo e pode ser editado depois.
+  escolhendo ambos entre as opções do catálogo, o perfil é salvo e pode ser
+  editado depois.
 - **CA-07** (RF-05): Dado um perfil com apenas campos opcionais ausentes,
   quando ele é salvo, então aceita-se o salvamento (opcionais podem ficar vazios).
 
@@ -317,7 +324,8 @@ Itens confirmados pelo solicitante como MVP:
   catálogo sincronizado, quando as recomendações são geradas, então cada item
   exibe pontuação entre 0 e 100 e a lista está ordenada de maior para menor.
 - **CA-12** (RF-11): Dada uma recomendação, quando exibida, então os fatores
-  que contribuíram (gênero, plataforma, estilo, experiência) estão visíveis.
+  que contribuíram (gênero, plataforma e estilo; no Modo Descoberta também a
+  experiência) estão visíveis.
 - **CA-13** (RF-13): Dado um usuário sem preferências mínimas, quando ele
   acessa a seção de recomendações, então as recomendações ficam indisponíveis
   com aviso para configurar o perfil; após preencher o perfil, então ficam
@@ -351,6 +359,17 @@ Itens confirmados pelo solicitante como MVP:
   test api/GameMatch.sln` e `npm test -- --watch=false` são executados, então
   todos os testes passam.
 
+### Vocabulário do catálogo no perfil (RF-05)
+
+- **CA-21** (RF-05, RB-16): Dado o formulário de perfil e um catálogo
+  sincronizado, quando o usuário escolhe preferências, então são oferecidas
+  apenas opções de gênero, plataforma e tag existentes no catálogo; tentando
+  salvar um valor fora do catálogo, então a API rejeita e nada é gravado.
+- **CA-22** (RF-05, RB-16): Dado um perfil salvo com valores que não existem
+  mais no catálogo, quando o usuário abre a edição, então esses valores
+  continuam visíveis e podem ser removidos, mas não podem ser adicionados de
+  volta.
+
 ## 11. Dados e integrações
 
 ### Entidades principais
@@ -358,7 +377,7 @@ Itens confirmados pelo solicitante como MVP:
 | Entidade | Informações essenciais | Ciclo de vida |
 |---|---|---|
 | Usuário / Conta | e-mail/login, senha (hash), dados de conta | Criada no cadastro; alteração de senha; **sem exclusão no MVP** |
-| Perfil gamer | gêneros favoritos*, plataformas*, estilos de gameplay, preferências de experiência, tempo de sessão típico | Criado após cadastro; editável; alimenta recomendações |
+| Perfil gamer | gêneros favoritos*, plataformas*, estilos de gameplay (tags do catálogo), tempo de sessão típico | Criado após cadastro; editável; alimenta recomendações |
 | Jogo | dados da FreeToGame (id externo, título, gêneros, plataformas, desenvolvedor, thumbnail, descrição, atribuição) | Somente criado/atualizado pela sincronização |
 | Favorito | usuário + jogo | Criado/removido pelo usuário; único por par |
 | Avaliação | usuário + jogo + nota (1–5) | Única por par; editável/removível |
@@ -391,11 +410,12 @@ Itens confirmados pelo solicitante como MVP:
 
 | # | Item | Tipo | Impacto | Mitigação / validação |
 |---|---|---|---|---|
-| R-1 | Fórmula da pontuação de compatibilidade ainda não definida | Risco | Recomendações pouco relevantes ou difíceis de explicar | Definir pesos e validação no TDD e testar com casos reais (§13-Q1) |
+| R-1 | Fórmula da pontuação de compatibilidade precisa ser validada com dados reais | Risco | Recomendações pouco relevantes ou difíceis de explicar | Pesos definidos no TDD (DT-07) e validados com casos reais na F3 |
 | R-2 | Snapshot da FreeToGame pode estar desatualizado ou incompleto | Risco | Catálogo pobre afeta recomendações | Validar conteúdo do snapshot em `seed/` na fase de catálogo |
 | R-3 | Sem dados de uso, metas de engajamento são estimativas | Risco | Métricas O-1/O-3 sem baseline | Instrumentar medição mínima; revisar metas após primeiro uso (§13-Q4) |
 | R-4 | Janela acadêmica até novembro/2026 | Risco | Escopo não entregue no prazo | Prioridades da §5.4; cortar evoluções (§5.2) antes do MVP |
 | R-5 | Exigência de perfil mínimo pode frustrar novos usuários | Risco | Abandono antes das primeiras recomendações | Fluxo de onboarding guiado para preencher preferências mínimas |
+| R-6 | Atualização do snapshot pode remover valores já salvos em perfis (tags/gêneros) | Risco | Preferência órfã sem correspondência no catálogo | Manter valores legados visíveis e removíveis; validar apenas novos salvamentos (RB-16) |
 | P-1 | Fundação técnica já existe (API, banco, contas, shell web) | Premissa | — | Conforme `docs/arquitetura.md` |
 | P-2 | Projeto é acadêmico, sem requisito de produção | Premissa | Escopo e metas orientados à demonstração | Manter fora de escopo itens de produção (§5.3) |
 | D-1 | Snapshot da FreeToGame | Dependência | Catálogo indisponível sem ele | Fase de catálogo (fase 3 da evolução) |
@@ -405,7 +425,7 @@ Itens confirmados pelo solicitante como MVP:
 
 | # | Questão | Status | Responsável sugerido | Forma de validação |
 |---|---|---|---|---|
-| Q1 | Pesos exatos e fórmula da pontuação de compatibilidade (0–100) | A definir — decidido: manter como pendente | Engenharia + produto | Definir no TDD de recomendações; testar com cenários de exemplo |
+| Q1 | Pesos exatos e fórmula da pontuação de compatibilidade (0–100) | Fechada — definida em DT-07 do TDD (pesos revisados ao remover a experiência do perfil) | Engenharia + produto | Validar com cenários reais na F3 |
 | Q2 | Faixas de exibição da pontuação (ex.: barra, cores, rótulos) | A definir | Design + produto | Revisão de UI no protótipo |
 | Q3 | Conteúdo exato da lista de opções predefinidas do Modo Descoberta | A definir — decidido: serão opções predefinidas, não texto livre | Produto | Workshop de ideias + revisão no protótipo |
 | Q4 | Metas numéricas de engajamento (O-1, O-3) e telemetria | A definir | Produto | Definir evento mínimo e coletar baseline na primeira utilização |
