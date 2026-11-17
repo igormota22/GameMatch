@@ -56,8 +56,8 @@ deste documento, revogável na revisão.
 | DT-04 | Frontend | Angular 22 zoneless, standalone + signals, Tailwind, rotas lazy por feature | existente | Fundação | Já adotado; estado simples sem NgRx | NgRx | Novas features seguem `features/<nome>/` |
 | DT-05 | Convenção de API | Rotas em português **sem versionamento**, erros ProblemDetails com `traceId` | confirmada | Entrevista (solicitante) | Consistência com `/contas`, `/conta`, `/health` | Versionar `/v1` a partir dos novos endpoints | Superfície de API homogênea; versionamento futuro exigirá migração |
 | DT-06 | Modelo de preferências | Listas **normalizadas**: tabelas de entidade fraca `(PerfilId, Tipo, Valor)` com unicidade composta | confirmada | Entrevista (solicitante) | Consultáveis e integros; evita JSONB opaco | JSONB no Postgres | Mais tabelas, mas consultas de cálculo/filtro simples |
-| DT-07 | Fórmula de compatibilidade | Pesos fixos: **gêneros 40%, plataformas 20%, estilos 25%, experiência 15%**; fator = sobreposição (interseção ÷ nº de itens do usuário); fator sem dados do usuário é ignorado e os pesos são **renormalizados** proporcionalmente; resultado 0–100 arredondado para inteiro | confirmada | Entrevista (solicitante), fecha PRD Q1 | Simples, explicável, testável; pesos fixos cabem no prazo acadêmico | Pesos iguais; pesos configuráveis em `appsettings` | Ajuste de pesos exige nova versão (mitigação: constantes centrais em `Domain`) |
-| DT-08 | Origem de estilos/experiência | Estilos do perfil = **tags** do snapshot (`tags.json`); "preferências de experiência" do perfil e opções do Modo Descoberta = subconjunto de opções fixas mapeadas para gêneros/tags | confirmada | Entrevista (solicitante), fecha PRD Q3 | FreeToGame não expõe estilos/experiência; tags são a fonte prevista no seed | Catálogo curado próprio; texto livre | Mapeamento opção→gêneros/tags vive em configuração (ver DT-09) |
+| DT-07 | Fórmula de compatibilidade | Pesos fixos: **gêneros 40%, plataformas 20%, estilos 25%**; no Modo Descoberta, a experiência escolhida entra como fator adicional de **15%**. Fator = sobreposição (interseção ÷ nº de itens do usuário); fator sem dados do usuário é ignorado e os pesos são **renormalizados** proporcionalmente; resultado 0–100 arredondado para inteiro | confirmada (revisada em `preferencias-catalogo`) | Entrevista (solicitante), fecha PRD Q1 | Simples, explicável, testável; perfil passa a ter três fatores e a experiência só existe no Modo Descoberta | Pesos iguais; pesos configuráveis em `appsettings` | Ajuste de pesos exige nova versão (mitigação: constantes centrais em `Domain`) |
+| DT-08 | Origem de estilos/experiência | Estilos do perfil = **tags** do snapshot (`tags.json`), escolhidas entre as opções do catálogo; o perfil não possui mais "preferências de experiência". As opções do Modo Descoberta continuam sendo um subconjunto de opções fixas mapeadas para gêneros/tags | confirmada (revisada em `preferencias-catalogo`) | Entrevista (solicitante), fecha PRD Q3 | FreeToGame não expõe estilos; tags são a fonte prevista no seed | Catálogo curado próprio; texto livre | Mapeamento opção→gêneros/tags vive em configuração (ver DT-09) |
 | DT-09 | Opções do Modo Descoberta | Lista fixa proposta: **Relaxar, Competir, Explorar, Cooperar, História/imersão** — cada uma com mapeamento para gêneros/tags em `appsettings` (`Descoberta:Opcoes`) | confirmada (proposta técnica, ajustável por produto) | Entrevista (solicitante); conteúdo do mapeamento é proposta deste TDD | Fecha PRD Q3 com 5 opções objetivas; configurável sem recompilar | Derivar das tags mais frequentes; deixar A definir | Produto pode revisar rótulos/mapeamentos sem mudança de código |
 | DT-10 | Produção de recomendações | Cálculo **sob demanda em memória**, sem persistência da entidade Recomendação | confirmada | Entrevista (solicitante) | Perfil é fonte única; catálogo local é pequeno; elimina invalidação | Persistir e recalcular | Recomputo a cada chamada — aceitável (ver DT-14) |
 | DT-11 | Sincronização do snapshot | **Comando CLI manual** (`dotnet run --project api/src/GameMatch.Seed -- sync`), upsert no banco a partir de `seed/*.json`; a API apenas lê | confirmada | Entrevista (solicitante), fecha PRD Q8 | Simples, offline, reproduzível; alinhado ao propósito acadêmico | Endpoint administrativo; auto-load na inicialização | Atualização do catálogo é operação manual documentada em `docs/ambiente.md` |
@@ -67,6 +67,7 @@ deste documento, revogável na revisão.
 | DT-15 | Modelagem do catálogo | Entidade `Jogo` com características normalizadas `(JogoId, Tipo, Valor)` para gêneros, plataformas e tags, espelhando o modelo do perfil (DT-06) | proposta | Este TDD | Simetria com o perfil simplifica cálculo e filtros | Colunas separadas `int[]`/JSONB | Duas tabelas de atributos no schema |
 | DT-16 | Testes | Suítes **locais**: xUnit (unit + integração com Postgres do compose) e runner do Angular; **sem CI** no âmbito deste TDD | confirmada | Entrevista (solicitante) | Sem `.github/` hoje; Docker já é pré-requisito | GitHub Actions agora; SQLite nas integrações | CI fica como pendência (P-06) |
 | DT-17 | Motor de recomendação em `Domain` | Calculadora pura em `GameMatch.Domain` (sem EF/HTTP), recebendo preferências e características como entradas | existente (previsto) + proposta | `docs/arquitetura.md` prevê a calculadora no `Domain` | Testável em unit test puro; regra pura conforme a tabela de camadas | Cálculo no `Infrastructure`/handler | `Application` orquestra: carrega dados → chama `Domain` → projeta DTO |
+| DT-18 | Vocabulário das preferências | A interface monta gêneros, plataformas e estilos a partir de `GET /catalogo/filtros`; o `ServicoPerfil` valida cada valor contra as características do catálogo (`genero`, `plataforma`, `tag`) e responde **422** em ProblemDetails quando algum não existe, gravando nada. Valores legados fora do catálogo continuam retornados por `GET /perfil` e podem ser omitidos no `PUT`, mas não podem ser reenviados como novos | proposta | Revisão com o solicitante em `preferencias-catalogo` (RB-16, CA-21/22) | Impede vocabulário divergente entre perfil e catálogo, pré-requisito da recomendação da F3 | Confiar apenas nos selects da UI; aceitar texto livre | Toda preferência nova depende do catálogo sincronizado; repositório de perfil passa a consultar o catálogo na validação |
 
 ## 3. Arquitetura e estrutura
 
@@ -178,9 +179,10 @@ erDiagram
     }
 ```
 
-*(Os enums `TipoPreferencia`/`TipoCaracteristica` assumem os mesmos valores:
-`Genero = 1`, `Plataforma = 2`, `Estilo = 3`, `Experiencia = 4` — o perfil
-usa os quatro; o jogo usa os três primeiros.)*
+*(Os enums `TipoPreferencia`/`TipoCaracteristica` compartilham os valores
+`Genero = 1`, `Plataforma = 2`, `Estilo = 3`. `TipoPreferencia` mantém
+`Experiencia = 4` apenas para leitura de dados legados: o perfil novo usa três
+tipos (DT-08/DT-18) e o jogo usa os três primeiros.)*
 
 ### 4.2 Invariantes
 
@@ -237,8 +239,8 @@ Todos exigem `Authorization: Bearer <token>` (DT-03) exceto onde indicado.
 
 | Método | Rota | Req (PRD) | Entrada | Saída | Erros |
 |---|---|---|---|---|---|
-| `GET` | `/perfil` | RF-05 | — | `PerfilDto` (generos, plataformas, estilos, experiências) | 401 |
-| `PUT` | `/perfil` | RF-05 | `PerfilSalvarDto` (obrigatório: `generos[]`, `plataformas[]`; opcionais: `estilos[]`, `experiencias[]`) | `PerfilDto` | 401, 422 (validação) |
+| `GET` | `/perfil` | RF-05 | — | `PerfilDto` (generos, plataformas, estilos) | 401 |
+| `PUT` | `/perfil` | RF-05 | `PerfilSalvarDto` (obrigatório: `generos[]`, `plataformas[]`; opcional: `estilos[]`; valores devem existir no catálogo — DT-18) | `PerfilDto` | 401, 422 (validação, incluindo valor fora do catálogo) |
 | `GET` | `/catalogo?pagina=1&tamanho=24&busca=&genero=&plataforma=&tag=` | RF-07/08 | query strings combináveis (RB-09) | `PaginaDto<JogoResumoDto>` (`items`, `pagina`, `tamanho`, `total`) | 401, 400 (parâmetros inválidos) |
 | `GET` | `/catalogo/filtros` | RF-08 | — | listas de gêneros, plataformas e tags existentes no catálogo | 401 |
 | `GET` | `/catalogo/{id}` | RF-07 | id interno | `JogoDetalheDto` (com características e `urlFonte`) | 401, 404 |
@@ -258,14 +260,12 @@ Todos exigem `Authorization: Bearer <token>` (DT-03) exceto onde indicado.
   "jogo": { "id": 12, "titulo": "...", "thumbnail": "...", "generos": [], "plataformas": [] },
   "pontuacao": 87,
   "fatores": [
-    { "chave": "generos", "rotulo": "Gêneros", "contribuicao": 16,
+    { "chave": "generos", "rotulo": "Gêneros", "contribuicao": 40,
       "correspondencias": ["RPG", "Ação"] },
     { "chave": "plataformas", "rotulo": "Plataformas", "contribuicao": 20,
       "correspondencias": ["PC"] },
-    { "chave": "estilos", "rotulo": "Estilos de gameplay", "contribuicao": 25,
-      "correspondencias": ["turn-based", "fantasy"] },
-    { "chave": "experiencia", "rotulo": "Experiência", "contribuicao": 26,
-      "correspondencias": ["exploração", "mundo aberto"] }
+    { "chave": "estilos", "rotulo": "Estilos de gameplay", "contribuicao": 27,
+      "correspondencias": ["turn-based", "fantasy"] }
   ]
 }
 ```
@@ -276,15 +276,17 @@ contribuições = `pontuacao` (±1 por arredondamento — documentado em teste).
 ### 5.2 Motor de compatibilidade (DT-07)
 
 ```
-pontuacao = round( 0.40·G + 0.20·P + 0.25·E + 0.15·X ) × 100
+pontuacao = round( 0.40·G + 0.20·P + 0.25·E + 0.15·X ) × 100   (Modo Descoberta)
+pontuacao = round( 0.40·G + 0.20·P + 0.25·E ) × 100            (recomendações padrão)
 G = |generos_perfil ∩ generos_jogo|   ÷ |generos_perfil|
 P = |plataformas_perfil ∩ plataformas_jogo| ÷ |plataformas_perfil|
 E = |estilos_perfil ∩ tags_jogo|     ÷ |estilos_perfil|      (0 se vazio → ignora e renormaliza)
-X = no modo padrão: |experiencias_perfil ∩ mapeamento_jogo| ÷ |experiencias_perfil|
-    no Modo Descoberta: |alvo_opcao ∩ mapeamento_jogo| ÷ |alvo_opcao|   (DT-08/DT-09)
+X = |alvo_opcao ∩ mapeamento_jogo| ÷ |alvo_opcao|   (somente no Modo Descoberta — DT-09)
     onde mapeamento_jogo = generos_jogo ∪ tags_jogo
 ```
 
+- O perfil não possui fator de experiência (DT-08/DT-18); `X` existe apenas
+  quando a consulta informa `experiencia`.
 - Pesos renormalizados proporcionalmente entre os fatores **definidos**
   (G e P sempre definidos — INV-02).
 - Sem correspondências em nenhum fator → `pontuacao = 0` (o jogo não entra
@@ -352,7 +354,7 @@ indisponível sem quebrar navegação (RNF-05, comportamento já previsto).
 
 | Rota | Guard | Feature |
 |---|---|---|
-| `/perfil` | autenticado | `features/perfil` |
+| `/perfil` | autenticado | `features/perfil` (formulário com opções de gênero, plataforma e tag vindas de `/catalogo/filtros`, DT-18) |
 | `/catalogo` | autenticado | `features/catalogo` (pesquisa + filtros + estado vazio CA-10) |
 | `/recomendacoes` | autenticado | `features/recomendacoes` (inclui Modo Descoberta, CA-14/15) |
 | `/favoritos` | autenticado | `features/favoritos` |
@@ -384,13 +386,16 @@ indisponível sem quebrar navegação (RNF-05, comportamento já previsto).
 | Integração (`GameMatch.IntegrationTests`) | xUnit + Postgres do compose | endpoints novos, invariantes INV-01..07, sync do snapshot (fixture com JSON de exemplo) |
 | Frontend | runner do Angular CLI | serviços, guards, componentes de perfil/catálogo/recomendações (estados vazio/erro/perfil-incompleto) |
 | Contrato | asserts sobre DTOs/ProblemDetails nos testes de integração | §5.1 |
-| Ponta a ponta | manual guiado pelas jornadas J-1..J-8 do PRD na revisão do MVP | Critérios CA-01..CA-20 |
+| Ponta a ponta | manual guiado pelas jornadas J-1..J-8 do PRD na revisão do MVP | Critérios CA-01..CA-22 |
 
 ### 7.2 Cenários específicos
 
-- **Cálculo:** pesos renormalizados quando estilos/experiências vazios;
-  fórmula manual conferida em teste (ex.: G=1, P=1, E=0.5, X=0.5 → 87);
-  exclusão de favoritados/avaliados (DT-12).
+- **Cálculo:** pesos renormalizados quando estilos vazios; fórmula manual
+  conferida em teste (ex.: G=1, P=1, E=0.5 → 85; com Modo Descoberta e X=0.5
+  → 80); exclusão de favoritados/avaliados (DT-12).
+- **Vocabulário do perfil:** opções da UI vêm de `/catalogo/filtros`; valor
+  fora do catálogo → 422 sem gravar (DT-18); perfil legado com valor órfão é
+  exibido, pode ser removido e não pode ser recriado.
 - **Concorrência:** dois `PUT /avaliacoes` simultâneos → PK composta
   garante um registro; favoritar duplicado duas vezes → 200 idempotente.
   Teste de integração com chamadas paralelas.
@@ -406,7 +411,7 @@ indisponível sem quebrar navegação (RNF-05, comportamento já previsto).
 
 | Critério | Requisitos | Verificação |
 |---|---|---|
-| TC-01 | RF-05/06, CA-06/07 | Integração: PUT inválido → 422; válido → 200; GET reflete dados |
+| TC-01 | RF-05/06, CA-06/07/21/22 | Integração: PUT inválido → 422 (inclusive valor fora do catálogo); válido → 200; GET reflete dados e preserva legado; unit: opções da UI derivadas de `/catalogo/filtros` |
 | TC-02 | RF-07..09, CA-08..10 | Integração: filtros combinados, paginação, 404/estado vazio; UI com fixture |
 | TC-03 | RF-10/12, CA-11 | Unit: fórmula e ordenação; Integração: 0≤pont≤100, top-12 ordenado |
 | TC-04 | RF-11, CA-12 | Integração: soma das contribuições ≈ pontuação; fatores presentes |
@@ -424,7 +429,8 @@ Sem cronograma/datas (não confirmados); ordem por dependência. Marco **MVP**
 |---|---|---|---|---|
 | **F1 — Perfil gamer** (P0) | RF-05, RF-06 (DT-06) | Fundação + contas existentes | Migrations das preferências; endpoints `GET/PUT /perfil`; UI `/perfil`; unit + integração | TC-01 verde; CA-06/07 manual |
 | **F2 — Catálogo** (P0) | RF-07..09 (DT-11, DT-15) | Snapshot em `seed/` (D-1) | Projeto `GameMatch.Seed` (`coletar`/`sync`) e snapshot versionado (416 jogos, 30 tags); entidade `Jogo`; endpoints `/catalogo*`; UI `/catalogo` com pesquisa, filtros e estado vazio | TC-02 verde; `sync` popula banco de forma idempotente |
-| **F3 — Recomendações + Modo Descoberta** (P1) | RF-10..15 (DT-07..10, DT-12..14) | F1 e F2 | `CalculadoraCompatibilidade` no `Domain`; endpoints `/recomendacoes*`; UI `/recomendacoes` com explicação, CTA de perfil incompleto e seletor de experiência | TC-03..TC-06 verdes; CA-11..CA-15 manual |
+| **F2.5 — Preferências do catálogo** (P0) | RF-05, RF-06, RB-16 (DT-18) | F1 e F2 | Validação do `PUT /perfil` contra as características do catálogo; formulário `/perfil` com opções de gênero, plataforma e tag de `/catalogo/filtros`; tratamento de valores legados | TC-01 verde; CA-06/07/21/22 manual |
+| **F3 — Recomendações + Modo Descoberta** (P1) | RF-10..15 (DT-07..10, DT-12..14) | F1, F2 e F2.5 | `CalculadoraCompatibilidade` no `Domain`; endpoints `/recomendacoes*`; UI `/recomendacoes` com explicação, CTA de perfil incompleto e seletor de experiência | TC-03..TC-06 verdes; CA-11..CA-15 manual |
 | **F4 — Favoritos e avaliações** (P1) | RF-16..18 (DT-12) | F2 | Endpoints `/favoritos`, `/avaliacoes`; UI; ligação com exclusão nas recomendações | TC-07 verde; CA-16/17 manual |
 | **F5 — Verificação do MVP** | RNF-03/05/07/08, CA-18..20 | F1..F4 | Revisão de acessibilidade básica, verificação do rodapé, suítes completas, atualização de `docs/ambiente.md` | TC-08 verde; checklist do PRD §5.1 aprovado → **marco MVP** |
 
@@ -449,7 +455,7 @@ Sem cronograma/datas (não confirmados); ordem por dependência. Marco **MVP**
 | R-5 | Perfil mínimo frustra novos usuários | Risco | CTA claro em `/perfil` a partir do aviso 409 | Design | Revisão do fluxo em F3 |
 | P-01 | Fundação técnica (API, banco, contas) | Premissa | — | — | — |
 | P-02 | Projeto acadêmico, sem produção | Premissa | — | — | — |
-| P-03 | Pesos 40/20/25/15 e lista de 5 opções | Decisão (DT-07/09) | Revisáveis na revisão do TDD | Solicitante | Aprovação deste documento |
+| P-03 | Pesos 40/20/25 (+15 no Modo Descoberta) e lista de 5 opções | Decisão (DT-07/09) | Revisáveis na revisão do TDD | Solicitante | Aprovação deste documento |
 | P-04 | Sem CI (DT-16) | Premissa | Suítes locais como gate | Engenharia | — |
 | P-05 | Sem cache de recomendações | Limitação | Aceito (catálogo pequeno) | — | Reavaliar se o catálogo crescer |
 | P-06 | Sem rate limiting, sem pipeline CI/CD | Pendência pós-MVP | Registrar em change posterior | Engenharia | Após MVP |
@@ -462,7 +468,7 @@ Sem cronograma/datas (não confirmados); ordem por dependência. Marco **MVP**
 | PRD | Decisões | Fases | Verificação |
 |---|---|---|---|
 | RF-01..04 (contas) | DT-03, DT-05 | já entregue | CA-01..05, CA-18 |
-| RF-05/06 | DT-06 | F1 | TC-01 |
+| RF-05/06, RB-16 | DT-06, DT-18 | F1 + F2.5 | TC-01 |
 | RF-07..09 | DT-11, DT-15 | F2 | TC-02 |
 | RF-10..13 | DT-07, DT-08, DT-10, DT-12, DT-14, DT-17 | F3 | TC-03..05 |
 | RF-14/15 | DT-09, DT-13 | F3 | TC-06 |
