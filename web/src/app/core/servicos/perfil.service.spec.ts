@@ -29,7 +29,6 @@ describe('PerfilService', () => {
       generos: [],
       plataformas: [],
       estilos: [],
-      experiencias: [],
       completo: false,
       atualizadoEm: null,
     });
@@ -40,7 +39,6 @@ describe('PerfilService', () => {
       generos: ['RPG'],
       plataformas: ['PC (Windows)'],
       estilos: ['turn-based'],
-      experiencias: [],
     };
 
     servico.salvar(perfil).subscribe();

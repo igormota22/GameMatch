@@ -37,8 +37,7 @@ export class Inicio implements OnInit {
       perfil !== null &&
       perfil.generos.length === 0 &&
       perfil.plataformas.length === 0 &&
-      perfil.estilos.length === 0 &&
-      perfil.experiencias.length === 0
+      perfil.estilos.length === 0
     );
   });
 
