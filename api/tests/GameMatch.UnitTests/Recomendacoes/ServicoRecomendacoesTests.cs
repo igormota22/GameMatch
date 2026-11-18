@@ -146,8 +146,9 @@ public sealed class ServicoRecomendacoesTests
         Assert.True(resultado.Sucesso);
 
         // Ordem: 100 (id 1), depois 47 com empate resolvido pelo menor id.
-        Assert.Equal([1, 2, 3], resultado.Itens!.Select(item => item.Jogo.Id));
-        Assert.Equal([100, 47, 47], resultado.Itens.Select(item => item.Pontuacao));
+        var itens = resultado.Itens!;
+        Assert.Equal([1, 2, 3], itens.Select(item => item.Jogo.Id));
+        Assert.Equal([100, 47, 47], itens.Select(item => item.Pontuacao));
     }
 
     [Fact]

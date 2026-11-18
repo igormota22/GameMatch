@@ -33,11 +33,11 @@
 
 ## 3. API — endpoints e integração (TC-03..TC-06)
 
-- [ ] 3.1 Criar `Api/Controllers/RecomendacaoController.cs` com
+- [x] 3.1 Criar `Api/Controllers/RecomendacaoController.cs` com
       `GET /recomendacoes?experiencia=` e `GET /recomendacoes/opcoes`
       (`[Authorize]`, `Problem` com `traceId` e códigos 401/404/409),
       verificando com `dotnet build api/GameMatch.sln`.
-- [ ] 3.2 Escrever `api/tests/GameMatch.IntegrationTests/RecomendacaoTests.cs`
+- [x] 3.2 Escrever `api/tests/GameMatch.IntegrationTests/RecomendacaoTests.cs`
       no padrão de `PerfilTests` (conta real + seed de catálogo) cobrindo 401,
       409 `perfil-incompleto`, 404 para opção inválida, topo-12 ordenado,
       0≤pont≤100 e presença dos fatores na resposta, verificando com
