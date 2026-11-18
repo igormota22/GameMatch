@@ -112,6 +112,9 @@ public sealed class RecomendacaoTests : IClassFixture<FabricaApiComBanco>
         foreach (var item in itens)
         {
             Assert.InRange(item.Pontuacao, 0, 100);
+            Assert.False(
+                string.IsNullOrWhiteSpace(item.Descricao),
+                "cada recomendação deve trazer a descrição do jogo");
 
             // Sem experiência informada, os três fatores na ordem do contrato.
             Assert.Equal(
@@ -306,6 +309,7 @@ public sealed class RecomendacaoTests : IClassFixture<FabricaApiComBanco>
 
     private sealed record RecomendacaoTeste(
         JogoTeste Jogo,
+        string Descricao,
         int Pontuacao,
         List<FatorTeste> Fatores);
 

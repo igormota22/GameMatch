@@ -123,6 +123,8 @@ public sealed class RecomendacaoRepositorioTests : IClassFixture<FabricaApiComBa
             catalogo,
             item => item.Titulo == $"Jogo de teste {id}");
 
+        Assert.Equal($"Descrição do jogo {id}.", jogo.Descricao);
+
         // Cada tipo de característica vai para o seu grupo, sem vazamento.
         Assert.Equal(["Strategy"], jogo.Generos);
         Assert.Equal(["PC (Windows)"], jogo.Plataformas);

@@ -24,6 +24,7 @@ public interface IRecomendacaoRepositorio
 public sealed record JogoRecomendacao(
     int Id,
     string Titulo,
+    string Descricao,
     string Thumbnail,
     string Desenvolvedor,
     IReadOnlyList<string> Generos,

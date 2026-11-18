@@ -245,6 +245,7 @@ public sealed class ServicoRecomendacoesTests
         new(
             id,
             $"Jogo {id}",
+            $"Descrição do jogo {id}.",
             $"https://cdn.example/{id}.jpg",
             "Estúdio",
             generos,

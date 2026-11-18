@@ -33,6 +33,7 @@ public sealed class RecomendacaoRepositorio(GameMatchDbContext contexto)
             {
                 jogo.Id,
                 jogo.Titulo,
+                jogo.Descricao,
                 jogo.Thumbnail,
                 jogo.Desenvolvedor,
                 Generos = jogo.Caracteristicas
@@ -58,6 +59,7 @@ public sealed class RecomendacaoRepositorio(GameMatchDbContext contexto)
             .Select(jogo => new JogoRecomendacao(
                 jogo.Id,
                 jogo.Titulo,
+                jogo.Descricao,
                 jogo.Thumbnail,
                 jogo.Desenvolvedor,
                 jogo.Generos,

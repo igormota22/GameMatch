@@ -79,6 +79,7 @@ public sealed class ServicoRecomendacoes(
                         jogo.Generos,
                         jogo.Plataformas,
                         jogo.Desenvolvedor),
+                    jogo.Descricao,
                     resultado.Pontuacao,
                     resultado.Fatores
                         .Select(fator => new FatorRecomendacaoDto(
