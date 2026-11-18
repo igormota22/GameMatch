@@ -60,12 +60,12 @@
 
 ## 5. Verificação e documentação
 
-- [ ] 5.1 Rodar `dotnet test api/GameMatch.sln` e `cd web; npm test -- --watch=false`
+- [x] 5.1 Rodar `dotnet test api/GameMatch.sln` e `cd web; npm test -- --watch=false`
       no estado final da branch e confirmar as suítes verdes (TC-03..TC-06).
-- [ ] 5.2 Revisar manualmente `/recomendacoes` com API + web locais: perfil
+- [x] 5.2 Revisar manualmente `/recomendacoes` com API + web locais: perfil
       completo lista e explica, perfil incompleto exibe CTA, Modo Descoberta
       muda a lista com fator de experiência; registrar o resultado no PR.
-- [ ] 5.3 Atualizar `README.md` (F3 concluída) e o roadmap `docs/tdd.md` §8,
+- [x] 5.3 Atualizar `README.md` (F3 concluída) e o roadmap `docs/tdd.md` §8,
       registrando em `docs/tdd.md` a medição de Q-02 se ela for feita; verificar
       com `git diff --stat`.
 

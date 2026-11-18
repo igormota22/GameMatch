@@ -139,6 +139,7 @@ Rotas do frontend:
 | `/conta` | Autenticado | Dados da conta, alteração de senha e saída |
 | `/perfil` | Autenticado | Preferências do perfil gamer em modo de leitura e edição |
 | `/catalogo` | Autenticado | Catálogo com pesquisa, filtros de gênero, plataforma e tag e paginação |
+| `/recomendacoes` | Autenticado | Recomendações personalizadas com pontuação, fatores explicados e Modo Descoberta |
 
 Endpoints da API:
 
@@ -153,6 +154,8 @@ Endpoints da API:
 | `GET` | `/catalogo` | Catálogo paginado com busca e filtros |
 | `GET` | `/catalogo/filtros` | Gêneros, plataformas e tags disponíveis no catálogo |
 | `GET` | `/catalogo/{id}` | Detalhe do jogo com características e URL da fonte |
+| `GET` | `/recomendacoes?experiencia=` | Top 12 recomendações explicadas (409 se o perfil está incompleto, 404 se `experiencia` é desconhecida) |
+| `GET` | `/recomendacoes/opcoes` | Opções de experiência do Modo Descoberta (chave e rótulo) |
 
 O catálogo é populado a partir do snapshot versionado em `seed/` pelos comandos
 `dotnet run --project api/src/GameMatch.Seed -- coletar` (gera o snapshot a
@@ -163,7 +166,7 @@ partir da FreeToGame) e `dotnet run --project api/src/GameMatch.Seed -- sync`
 
 O token fica em `localStorage`, é enviado pelo interceptor como
 `Authorization: Bearer <token>` e o guard redireciona visitantes de `/conta`,
-`/perfil` e `/catalogo` para `/entrar` preservando o destino. A sessão persiste
+`/perfil`, `/catalogo` e `/recomendacoes` para `/entrar` preservando o destino. A sessão persiste
 após recarregar a página. Após o login sem destino informado, o usuário volta
 para a home, que exibe o resumo do perfil.
 
@@ -189,6 +192,10 @@ características como:
 Cada recomendação traz uma pontuação de compatibilidade, acompanhada da
 explicação dos fatores que contribuíram para o resultado. A fórmula, os pesos e
 os contratos estão em [docs/tdd.md](docs/tdd.md).
+
+O sistema está disponível em `/recomendacoes` (F3): a lista usa o topo de 12
+jogos do catálogo e o seletor do Modo Descoberta adiciona o fator de
+experiência à pontuação.
 
 ## Escopo inicial (MVP)
 
