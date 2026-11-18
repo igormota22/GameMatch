@@ -8,6 +8,5 @@ public sealed record PerfilDto(
     IReadOnlyList<string> Generos,
     IReadOnlyList<string> Plataformas,
     IReadOnlyList<string> Estilos,
-    IReadOnlyList<string> Experiencias,
     bool Completo,
     DateTimeOffset? AtualizadoEm);

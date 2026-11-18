@@ -15,7 +15,7 @@ public sealed class PerfilGamer
 
     /// <summary>
     /// O perfil só está completo com ao menos um gênero e uma plataforma;
-    /// estilos e experiências são opcionais.
+    /// estilos são opcionais.
     /// </summary>
     public bool EstaCompleto =>
         Preferencias.Any(preferencia => preferencia.Tipo == TipoPreferencia.Genero) &&

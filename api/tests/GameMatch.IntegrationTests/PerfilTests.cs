@@ -1,6 +1,11 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using GameMatch.Domain.Entidades;
+using GameMatch.Infrastructure.Persistencia;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GameMatch.IntegrationTests;
 
@@ -40,7 +45,6 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         Assert.Empty(perfil!.Generos);
         Assert.Empty(perfil.Plataformas);
         Assert.Empty(perfil.Estilos);
-        Assert.Empty(perfil.Experiencias);
         Assert.False(perfil.Completo);
         Assert.Null(perfil.AtualizadoEm);
     }
@@ -55,8 +59,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         {
             generos = new[] { "RPG" },
             plataformas = new[] { "PC (Windows)" },
-            estilos = new[] { "turn-based" },
-            experiencias = new[] { "exploração" }
+            estilos = new[] { "turn-based" }
         };
 
         using var salvamento = await cliente.PutAsJsonAsync("/perfil", entrada);
@@ -78,7 +81,6 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         Assert.Equal(["RPG"], consultado!.Generos);
         Assert.Equal(["PC (Windows)"], consultado.Plataformas);
         Assert.Equal(["turn-based"], consultado.Estilos);
-        Assert.Equal(["exploração"], consultado.Experiencias);
         Assert.True(consultado.Completo);
     }
 
@@ -96,8 +98,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = Array.Empty<string>(),
                 plataformas = new[] { "PC (Windows)" },
-                estilos = Array.Empty<string>(),
-                experiencias = Array.Empty<string>()
+                estilos = Array.Empty<string>()
             });
 
         Assert.Equal(HttpStatusCode.UnprocessableEntity, resposta.StatusCode);
@@ -122,8 +123,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { "RPG" },
                 plataformas = Array.Empty<string>(),
-                estilos = Array.Empty<string>(),
-                experiencias = Array.Empty<string>()
+                estilos = Array.Empty<string>()
             });
 
         Assert.Equal(HttpStatusCode.UnprocessableEntity, resposta.StatusCode);
@@ -144,8 +144,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { "Estratégia" },
                 plataformas = new[] { "Web Browser" },
-                estilos = Array.Empty<string>(),
-                experiencias = Array.Empty<string>()
+                estilos = Array.Empty<string>()
             });
 
         Assert.Equal(HttpStatusCode.OK, resposta.StatusCode);
@@ -171,8 +170,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { "  RPG ", "rpg", "Ação" },
                 plataformas = new[] { "PC (Windows)", " pc (windows) " },
-                estilos = new[] { "turn-based", "TURN-BASED" },
-                experiencias = new[] { "  exploração  " }
+                estilos = new[] { "turn-based", "TURN-BASED" }
             });
 
         Assert.Equal(HttpStatusCode.OK, resposta.StatusCode);
@@ -182,7 +180,6 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         Assert.Equal(["Ação", "RPG"], perfil!.Generos);
         Assert.Equal(["PC (Windows)"], perfil.Plataformas);
         Assert.Equal(["turn-based"], perfil.Estilos);
-        Assert.Equal(["exploração"], perfil.Experiencias);
     }
 
     [Fact]
@@ -197,8 +194,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { new string('a', 101) },
                 plataformas = new[] { "PC (Windows)" },
-                estilos = Array.Empty<string>(),
-                experiencias = Array.Empty<string>()
+                estilos = Array.Empty<string>()
             });
 
         Assert.Equal(HttpStatusCode.UnprocessableEntity, resposta.StatusCode);
@@ -217,8 +213,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { "RPG" },
                 plataformas = new[] { "PC (Windows)" },
-                estilos = Array.Empty<string>(),
-                experiencias = Array.Empty<string>()
+                estilos = Array.Empty<string>()
             });
 
         Assert.Equal(HttpStatusCode.OK, resposta.StatusCode);
@@ -226,7 +221,6 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         var perfil = await resposta.Content.ReadFromJsonAsync<PerfilResposta>();
         Assert.NotNull(perfil);
         Assert.Empty(perfil!.Estilos);
-        Assert.Empty(perfil.Experiencias);
         Assert.True(perfil.Completo);
     }
 
@@ -245,8 +239,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { "RPG" },
                 plataformas = new[] { "PC (Windows)" },
-                estilos = Array.Empty<string>(),
-                experiencias = Array.Empty<string>()
+                estilos = Array.Empty<string>()
             });
 
         await clienteB.PutAsJsonAsync(
@@ -255,8 +248,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { "Corrida" },
                 plataformas = new[] { "Web Browser" },
-                estilos = Array.Empty<string>(),
-                experiencias = Array.Empty<string>()
+                estilos = Array.Empty<string>()
             });
 
         var perfilA = await clienteA.GetFromJsonAsync<PerfilResposta>("/perfil");
@@ -268,10 +260,104 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         Assert.Equal(["Corrida"], perfilB!.Generos);
     }
 
-    private static async Task<string> CriarContaAsync(HttpClient cliente)
+    [Fact]
+    public async Task Salvar_valor_fora_do_catalogo_retorna_422_sem_gravar()
     {
+        using var cliente = _fabrica.CreateClient();
+        await AutenticarAsync(cliente, await CriarContaAsync(cliente));
+
+        var generoInedito = $"Genero Inedito {Guid.NewGuid():N}";
+        var tagInedita = $"tag-inedita-{Guid.NewGuid():N}";
+
+        using var resposta = await cliente.PutAsJsonAsync(
+            "/perfil",
+            new
+            {
+                generos = new[] { generoInedito },
+                plataformas = new[] { "PC (Windows)" },
+                estilos = new[] { tagInedita }
+            });
+
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, resposta.StatusCode);
+        Assert.Equal(
+            "application/problem+json",
+            resposta.Content.Headers.ContentType?.MediaType);
+
+        var corpo = await resposta.Content.ReadAsStringAsync();
+        Assert.Contains("generos", corpo);
+        Assert.Contains("estilos", corpo);
+
+        var perfil = await cliente.GetFromJsonAsync<PerfilResposta>("/perfil");
+        Assert.NotNull(perfil);
+        Assert.Empty(perfil!.Generos);
+        Assert.Empty(perfil.Estilos);
+        Assert.False(perfil.Completo);
+    }
+
+    [Fact]
+    public async Task Perfil_preserva_e_permite_remover_valor_legado_fora_do_catalogo()
+    {
+        using var cliente = _fabrica.CreateClient();
+        var email = $"perfil.{Guid.NewGuid():N}@teste.com";
+        await AutenticarAsync(cliente, await CriarContaComEmailAsync(cliente, email));
+        await InserirPerfilLegadoAsync(email, "Órfão");
+
+        using var manutencao = await cliente.PutAsJsonAsync(
+            "/perfil",
+            new
+            {
+                generos = new[] { "Órfão" },
+                plataformas = new[] { "PC (Windows)" },
+                estilos = Array.Empty<string>()
+            });
+
+        Assert.Equal(HttpStatusCode.OK, manutencao.StatusCode);
+
+        var comLegado = await cliente.GetFromJsonAsync<PerfilResposta>("/perfil");
+        Assert.NotNull(comLegado);
+        Assert.Equal(["Órfão"], comLegado!.Generos);
+
+        using var remocao = await cliente.PutAsJsonAsync(
+            "/perfil",
+            new
+            {
+                generos = new[] { "RPG" },
+                plataformas = new[] { "PC (Windows)" },
+                estilos = Array.Empty<string>()
+            });
+
+        Assert.Equal(HttpStatusCode.OK, remocao.StatusCode);
+
+        var semLegado = await cliente.GetFromJsonAsync<PerfilResposta>("/perfil");
+        Assert.NotNull(semLegado);
+        Assert.Equal(["RPG"], semLegado!.Generos);
+
+        using var recriacao = await cliente.PutAsJsonAsync(
+            "/perfil",
+            new
+            {
+                generos = new[] { "Órfão" },
+                plataformas = new[] { "PC (Windows)" },
+                estilos = Array.Empty<string>()
+            });
+
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, recriacao.StatusCode);
+        Assert.Contains("generos", await recriacao.Content.ReadAsStringAsync());
+    }
+
+    private async Task<string> CriarContaAsync(HttpClient cliente)
+    {
+        await SemearCatalogoAsync();
+
         var email = $"perfil.{Guid.NewGuid():N}@teste.com";
 
+        return await CriarContaComEmailAsync(cliente, email);
+    }
+
+    private static async Task<string> CriarContaComEmailAsync(
+        HttpClient cliente,
+        string email)
+    {
         using var resposta = await cliente.PostAsJsonAsync(
             "/contas",
             new { email, senha = SenhaValida });
@@ -283,6 +369,90 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         Assert.False(string.IsNullOrWhiteSpace(autenticacao!.Token));
 
         return autenticacao.Token;
+    }
+
+    private async Task SemearCatalogoAsync()
+    {
+        var opcoes = new DbContextOptionsBuilder<GameMatchDbContext>()
+            .UseNpgsql(_fabrica.StringConexao)
+            .Options;
+
+        await using var contexto = new GameMatchDbContext(opcoes);
+
+        if (await contexto.Jogos.AnyAsync(jogo => jogo.IdExterno == "perfil-catalogo-teste"))
+        {
+            return;
+        }
+
+        var jogo = new Jogo
+        {
+            IdExterno = "perfil-catalogo-teste",
+            Titulo = "Catálogo de teste do perfil",
+            Descricao = "Jogo usado apenas para fornecer características de teste.",
+            Thumbnail = "https://cdn.example/perfil-catalogo-teste.jpg",
+            Desenvolvedor = "Estúdio de teste",
+            UrlFonte = "https://www.freetogame.com/perfil-catalogo-teste",
+            SincronizadoEm = DateTimeOffset.UtcNow
+        };
+
+        AdicionarCaracteristicas(jogo, TipoCaracteristica.Genero, "RPG", "Ação", "Estratégia", "Corrida");
+        AdicionarCaracteristicas(jogo, TipoCaracteristica.Plataforma, "PC (Windows)", "Web Browser");
+        AdicionarCaracteristicas(jogo, TipoCaracteristica.Estilo, "turn-based");
+
+        contexto.Jogos.Add(jogo);
+        await contexto.SaveChangesAsync();
+    }
+
+    private static void AdicionarCaracteristicas(
+        Jogo jogo,
+        TipoCaracteristica tipo,
+        params string[] valores)
+    {
+        foreach (var valor in valores)
+        {
+            jogo.Caracteristicas.Add(new JogoCaracteristica
+            {
+                Tipo = tipo,
+                Valor = valor
+            });
+        }
+    }
+
+    private async Task InserirPerfilLegadoAsync(string email, string genero)
+    {
+        using var escopo = _fabrica.Services.CreateScope();
+        var usuarios = escopo.ServiceProvider.GetRequiredService<UserManager<Usuario>>();
+        var usuario = await usuarios.FindByEmailAsync(email);
+
+        Assert.NotNull(usuario);
+
+        var opcoes = new DbContextOptionsBuilder<GameMatchDbContext>()
+            .UseNpgsql(_fabrica.StringConexao)
+            .Options;
+
+        await using var contexto = new GameMatchDbContext(opcoes);
+        contexto.PerfisGamer.Add(new PerfilGamer
+        {
+            UsuarioId = usuario!.Id,
+            AtualizadoEm = DateTimeOffset.UtcNow,
+            Preferencias =
+            [
+                new PreferenciaPerfil
+                {
+                    UsuarioId = usuario.Id,
+                    Tipo = TipoPreferencia.Genero,
+                    Valor = genero
+                },
+                new PreferenciaPerfil
+                {
+                    UsuarioId = usuario.Id,
+                    Tipo = TipoPreferencia.Plataforma,
+                    Valor = "PC (Windows)"
+                }
+            ]
+        });
+
+        await contexto.SaveChangesAsync();
     }
 
     private static Task AutenticarAsync(HttpClient cliente, string token)
@@ -301,8 +471,7 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
             {
                 generos = new[] { "RPG" },
                 plataformas = new[] { "PC (Windows)" },
-                estilos = new[] { "turn-based" },
-                experiencias = new[] { "exploração" }
+                estilos = new[] { "turn-based" }
             });
 
         Assert.Equal(HttpStatusCode.OK, resposta.StatusCode);
@@ -312,7 +481,6 @@ public sealed class PerfilTests : IClassFixture<FabricaApiComBanco>
         List<string> Generos,
         List<string> Plataformas,
         List<string> Estilos,
-        List<string> Experiencias,
         bool Completo,
         DateTimeOffset? AtualizadoEm);
 
