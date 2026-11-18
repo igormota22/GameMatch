@@ -6,14 +6,13 @@ export interface Perfil {
   generos: string[];
   plataformas: string[];
   estilos: string[];
-  experiencias: string[];
   completo: boolean;
   atualizadoEm: string | null;
 }
 
 export type PerfilSalvar = Pick<
   Perfil,
-  'generos' | 'plataformas' | 'estilos' | 'experiencias'
+  'generos' | 'plataformas' | 'estilos'
 >;
 
 /**

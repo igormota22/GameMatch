@@ -17,7 +17,6 @@ interface PerfilResposta {
   generos: string[];
   plataformas: string[];
   estilos: string[];
-  experiencias: string[];
   completo: boolean;
   atualizadoEm: string | null;
 }
@@ -107,7 +106,6 @@ describe('Inicio', () => {
       generos: ['RPG', 'Ação'],
       plataformas: ['PC (Windows)'],
       estilos: ['turn-based'],
-      experiencias: ['exploração'],
       completo: true,
       atualizadoEm: '2026-11-13T12:00:00Z',
     });
@@ -119,7 +117,6 @@ describe('Inicio', () => {
     expect(texto).toContain('RPG, Ação');
     expect(texto).toContain('PC (Windows)');
     expect(texto).toContain('turn-based');
-    expect(texto).toContain('exploração');
     expect(texto).toContain('Perfil completo');
     expect(link(fixture, 'Ver perfil completo')?.getAttribute('href')).toBe('/perfil');
   });
@@ -134,7 +131,6 @@ describe('Inicio', () => {
       generos: ['RPG'],
       plataformas: [],
       estilos: [],
-      experiencias: [],
       completo: false,
       atualizadoEm: null,
     });
@@ -157,7 +153,6 @@ describe('Inicio', () => {
       generos: [],
       plataformas: [],
       estilos: [],
-      experiencias: [],
       completo: false,
       atualizadoEm: null,
     });
