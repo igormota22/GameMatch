@@ -184,7 +184,7 @@ características como:
 - Gêneros favoritos.
 - Plataformas de interesse.
 - Estilos de gameplay.
-- Preferências de experiência.
+- No Modo Descoberta, a experiência escolhida no momento da consulta.
 
 Cada recomendação traz uma pontuação de compatibilidade, acompanhada da
 explicação dos fatores que contribuíram para o resultado. A fórmula, os pesos e
