@@ -16,4 +16,13 @@ describe('rotas da aplicação', () => {
 
     expect(rota?.canActivate).toContain(autenticadoGuard);
   });
+
+  it('expõe /recomendacoes como rota autenticada com carregamento lazy', () => {
+    const rota = routes.find((candidata) => candidata.path === 'recomendacoes');
+
+    expect(rota).toBeDefined();
+    expect(rota?.canActivate).toContain(autenticadoGuard);
+    expect(rota?.title).toBe('GameMatch — Recomendações');
+    expect(typeof rota?.loadComponent).toBe('function');
+  });
 });

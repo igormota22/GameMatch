@@ -45,12 +45,12 @@
 
 ## 4. Web — rota, listagem e Modo Descoberta (CA-11..CA-15)
 
-- [ ] 4.1 Criar `core/servicos/recomendacoes.service.ts` e
+- [x] 4.1 Criar `core/servicos/recomendacoes.service.ts` e
       `features/recomendacoes/` com rota lazy em `app.routes.ts` protegida por
       `autenticadoGuard` e item "Recomendações" no `layout/cabecalho/cabecalho.html`,
       verificando com `cd web; npm test -- --watch=false` (rota e cabeçalho
       cobertos pelos specs existentes).
-- [ ] 4.2 Implementar a tela com cards de pontuação e fatores explicados,
+- [x] 4.2 Implementar a tela com cards de pontuação e fatores explicados,
       estados de carregando/erro, CTA para `/perfil` diante de
       `perfil-incompleto` e seletor de experiência alimentado por
       `/recomendacoes/opcoes`, coberto em
