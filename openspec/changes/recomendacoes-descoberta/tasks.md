@@ -2,11 +2,11 @@
 
 ## 1. Motor de compatibilidade (Domain) — TC-03/TC-04
 
-- [ ] 1.1 Criar `api/src/GameMatch.Domain/Recomendacoes/` com os tipos de
+- [x] 1.1 Criar `api/src/GameMatch.Domain/Recomendacoes/` com os tipos de
       preferências/características de entrada e `CalculadoraCompatibilidade`
       puro (pesos 40/20/25 + 15 no Modo Descoberta, renormalização e
       arredondamento), verificando com `dotnet build api/GameMatch.sln`.
-- [ ] 1.2 Escrever `api/tests/GameMatch.UnitTests/Recomendacoes/CalculadoraCompatibilidadeTests.cs`
+- [x] 1.2 Escrever `api/tests/GameMatch.UnitTests/Recomendacoes/CalculadoraCompatibilidadeTests.cs`
       cobrindo pontuação 0–100, fatores ausentes renormalizados, jogo sem
       correspondência com nota 0, fator de experiência só quando informado e
       soma das contribuições ≈ pontuação (±1), verificando com
