@@ -2,6 +2,7 @@ using GameMatch.Api.Autenticacao;
 using GameMatch.Api.Diagnostico;
 using GameMatch.Application.Catalogo;
 using GameMatch.Application.Perfil;
+using GameMatch.Application.Recomendacoes;
 using GameMatch.Infrastructure;
 using GameMatch.Infrastructure.Persistencia.Repositorios;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +49,21 @@ builder.Services.AddScoped<IPerfilRepositorio, PerfilRepositorio>();
 builder.Services.AddScoped<ServicoPerfil>();
 builder.Services.AddScoped<ICatalogoRepositorio, CatalogoRepositorio>();
 builder.Services.AddScoped<ServicoCatalogo>();
+builder.Services.AddScoped<IRecomendacaoRepositorio, RecomendacaoRepositorio>();
+builder.Services.AddSingleton(
+    new OpcoesRecomendacoes
+    {
+        Top = builder.Configuration.GetValue<int?>("Recomendacoes:Top")
+            ?? OpcoesRecomendacoes.TopPadrao
+    });
+builder.Services.AddSingleton(
+    new OpcoesDescoberta
+    {
+        Opcoes = builder.Configuration
+            .GetSection("Descoberta:Opcoes")
+            .Get<List<OpcaoDescoberta>>() ?? []
+    });
+builder.Services.AddScoped<ServicoRecomendacoes>();
 builder.Services.AdicionarAutenticacaoJwt(builder.Configuration);
 builder.Services.AddSingleton<GeradorTokenJwt>();
 builder.Services.AddHealthChecks()

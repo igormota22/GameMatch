@@ -14,17 +14,17 @@
 
 ## 2. Caso de uso, repositório e configuração
 
-- [ ] 2.1 Criar `Application/Recomendacoes/` com `IRecomendacaoRepositorio`
+- [x] 2.1 Criar `Application/Recomendacoes/` com `IRecomendacaoRepositorio`
       (preferências + catálogo com características em lote), as classes de
       opção `OpcoesRecomendacoes` (`Recomendacoes:Top`, padrão 12) e
       `OpcoesDescoberta` (`Descoberta:Opcoes`) lidas de `IConfiguration`,
       verificando com `dotnet build api/GameMatch.sln`.
-- [ ] 2.2 Implementar `Infrastructure/Persistencia/Repositorios/RecomendacaoRepositorio.cs`
+- [x] 2.2 Implementar `Infrastructure/Persistencia/Repositorios/RecomendacaoRepositorio.cs`
       com `AsNoTracking` e leituras em lote, registrando os serviços em
       `Api/Program.cs` e as seções de configuração em `appsettings.json`
       (cinco opções de DT-09), verificando com
       `dotnet test api/GameMatch.sln --filter RecomendacaoRepositorio`.
-- [ ] 2.3 Escrever `ServicoRecomendacoes` (validação de perfil incompleto →
+- [x] 2.3 Escrever `ServicoRecomendacoes` (validação de perfil incompleto →
       `perfil-incompleto`, chave de `experiencia` desconhecida → 404,
       ordenação determinística e limite do topo) com
       `api/tests/GameMatch.UnitTests/Recomendacoes/ServicoRecomendacoesTests.cs`
