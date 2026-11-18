@@ -54,13 +54,13 @@ menor pontuação e limitar a resposta ao topo de itens definido em configuraç�
 O sistema DEVE (MUST) retornar, em cada recomendação, os fatores que
 contribuíram para a pontuação com rótulo, contribuição numérica e lista de
 itens correspondidos, de modo que a soma das contribuições corresponda à
-pontuação (com tolerância de ±1 por arredondamento). Rastreia RF-11, RB-11 e
-CA-12.
+pontuação (com tolerância de ±1 por arredondamento), além da breve descrição
+do jogo para contextualizar a sugestão. Rastreia RF-11, RB-11 e CA-12.
 
 #### Scenario: Recomendação exibida
 
 - **WHEN** uma recomendação é retornada ao cliente
-- **THEN** ela apresenta a pontuação e cada fator com sua contribuição e as correspondências que a originaram
+- **THEN** ela apresenta a pontuação, a breve descrição do jogo e cada fator com sua contribuição e as correspondências que a originaram
 
 #### Scenario: Fator sem correspondências
 
@@ -140,6 +140,16 @@ CA-11, CA-12, CA-13, CA-14, CA-15.
 
 - **WHEN** um usuário autenticado com perfil completo acessa `/recomendacoes`
 - **THEN** a tela exibe as recomendações ordenadas com a pontuação e os fatores visíveis
+
+#### Scenario: Descrição do jogo na explicação
+
+- **WHEN** um card de recomendação é exibido
+- **THEN** a seção "Por que este jogo?" apresenta a breve descrição do jogo logo acima dos fatores
+
+#### Scenario: Atalho para recomendações na home
+
+- **WHEN** um usuário autenticado acessa a tela inicial
+- **THEN** a seção "Seu perfil" oferece um atalho "Ver recomendações" para `/recomendacoes`
 
 #### Scenario: Perfil incompleto
 
