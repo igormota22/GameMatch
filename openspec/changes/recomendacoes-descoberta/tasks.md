@@ -31,6 +31,12 @@
       usando fakes privados, verificando com
       `dotnet test api/GameMatch.sln --filter ServicoRecomendacoes`.
 
+- [x] 2.4 Incluir a descrição curta do jogo (`Jogo.Descricao`) em
+      `JogoRecomendacao` e `RecomendacaoDto`, na projeção do
+      `RecomendacaoRepositorio` e no mapeamento do `ServicoRecomendacoes`,
+      cobrindo nos testes de repositório e de integração, verificando com
+      `dotnet test api/GameMatch.sln --filter Recomendacao`.
+
 ## 3. API — endpoints e integração (TC-03..TC-06)
 
 - [x] 3.1 Criar `Api/Controllers/RecomendacaoController.cs` com
@@ -56,6 +62,11 @@
       `/recomendacoes/opcoes`, coberto em
       `features/recomendacoes/recomendacoes.spec.ts` (CA-11..CA-15, inclusão do
       fator de experiência e redirecionamento de visitante), verificando com
+      `cd web; npm test -- --watch=false`.
+- [x] 4.3 Adicionar o atalho "Ver recomendações" na seção de perfil da tela
+      inicial (`features/inicio/`) e exibir a descrição do jogo na seção
+      "Por que este jogo?" dos cards, coberto em `inicio.spec.ts` e
+      `recomendacoes.spec.ts`, verificando com
       `cd web; npm test -- --watch=false`.
 
 ## 5. Verificação e documentação

@@ -104,12 +104,18 @@
           </div>
         </dl>
 
-        <div>
+        <div class="flex flex-wrap gap-3">
           <a
             routerLink="/perfil"
             class="inline-block rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
           >
             {{ completo() ? 'Ver perfil completo' : 'Configurar perfil' }}
+          </a>
+          <a
+            routerLink="/recomendacoes"
+            class="inline-block rounded-md border border-emerald-500/60 px-4 py-2 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-500/10"
+          >
+            Ver recomendações
           </a>
         </div>
       }

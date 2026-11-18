@@ -12,6 +12,7 @@ export interface FatorRecomendacao {
 
 export interface Recomendacao {
   jogo: JogoResumo;
+  descricao: string;
   pontuacao: number;
   fatores: FatorRecomendacao[];
 }

@@ -55,6 +55,7 @@ function recomendacao(
       plataformas: ['PC (Windows)'],
       desenvolvedor: 'Estúdio Aurora',
     },
+    descricao: `Descrição breve de ${titulo} para contextualizar a sugestão.`,
     pontuacao,
     fatores,
   };
@@ -131,6 +132,7 @@ describe('Recomendacoes', () => {
 
     // Fatores explicados com contribuição e correspondências (CA-12).
     expect(texto).toContain('Por que este jogo?');
+    expect(texto).toContain('Descrição breve de Aurora Tactics');
     expect(texto).toContain('Gêneros');
     expect(texto).toContain('40 pontos');
     expect(texto).toContain('RPG');

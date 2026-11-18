@@ -114,6 +114,11 @@
               <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-400">
                 Por que este jogo?
               </h4>
+              @if (recomendacao.descricao) {
+                <p class="mt-1 line-clamp-3 text-xs text-slate-500">
+                  {{ recomendacao.descricao }}
+                </p>
+              }
               <ul class="mt-2 flex flex-col gap-2">
                 @for (fator of recomendacao.fatores; track fator.chave) {
                   <li class="rounded-lg border border-slate-800 bg-slate-950/60 p-2 text-xs">
