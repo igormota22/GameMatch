@@ -119,6 +119,7 @@ describe('Inicio', () => {
     expect(texto).toContain('turn-based');
     expect(texto).toContain('Perfil completo');
     expect(link(fixture, 'Ver perfil completo')?.getAttribute('href')).toBe('/perfil');
+    expect(link(fixture, 'Ver recomendações')?.getAttribute('href')).toBe('/recomendacoes');
   });
 
   it('orienta a configurar quando o perfil está incompleto', async () => {
@@ -141,6 +142,7 @@ describe('Inicio', () => {
     expect(texto).toContain('Informe ao menos um gênero e uma plataforma');
     expect(texto).toContain('Não informado');
     expect(link(fixture, 'Configurar perfil')?.getAttribute('href')).toBe('/perfil');
+    expect(link(fixture, 'Ver recomendações')?.getAttribute('href')).toBe('/recomendacoes');
   });
 
   it('orienta a configurar quando o perfil está vazio', async () => {

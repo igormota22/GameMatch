@@ -430,7 +430,7 @@ Sem cronograma/datas (não confirmados); ordem por dependência. Marco **MVP**
 | **F1 — Perfil gamer** (P0) | RF-05, RF-06 (DT-06) | Fundação + contas existentes | Migrations das preferências; endpoints `GET/PUT /perfil`; UI `/perfil`; unit + integração | TC-01 verde; CA-06/07 manual |
 | **F2 — Catálogo** (P0) | RF-07..09 (DT-11, DT-15) | Snapshot em `seed/` (D-1) | Projeto `GameMatch.Seed` (`coletar`/`sync`) e snapshot versionado (416 jogos, 30 tags); entidade `Jogo`; endpoints `/catalogo*`; UI `/catalogo` com pesquisa, filtros e estado vazio | TC-02 verde; `sync` popula banco de forma idempotente |
 | **F2.5 — Preferências do catálogo** (P0) | RF-05, RF-06, RB-16 (DT-18) | F1 e F2 | Validação do `PUT /perfil` contra as características do catálogo; formulário `/perfil` com opções de gênero, plataforma e tag de `/catalogo/filtros`; tratamento de valores legados | TC-01 verde; CA-06/07/21/22 manual |
-| **F3 — Recomendações + Modo Descoberta** (P1) | RF-10..15 (DT-07..10, DT-12..14) | F1, F2 e F2.5 | `CalculadoraCompatibilidade` no `Domain`; endpoints `/recomendacoes*`; UI `/recomendacoes` com explicação, CTA de perfil incompleto e seletor de experiência | TC-03..TC-06 verdes; CA-11..CA-15 manual |
+| **F3 — Recomendações + Modo Descoberta** (P1) | RF-10..15 (DT-07..10, DT-12..14) | F1, F2 e F2.5 | `CalculadoraCompatibilidade` no `Domain`; endpoints `/recomendacoes*`; UI `/recomendacoes` com explicação, CTA de perfil incompleto e seletor de experiência | **concluída:** TC-03..TC-06 verdes (74 unit + 48 integração); CA-11..CA-15 verificados manualmente |
 | **F4 — Favoritos e avaliações** (P1) | RF-16..18 (DT-12) | F2 | Endpoints `/favoritos`, `/avaliacoes`; UI; ligação com exclusão nas recomendações | TC-07 verde; CA-16/17 manual |
 | **F5 — Verificação do MVP** | RNF-03/05/07/08, CA-18..20 | F1..F4 | Revisão de acessibilidade básica, verificação do rodapé, suítes completas, atualização de `docs/ambiente.md` | TC-08 verde; checklist do PRD §5.1 aprovado → **marco MVP** |
 
@@ -460,7 +460,7 @@ Sem cronograma/datas (não confirmados); ordem por dependência. Marco **MVP**
 | P-05 | Sem cache de recomendações | Limitação | Aceito (catálogo pequeno) | — | Reavaliar se o catálogo crescer |
 | P-06 | Sem rate limiting, sem pipeline CI/CD | Pendência pós-MVP | Registrar em change posterior | Engenharia | Após MVP |
 | Q-01 | Conteúdo/rotulagem final do Modo Descoberta (DT-09) | Pendência não bloqueante | `Descoberta:Opcoes` em configuração | Produto | Revisão de UI antes da entrega |
-| Q-02 | Tempos de resposta esperados (PRD Q5) | A definir | Medir em F3 no ambiente local | Engenharia | Meta registrada no PRD |
+| Q-02 | Tempos de resposta esperados (PRD Q5) | Medido em F3 no ambiente local (banco com 416 jogos): `/recomendacoes` quente 0,14–0,18 s (média ~0,17 s), primeira chamada 0,48 s; com `?experiencia=` 0,17–0,21 s | Concluído (medição em F3) | Engenharia | Orçamento abaixo de 1 s mantido; reavaliar se o catálogo crescer |
 | Q-03 | Metas de telemetria (PRD Q4) | A definir | Fora deste TDD | Produto | Change de observabilidade |
 
 ### Mapa de rastreabilidade (resumo)

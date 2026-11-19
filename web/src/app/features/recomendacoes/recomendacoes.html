@@ -1,0 +1,147 @@
+<section class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 lg:px-8">
+  <header class="max-w-2xl">
+    <p class="text-sm font-semibold uppercase tracking-wide text-emerald-400">Recomendações</p>
+    <h1 class="mt-2 text-2xl font-bold text-white sm:text-3xl">
+      Jogos feitos para o seu perfil
+    </h1>
+    <p class="mt-2 text-sm text-slate-400">
+      Cada sugestão explica por que combinou com as suas preferências.
+    </p>
+  </header>
+
+  <div class="flex max-w-md flex-col gap-1 text-sm text-slate-200">
+    <label for="experiencia" class="font-medium">Modo Descoberta</label>
+    <select
+      id="experiencia"
+      class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+      [value]="experiencia()"
+      (change)="selecionarExperiencia($event)"
+    >
+      <option value="">Recomendações personalizadas</option>
+      @for (opcao of opcoes(); track opcao.chave) {
+        <option [value]="opcao.chave">{{ opcao.rotulo }}</option>
+      }
+    </select>
+  </div>
+
+  @if (carregando()) {
+    <p
+      class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400"
+      role="status"
+    >
+      Carregando recomendações...
+    </p>
+  } @else if (perfilIncompleto()) {
+    <div
+      class="rounded-xl border border-amber-500/40 bg-amber-500/10 p-6 text-sm text-amber-200"
+      role="alert"
+    >
+      <p class="font-semibold">Perfil incompleto</p>
+      <p class="mt-1">
+        Informe gêneros e plataformas no perfil para receber recomendações.
+      </p>
+      <a
+        routerLink="/perfil"
+        class="mt-4 inline-block rounded-md bg-emerald-500 px-4 py-2 font-semibold text-slate-950 transition hover:bg-emerald-400"
+      >
+        Configurar perfil
+      </a>
+    </div>
+  } @else if (erro()) {
+    <div
+      class="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
+      role="alert"
+    >
+      <p>{{ erro() }}</p>
+      <button
+        type="button"
+        class="mt-3 rounded-md border border-rose-400/60 px-3 py-2 font-medium transition hover:bg-rose-500/10"
+        (click)="carregar()"
+      >
+        Tentar novamente
+      </button>
+    </div>
+  } @else if (semRecomendacoes()) {
+    <p
+      class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400"
+      role="status"
+    >
+      Nenhuma recomendação disponível para o seu perfil no momento.
+    </p>
+  } @else {
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Recomendações">
+      @for (recomendacao of recomendacoes(); track recomendacao.jogo.id) {
+        <li class="flex flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
+          <div class="relative">
+            <img
+              [src]="recomendacao.jogo.thumbnail"
+              [alt]="'Capa de ' + recomendacao.jogo.titulo"
+              loading="lazy"
+              class="aspect-video w-full object-cover"
+            />
+            <p
+              class="absolute right-2 top-2 rounded-full bg-slate-950/90 px-2.5 py-1 text-xs font-bold text-emerald-300"
+              [attr.aria-label]="'Pontuação de ' + recomendacao.jogo.titulo"
+            >
+              {{ recomendacao.pontuacao }}%
+            </p>
+          </div>
+
+          <div class="flex flex-1 flex-col gap-3 p-4">
+            <div>
+              <h3 class="text-base font-semibold text-white">
+                {{ recomendacao.jogo.titulo }}
+              </h3>
+              <p class="mt-1 text-xs text-slate-400">
+                {{ recomendacao.jogo.desenvolvedor }}
+              </p>
+            </div>
+
+            <ul
+              class="flex flex-wrap gap-1"
+              [attr.aria-label]="'Gêneros de ' + recomendacao.jogo.titulo"
+            >
+              @for (genero of recomendacao.jogo.generos; track genero) {
+                <li
+                  class="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-300"
+                >
+                  {{ genero }}
+                </li>
+              }
+            </ul>
+
+            <div>
+              <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                Por que este jogo?
+              </h4>
+              @if (recomendacao.descricao) {
+                <p class="mt-1 line-clamp-3 text-xs text-slate-500">
+                  {{ recomendacao.descricao }}
+                </p>
+              }
+              <ul class="mt-2 flex flex-col gap-2">
+                @for (fator of recomendacao.fatores; track fator.chave) {
+                  <li class="rounded-lg border border-slate-800 bg-slate-950/60 p-2 text-xs">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-medium text-slate-200">{{ fator.rotulo }}</span>
+                      <span class="font-bold text-emerald-300">
+                        {{ fator.contribuicao }} pontos
+                      </span>
+                    </div>
+                    @if (fator.correspondencias.length > 0) {
+                      <p class="mt-1 text-slate-400">
+                        {{ fator.correspondencias.join(' · ') }}
+                      </p>
+                    } @else {
+                      <p class="mt-1 text-slate-500">Sem correspondência</p>
+                    }
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</section>

@@ -22,6 +22,7 @@ describe('Cabecalho', () => {
     expect(texto).toContain('Entrar');
     expect(texto).toContain('Criar conta');
     expect(texto).not.toContain('Catálogo');
+    expect(texto).not.toContain('Recomendações');
     expect(texto).not.toContain('Sair');
   });
 
@@ -38,6 +39,7 @@ describe('Cabecalho', () => {
     const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
     expect(texto).toContain('Catálogo');
+    expect(texto).toContain('Recomendações');
     expect(texto).toContain('Perfil');
     expect(texto).toContain('Minha conta');
     expect(texto).toContain('jogador@teste.com');

@@ -16,6 +16,18 @@ O snapshot foi coletado da fonte oficial e está versionado:
 As tags `third-person` e `zombies` não entram no mapa porque a fonte responde
 `500` para elas; a ocorrência fica registrada em `tagsIgnoradas`.
 
+### Tradução das descrições
+
+Desde 2026-11-18 as `short_description` de `jogos.json` estão traduzidas para
+**PT-BR** (change `recomendacoes-descoberta`), porque a `descricao` do banco —
+exibida na interface e nos cards de recomendação — vem deste arquivo. A
+tradução preserva ids, ordem e todos os demais campos, que seguem o formato
+original da fonte; `metadados.json` continua registrando a data da coleta.
+
+Atenção: uma nova `coletar` substitui o snapshot pelo conteúdo da fonte e
+descarta a tradução. Após qualquer coleta, as descrições devem ser traduzidas
+de novo antes do `sync`.
+
 ## Esquemas
 
 ### `jogos.json`
