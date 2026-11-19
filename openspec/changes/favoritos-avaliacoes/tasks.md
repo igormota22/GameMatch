@@ -16,16 +16,16 @@
 
 ## 2. API de favoritos
 
-- [ ] 2.1 Criar `Application/Favoritos/` (`IFavoritoRepositorio`,
+- [x] 2.1 Criar `Application/Favoritos/` (`IFavoritoRepositorio`,
       `ServicoFavoritos`, DTOs de página e de ids) com as regras de
       idempotência (201/200) e remoção (204/404) — verificação: unit tests do
       serviço cobrem criação, repetição, remoção e favorito inexistente.
-- [ ] 2.2 Criar `FavoritoController` com `GET /favoritos`,
+- [x] 2.2 Criar `FavoritoController` com `GET /favoritos`,
       `POST /favoritos/{jogoId}`, `DELETE /favoritos/{jogoId}` e
       `GET /favoritos/ids` (D1), `[Authorize]` e `UsuarioId` do token —
       verificação: testes de integração respondem 201/200/204/401/404 conforme
       §5.1 e o contrato de ids `{ "ids": [] }`.
-- [ ] 2.3 Escrever os testes de integração de INV-05/INV-07 (POST paralelo
+- [x] 2.3 Escrever os testes de integração de INV-05/INV-07 (POST paralelo
       sem duplicata; usuário A não acessa favoritos de B) e de listagem vazia/
       paginada — verificação: `dotnet test` do `GameMatch.IntegrationTests`
       verde com os novos cenários.

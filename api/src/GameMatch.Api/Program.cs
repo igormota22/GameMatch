@@ -1,6 +1,7 @@
 using GameMatch.Api.Autenticacao;
 using GameMatch.Api.Diagnostico;
 using GameMatch.Application.Catalogo;
+using GameMatch.Application.Favoritos;
 using GameMatch.Application.Perfil;
 using GameMatch.Application.Recomendacoes;
 using GameMatch.Infrastructure;
@@ -49,6 +50,8 @@ builder.Services.AddScoped<IPerfilRepositorio, PerfilRepositorio>();
 builder.Services.AddScoped<ServicoPerfil>();
 builder.Services.AddScoped<ICatalogoRepositorio, CatalogoRepositorio>();
 builder.Services.AddScoped<ServicoCatalogo>();
+builder.Services.AddScoped<IFavoritoRepositorio, FavoritoRepositorio>();
+builder.Services.AddScoped<ServicoFavoritos>();
 builder.Services.AddScoped<IRecomendacaoRepositorio, RecomendacaoRepositorio>();
 builder.Services.AddSingleton(
     new OpcoesRecomendacoes
