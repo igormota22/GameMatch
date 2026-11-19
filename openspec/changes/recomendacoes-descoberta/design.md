@@ -94,6 +94,15 @@ com fakes privados no próprio arquivo; integração reutilizando
 autenticação por `POST /contas`. Web: spec do componente com
 `provideHttpClientTesting` e `expectOne`.
 
+**D10 — Tradução das descrições no snapshot, não no banco.**
+A `descricao` exibida nos cards vem de `seed/jogos.json` (`short_description`),
+que é a fonte de verdade: o `sync` reescreve `jogo.descricao` a cada
+sincronização, então traduzir direto no banco seria revertido. As 416
+descrições são traduzidas para PT-BR no próprio snapshot (preservando ids,
+ordem e demais campos, que seguem o formato original da FreeToGame) e o banco
+é re-sincronizado. Alternativa descartada: traduzir na camada de apresentação
+— duplicaria regra de negócio na web e não resolveria `/catalogo`.
+
 ## Risks / Trade-offs
 
 - [Pesos produzem poucos jogos com pontuação relevante (R-1 do PRD)] →

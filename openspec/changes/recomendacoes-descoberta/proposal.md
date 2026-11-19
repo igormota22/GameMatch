@@ -26,6 +26,10 @@ roadmap do `docs/tdd.md` §8.
   perfil incompleto quando a API responder 409 (RF-13, RF-14, RF-15).
 - Entrada de navegação no cabeçalho autenticado e nova seção em
   `appsettings.json`.
+- **Descrições do catálogo em PT-BR:** as `short_description` de
+  `seed/jogos.json` (fonte de verdade do banco, 416 jogos) são traduzidas
+  para português, para que a descrição exibida nos cards venha em PT-BR;
+  re-sincronização do banco via `sync` (tarefa 6.1/6.2).
 - **Fora do escopo (registrado):** a exclusão de jogos já favoritados ou
   avaliados (DT-12, INV-06) será entregue junto com F4, porque favoritos e
   avaliações ainda não existem; nesta change nenhuma exclusão é aplicada.

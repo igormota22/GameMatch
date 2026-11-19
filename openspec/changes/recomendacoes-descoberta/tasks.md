@@ -80,6 +80,19 @@
       registrando em `docs/tdd.md` a medição de Q-02 se ela for feita; verificar
       com `git diff --stat`.
 
+## 6. Catálogo: descrições em PT-BR
+
+- [x] 6.1 Traduzir para PT-BR as `short_description` de `seed/jogos.json`
+      (416 jogos), preservando ids, ordem e todos os demais campos, e
+      registrar a alteração em `seed/README.md`; verificar com script Node
+      de integridade (contagem, ids, campos não traduzidos idênticos e
+      nenhuma descrição remanescente em inglês).
+- [x] 6.2 Re-sincronizar o banco de desenvolvimento com
+      `dotnet run --project api/src/GameMatch.Seed -- sync` e confirmar que
+      `GET /catalogo` devolve as descrições em PT-BR; rodar
+      `dotnet test api/GameMatch.sln` e
+      `cd web; npm test -- --watch=false` no estado final.
+
 ## Workflow follow-up
 
 - Abrir PR da feature branch para a `main` com

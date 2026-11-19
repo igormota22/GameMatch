@@ -144,7 +144,7 @@ CA-11, CA-12, CA-13, CA-14, CA-15.
 #### Scenario: Descrição do jogo na explicação
 
 - **WHEN** um card de recomendação é exibido
-- **THEN** a seção "Por que este jogo?" apresenta a breve descrição do jogo logo acima dos fatores
+- **THEN** a seção "Por que este jogo?" apresenta a breve descrição do jogo, em português (PT-BR), logo acima dos fatores
 
 #### Scenario: Atalho para recomendações na home
 
