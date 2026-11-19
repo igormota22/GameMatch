@@ -2,15 +2,15 @@
 
 ## 1. Domínio e persistência (F4)
 
-- [ ] 1.1 Criar as entidades `Favorito` e `Avaliacao` no `GameMatch.Domain`
+- [x] 1.1 Criar as entidades `Favorito` e `Avaliacao` no `GameMatch.Domain`
       (PK composta `(UsuarioId, JogoId)`, `CriadoEm`/`AtualizadaEm`, nota 1–5)
       e unit tests de invariantes INV-04/INV-05 — verificação: `dotnet test`
       do `GameMatch.UnitTests` verde com os novos testes.
-- [ ] 1.2 Adicionar as configurações EF (`Configuracoes/`) com PK composta e
+- [x] 1.2 Adicionar as configurações EF (`Configuracoes/`) com PK composta e
       CHECK de nota 1–5, registrar no `GameMatchDbContext` e gerar a migration
       `FavoritosAvaliacoes` — verificação: `dotnet ef migrations add` gera a
       migration e `dotnet ef database update` aplica limpo no banco do compose.
-- [ ] 1.3 Criar índices `Favoritos (UsuarioId)` e `Avaliacoes (UsuarioId)`
+- [x] 1.3 Criar índices `Favoritos (UsuarioId)` e `Avaliacoes (UsuarioId)`
       (§4.3 do TDD) e unit tests das regras de favorito/avaliação citadas na
       §7.1 — verificação: migration contém os índices e `dotnet test` verde.
 

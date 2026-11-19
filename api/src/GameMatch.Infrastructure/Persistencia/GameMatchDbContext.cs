@@ -17,6 +17,10 @@ public sealed class GameMatchDbContext(DbContextOptions<GameMatchDbContext> opti
 
     public DbSet<JogoCaracteristica> JogosCaracteristicas => Set<JogoCaracteristica>();
 
+    public DbSet<Favorito> Favoritos => Set<Favorito>();
+
+    public DbSet<Avaliacao> Avaliacoes => Set<Avaliacao>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
