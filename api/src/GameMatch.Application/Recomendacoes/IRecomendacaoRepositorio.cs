@@ -15,6 +15,14 @@ public interface IRecomendacaoRepositorio
 
     Task<IReadOnlyList<JogoRecomendacao>> ObterCatalogoAsync(
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Ids dos jogos que o usuário já favoritou ou avaliou, em uma única
+    /// leitura em lote, para a exclusão das recomendações (DT-12/INV-06).
+    /// </summary>
+    Task<IReadOnlyList<int>> ObterJogosMarcadosAsync(
+        string usuarioId,
+        CancellationToken cancellationToken = default);
 }
 
 /// <summary>

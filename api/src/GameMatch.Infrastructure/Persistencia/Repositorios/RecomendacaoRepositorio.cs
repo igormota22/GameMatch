@@ -67,4 +67,24 @@ public sealed class RecomendacaoRepositorio(GameMatchDbContext contexto)
                 jogo.Tags))
             .ToArray();
     }
+
+    public async Task<IReadOnlyList<int>> ObterJogosMarcadosAsync(
+        string usuarioId,
+        CancellationToken cancellationToken = default)
+    {
+        var favoritos = contexto.Favoritos
+            .AsNoTracking()
+            .Where(favorito => favorito.UsuarioId == usuarioId)
+            .Select(favorito => favorito.JogoId);
+
+        var avaliacoes = contexto.Avaliacoes
+            .AsNoTracking()
+            .Where(avaliacao => avaliacao.UsuarioId == usuarioId)
+            .Select(avaliacao => avaliacao.JogoId);
+
+        // UNION no banco: uma leitura em lote dos pares marcados (D2).
+        return await favoritos
+            .Union(avaliacoes)
+            .ToArrayAsync(cancellationToken);
+    }
 }

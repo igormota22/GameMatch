@@ -46,12 +46,12 @@
 
 ## 4. Exclusão nas recomendações (DT-12, INV-06)
 
-- [ ] 4.1 Estender `IRecomendacaoRepositorio`/`RecomendacaoRepositorio` para
+- [x] 4.1 Estender `IRecomendacaoRepositorio`/`RecomendacaoRepositorio` para
       devolver os pares `(UsuarioId, JogoId)` favoritados/avaliados do usuário
       e filtrar no `ServicoRecomendacoes` antes do cálculo/top-12 (D2) —
       verificação: unit tests do serviço excluem marcados e mantêm o topo 12
       com catálogo parcialmente marcado.
-- [ ] 4.2 Escrever o teste de integração TC-07 de exclusão: favoritado e
+- [x] 4.2 Escrever o teste de integração TC-07 de exclusão: favoritado e
       avaliado não aparecem em `GET /recomendacoes`, remoção devolve o jogo —
       verificação: `dotnet test` verde cobrindo os cenários do delta de
       `recomendacoes`.
