@@ -32,15 +32,15 @@
 
 ## 3. API de avaliações
 
-- [ ] 3.1 Criar `Application/Avaliacoes/` (`IAvaliacaoRepositorio`,
+- [x] 3.1 Criar `Application/Avaliacoes/` (`IAvaliacaoRepositorio`,
       `ServicoAvaliacoes`, DTOs) com upsert (cria ou substitui), remoção e
       consulta — verificação: unit tests cobrem primeira avaliação,
       substituição, remoção e nota fora da faixa.
-- [ ] 3.2 Criar `AvaliacaoController` com `GET/PUT/DELETE /avaliacoes/{jogoId}`
+- [x] 3.2 Criar `AvaliacaoController` com `GET/PUT/DELETE /avaliacoes/{jogoId}`
       (422 para nota fora de 1–5, 404 para jogo/avaliação inexistente, 401 sem
       sessão) — verificação: testes de integração de 422/404/401/200/204
       conforme §5.1.
-- [ ] 3.3 Escrever o teste de concorrência da §7.2 (dois `PUT /avaliacoes`
+- [x] 3.3 Escrever o teste de concorrência da §7.2 (dois `PUT /avaliacoes`
       paralelos → um único registro) — verificação: teste de integração verde
       com chamadas paralelas.
 
