@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, finalize, map, of, shareReplay, tap, throwError } from 'rxjs';
+import { PaginaJogos } from './catalogo.service';
 
 interface FavoritosIds {
   ids: number[];
@@ -50,6 +51,12 @@ export class FavoritosService {
     return this.estado().has(jogoId);
   }
 
+  listar(pagina = 1, tamanho = 12): Observable<PaginaJogos> {
+    return this.http.get<PaginaJogos>('/api/favoritos', {
+      params: { pagina, tamanho },
+    });
+  }
+
   /**
    * Alterna o favorito de forma otimista. O observable conclui com o novo
    * estado; em falha, o estado anterior é restaurado antes do erro propagar.
@@ -68,6 +75,21 @@ export class FavoritosService {
       map(() => novoEstado),
       catchError((erro: unknown) => {
         this.aplicar(jogoId, estavaFavoritado);
+
+        return throwError(() => erro);
+      }),
+    );
+  }
+
+  /**
+   * Remove o favorito de forma otimista, restaurando o estado em caso de falha.
+   */
+  remover(jogoId: number): Observable<void> {
+    this.aplicar(jogoId, false);
+
+    return this.http.delete<void>(`/api/favoritos/${jogoId}`).pipe(
+      catchError((erro: unknown) => {
+        this.aplicar(jogoId, true);
 
         return throwError(() => erro);
       }),

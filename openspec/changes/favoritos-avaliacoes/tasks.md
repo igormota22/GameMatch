@@ -66,7 +66,7 @@
       `features/recomendacoes` refletindo o estado do serviço — verificação:
       specs de componente cobrem favoritar, remover e falha da API (estado
       revertido + mensagem).
-- [ ] 5.3 Criar `features/favoritos/` com rota `/favoritos` (guard
+- [x] 5.3 Criar `features/favoritos/` com rota `/favoritos` (guard
       autenticado): lista paginada, remoção, estrelas 1–5 para avaliar,
       alterar e remover avaliação, estados vazio e de erro — verificação:
       `npm test` verde (specs dos estados) e verificação manual de CA-16/17 no

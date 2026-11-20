@@ -96,6 +96,42 @@ describe('FavoritosService', () => {
     expect(servico.estaFavoritado(8)).toBe(false);
   });
 
+  it('lista os favoritos com a paginação informada', () => {
+    servico.listar(2, 6).subscribe();
+
+    const requisicao = http.expectOne(
+      (pedido) => pedido.url === '/api/favoritos',
+    );
+
+    expect(requisicao.request.method).toBe('GET');
+    expect(requisicao.request.params.get('pagina')).toBe('2');
+    expect(requisicao.request.params.get('tamanho')).toBe('6');
+
+    requisicao.flush({ items: [], pagina: 2, tamanho: 6, total: 0 });
+  });
+
+  it('remove com DELETE e restaura o estado quando a API falha', () => {
+    servico.carregar().subscribe();
+    http.expectOne('/api/favoritos/ids').flush({ ids: [4] });
+
+    let erroRecebido = false;
+
+    servico.remover(4).subscribe({
+      next: () => undefined,
+      error: () => (erroRecebido = true),
+    });
+
+    expect(servico.estaFavoritado(4)).toBe(false);
+
+    http.expectOne('/api/favoritos/4').flush('erro', {
+      status: 500,
+      statusText: 'Server Error',
+    });
+
+    expect(erroRecebido).toBe(true);
+    expect(servico.estaFavoritado(4)).toBe(true);
+  });
+
   it('limpa o estado e recarrega os ids na próxima sessão', () => {
     servico.carregar().subscribe();
     http.expectOne('/api/favoritos/ids').flush({ ids: [1] });
