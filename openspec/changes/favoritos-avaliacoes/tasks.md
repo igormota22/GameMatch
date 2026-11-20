@@ -58,7 +58,7 @@
 
 ## 5. Interface web
 
-- [ ] 5.1 Criar `core/servicos/favoritos.service.ts` (signal de ids via
+- [x] 5.1 Criar `core/servicos/favoritos.service.ts` (signal de ids via
       `GET /favoritos/ids`, favoritar/remover otimistas) e
       `avaliacoes.service.ts`, com unit tests dos estados de erro —
       verificação: `npm test` verde com os specs novos.
