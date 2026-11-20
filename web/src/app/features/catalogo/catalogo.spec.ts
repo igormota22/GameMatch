@@ -80,13 +80,17 @@ describe('Catalogo', () => {
     return encontrado;
   }
 
-  async function carregarInicial(pagina: PaginaResposta): Promise<void> {
+  async function carregarInicial(
+    pagina: PaginaResposta,
+    idsFavoritos: number[] = [],
+  ): Promise<void> {
     fixture.detectChanges();
 
     http.expectOne('/api/catalogo/filtros').flush(FILTROS);
     http
       .expectOne((requisicao) => requisicao.url === '/api/catalogo')
       .flush(pagina);
+    http.expectOne('/api/favoritos/ids').flush({ ids: idsFavoritos });
 
     await fixture.whenStable();
     fixture.detectChanges();
@@ -269,6 +273,102 @@ describe('Catalogo', () => {
     expect(botao('Anterior').disabled).toBe(true);
   });
 
+  it('favorita um jogo do card e reflete o estado no botão', async () => {
+    await carregarInicial({
+      items: [item(1, 'Aurora Tactics')],
+      pagina: 1,
+      tamanho: 24,
+      total: 1,
+    });
+
+    const favoritar = elemento().querySelector<HTMLButtonElement>(
+      '[aria-label="Favoritar Aurora Tactics"]',
+    );
+
+    expect(favoritar).not.toBeNull();
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('false');
+    expect(favoritar!.textContent).toContain('Favoritar');
+
+    favoritar!.click();
+    fixture.detectChanges();
+
+    const requisicao = http.expectOne('/api/favoritos/1');
+
+    expect(requisicao.request.method).toBe('POST');
+
+    requisicao.flush(null);
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('true');
+    expect(favoritar!.textContent).toContain('Favoritado');
+  });
+
+  it('remove um favorito do card com DELETE', async () => {
+    await carregarInicial(
+      {
+        items: [item(2, 'Blue Racer')],
+        pagina: 1,
+        tamanho: 24,
+        total: 1,
+      },
+      [2],
+    );
+
+    const favoritar = elemento().querySelector<HTMLButtonElement>(
+      '[aria-label="Favoritar Blue Racer"]',
+    );
+
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('true');
+
+    favoritar!.click();
+    fixture.detectChanges();
+
+    const requisicao = http.expectOne('/api/favoritos/2');
+
+    expect(requisicao.request.method).toBe('DELETE');
+
+    requisicao.flush(null);
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('false');
+    expect(favoritar!.textContent).toContain('Favoritar');
+  });
+
+  it('reverte o estado e exibe a mensagem quando favoritar falha', async () => {
+    await carregarInicial({
+      items: [item(1, 'Aurora Tactics')],
+      pagina: 1,
+      tamanho: 24,
+      total: 1,
+    });
+
+    const favoritar = elemento().querySelector<HTMLButtonElement>(
+      '[aria-label="Favoritar Aurora Tactics"]',
+    );
+
+    favoritar!.click();
+    fixture.detectChanges();
+
+    http.expectOne('/api/favoritos/1').flush(
+      {
+        title: 'Falha',
+        detail: 'Não foi possível favoritar o jogo.',
+        status: 500,
+      },
+      { status: 500, statusText: 'Server Error' },
+    );
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('false');
+    expect(elemento().textContent).toContain('Não foi possível favoritar o jogo.');
+  });
+
   it('distingue catálogo vazio de busca sem resultados', async () => {
     await carregarInicial({ items: [], pagina: 1, tamanho: 24, total: 0 });
 
@@ -328,6 +428,7 @@ describe('Catalogo', () => {
     fixture.detectChanges();
 
     http.expectOne('/api/catalogo/filtros').flush(FILTROS);
+    http.expectOne('/api/favoritos/ids').flush({ ids: [] });
 
     http
       .expectOne((requisicao) => requisicao.url === '/api/catalogo')

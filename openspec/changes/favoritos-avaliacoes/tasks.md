@@ -62,7 +62,7 @@
       `GET /favoritos/ids`, favoritar/remover otimistas) e
       `avaliacoes.service.ts`, com unit tests dos estados de erro —
       verificação: `npm test` verde com os specs novos.
-- [ ] 5.2 Adicionar o botão de favoritar nos cards de `features/catalogo` e
+- [x] 5.2 Adicionar o botão de favoritar nos cards de `features/catalogo` e
       `features/recomendacoes` refletindo o estado do serviço — verificação:
       specs de componente cobrem favoritar, remover e falha da API (estado
       revertido + mensagem).

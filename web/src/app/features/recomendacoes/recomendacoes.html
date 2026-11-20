@@ -24,6 +24,15 @@
     </select>
   </div>
 
+  @if (erroFavorito()) {
+    <div
+      class="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
+      role="alert"
+    >
+      {{ erroFavorito() }}
+    </div>
+  }
+
   @if (carregando()) {
     <p
       class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400"
@@ -139,6 +148,43 @@
                 }
               </ul>
             </div>
+
+            <button
+              type="button"
+              class="mt-auto inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition"
+              [class.border-emerald-500]="favoritos.estaFavoritado(recomendacao.jogo.id)"
+              [class.bg-emerald-500/10]="favoritos.estaFavoritado(recomendacao.jogo.id)"
+              [class.text-emerald-300]="favoritos.estaFavoritado(recomendacao.jogo.id)"
+              [class.border-slate-700]="!favoritos.estaFavoritado(recomendacao.jogo.id)"
+              [class.text-slate-300]="!favoritos.estaFavoritado(recomendacao.jogo.id)"
+              [class.hover:bg-slate-800]="!favoritos.estaFavoritado(recomendacao.jogo.id)"
+              [attr.aria-pressed]="favoritos.estaFavoritado(recomendacao.jogo.id)"
+              [attr.aria-label]="'Favoritar ' + recomendacao.jogo.titulo"
+              (click)="alternarFavorito(recomendacao.jogo.id)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                [attr.fill]="
+                  favoritos.estaFavoritado(recomendacao.jogo.id) ? 'currentColor' : 'none'
+                "
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+                aria-hidden="true"
+              >
+                <path
+                  d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                />
+              </svg>
+              {{
+                favoritos.estaFavoritado(recomendacao.jogo.id)
+                  ? 'Favoritado'
+                  : 'Favoritar'
+              }}
+            </button>
           </div>
         </li>
       }
