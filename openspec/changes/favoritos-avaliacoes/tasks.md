@@ -71,7 +71,7 @@
       alterar e remover avaliação, estados vazio e de erro — verificação:
       `npm test` verde (specs dos estados) e verificação manual de CA-16/17 no
       navegador.
-- [ ] 5.4 Registrar a rota em `app.routes.ts`, item no `cabecalho.html` e
+- [x] 5.4 Registrar a rota em `app.routes.ts`, item no `cabecalho.html` e
       entrada na home se aplicável — verificação: `npm test` (spec de rotas)
       verde e navegação manual até `/favoritos` a partir do cabeçalho.
 

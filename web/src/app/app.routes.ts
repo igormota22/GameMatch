@@ -45,6 +45,13 @@ export const routes: Routes = [
       import('./features/recomendacoes/recomendacoes').then((modulo) => modulo.Recomendacoes),
   },
   {
+    path: 'favoritos',
+    title: 'GameMatch — Favoritos',
+    canActivate: [autenticadoGuard],
+    loadComponent: () =>
+      import('./features/favoritos/favoritos').then((modulo) => modulo.Favoritos),
+  },
+  {
     path: '**',
     title: 'GameMatch — Página não encontrada',
     loadComponent: () =>
