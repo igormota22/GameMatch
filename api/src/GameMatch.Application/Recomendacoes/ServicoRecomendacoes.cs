@@ -50,6 +50,10 @@ public sealed class ServicoRecomendacoes(
         }
 
         var catalogo = await repositorio.ObterCatalogoAsync(cancellationToken);
+        var marcados = await repositorio.ObterJogosMarcadosAsync(
+            usuarioId,
+            cancellationToken);
+        var marcadosIds = marcados.ToHashSet();
 
         var preferencias = new PreferenciasCalculo(
             Valores(perfil, TipoPreferencia.Genero),
@@ -61,6 +65,7 @@ public sealed class ServicoRecomendacoes(
             : opcao.Generos.Concat(opcao.Tags).ToArray();
 
         var recomendacoes = catalogo
+            .Where(jogo => !marcadosIds.Contains(jogo.Id))
             .Select(jogo =>
             {
                 var resultado = CalculadoraCompatibilidade.Calcular(

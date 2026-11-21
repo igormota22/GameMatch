@@ -9,6 +9,7 @@ import {
   PaginaJogos,
 } from '../../core/servicos/catalogo.service';
 import { mensagemDeErro } from '../../core/servicos/mensagem-erro';
+import { FavoritosService } from '../../core/servicos/favoritos.service';
 
 const FILTROS_VAZIOS: FiltrosCatalogo = {
   generos: [],
@@ -26,12 +27,15 @@ export class Catalogo implements OnInit {
   private readonly catalogoService = inject(CatalogoService);
   private readonly lista = viewChild<ElementRef<HTMLElement>>('lista');
 
+  protected readonly favoritos = inject(FavoritosService);
+
   protected readonly urlFreetogame = URL_FREETOGAME;
   protected readonly pagina = signal<PaginaJogos | null>(null);
   protected readonly filtros = signal<FiltrosCatalogo>(FILTROS_VAZIOS);
   protected readonly numeroPagina = signal(1);
   protected readonly carregando = signal(true);
   protected readonly erro = signal<string | null>(null);
+  protected readonly erroFavorito = signal<string | null>(null);
   protected readonly filtrosAtivos = signal(false);
 
   protected readonly total = computed(() => this.pagina()?.total ?? 0);
@@ -82,6 +86,7 @@ export class Catalogo implements OnInit {
   ngOnInit(): void {
     this.carregar();
     this.carregarFiltros();
+    this.carregarFavoritos();
   }
 
   protected carregar(): void {
@@ -123,6 +128,18 @@ export class Catalogo implements OnInit {
     this.catalogoService.obterFiltros().subscribe({
       next: (filtros) => this.filtros.set(filtros),
       error: () => this.filtros.set(FILTROS_VAZIOS),
+    });
+  }
+
+  protected carregarFavoritos(): void {
+    this.favoritos.carregar().subscribe({ error: () => undefined });
+  }
+
+  protected alternarFavorito(jogoId: number): void {
+    this.erroFavorito.set(null);
+
+    this.favoritos.alternar(jogoId).subscribe({
+      error: (erro) => this.erroFavorito.set(mensagemDeErro(erro)),
     });
   }
 

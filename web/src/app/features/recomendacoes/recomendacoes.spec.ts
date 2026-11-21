@@ -102,7 +102,10 @@ describe('Recomendacoes', () => {
     http.expectOne('/api/recomendacoes/opcoes').flush(OPCOES);
   }
 
-  async function carregarInicial(itens: Recomendacao[]): Promise<void> {
+  async function carregarInicial(
+    itens: Recomendacao[],
+    idsFavoritos: number[] = [],
+  ): Promise<void> {
     fixture.detectChanges();
 
     expectOpcoes();
@@ -113,6 +116,8 @@ describe('Recomendacoes', () => {
           requisicao.url === '/api/recomendacoes' && !requisicao.params.has('experiencia'),
       )
       .flush({ itens });
+
+    http.expectOne('/api/favoritos/ids').flush({ ids: idsFavoritos });
 
     await fixture.whenStable();
     fixture.detectChanges();
@@ -152,6 +157,7 @@ describe('Recomendacoes', () => {
   it('exibe CTA para /perfil quando a API responde perfil-incompleto', async () => {
     fixture.detectChanges();
     expectOpcoes();
+    http.expectOne('/api/favoritos/ids').flush({ ids: [] });
 
     http
       .expectOne((requisicao) => requisicao.url === '/api/recomendacoes')
@@ -175,6 +181,7 @@ describe('Recomendacoes', () => {
   it('exibe erro em português e permite tentar novamente', async () => {
     fixture.detectChanges();
     expectOpcoes();
+    http.expectOne('/api/favoritos/ids').flush({ ids: [] });
 
     http
       .expectOne((requisicao) => requisicao.url === '/api/recomendacoes')
@@ -221,6 +228,74 @@ describe('Recomendacoes', () => {
     expect(texto).toContain('Experiência');
     expect(texto).toContain('15 pontos');
     expect(texto).toContain('93%');
+  });
+
+  it('favorita e remove jogos recomendados sem recarregar a lista', async () => {
+    await carregarInicial([recomendacao(1, 'Aurora Tactics', 87)], [1]);
+
+    const favoritar = elemento().querySelector<HTMLButtonElement>(
+      '[aria-label="Favoritar Aurora Tactics"]',
+    );
+
+    expect(favoritar).not.toBeNull();
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('true');
+
+    favoritar!.click();
+    fixture.detectChanges();
+
+    const remocao = http.expectOne('/api/favoritos/1');
+
+    expect(remocao.request.method).toBe('DELETE');
+
+    remocao.flush(null);
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('false');
+
+    favoritar!.click();
+    fixture.detectChanges();
+
+    const criacao = http.expectOne('/api/favoritos/1');
+
+    expect(criacao.request.method).toBe('POST');
+
+    criacao.flush(null);
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('true');
+    // A recomendação continua visível durante a sessão (delta de recomendações).
+    expect(elemento().textContent).toContain('Aurora Tactics');
+    expect(elemento().textContent).toContain('87%');
+  });
+
+  it('reverte o favorito recomendado e exibe a mensagem quando a API falha', async () => {
+    await carregarInicial([recomendacao(2, 'Blue Racer', 42)]);
+
+    const favoritar = elemento().querySelector<HTMLButtonElement>(
+      '[aria-label="Favoritar Blue Racer"]',
+    );
+
+    favoritar!.click();
+    fixture.detectChanges();
+
+    http.expectOne('/api/favoritos/2').flush(
+      {
+        title: 'Falha',
+        detail: 'Não foi possível favoritar o jogo.',
+        status: 500,
+      },
+      { status: 500, statusText: 'Server Error' },
+    );
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(favoritar!.getAttribute('aria-pressed')).toBe('false');
+    expect(elemento().textContent).toContain('Não foi possível favoritar o jogo.');
   });
 
   it('exibe estado vazio quando a API não devolve recomendações', async () => {

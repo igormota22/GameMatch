@@ -23,7 +23,7 @@ public sealed class ServicoCatalogo(ICatalogoRepositorio repositorio)
 
         return ResultadoListagemCatalogo.Ok(
             new PaginaDto<JogoResumoDto>(
-                resultado.Jogos.Select(MapearResumo).ToArray(),
+                resultado.Jogos.Select(MapeadorJogoResumo.Mapear).ToArray(),
                 consulta.Pagina,
                 consulta.Tamanho,
                 resultado.Total));
@@ -41,15 +41,6 @@ public sealed class ServicoCatalogo(ICatalogoRepositorio repositorio)
 
         return jogo is null ? null : MapearDetalhe(jogo);
     }
-
-    private static JogoResumoDto MapearResumo(Jogo jogo) =>
-        new(
-            jogo.Id,
-            jogo.Titulo,
-            jogo.Thumbnail,
-            Valores(jogo, TipoCaracteristica.Genero),
-            Valores(jogo, TipoCaracteristica.Plataforma),
-            jogo.Desenvolvedor);
 
     private static JogoDetalheDto MapearDetalhe(Jogo jogo) =>
         new(

@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { FavoritosService } from '../../core/servicos/favoritos.service';
 import { SessaoService } from '../../core/sessao/sessao.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { SessaoService } from '../../core/sessao/sessao.service';
 })
 export class Cabecalho {
   private readonly sessaoService = inject(SessaoService);
+  private readonly favoritosService = inject(FavoritosService);
   private readonly router = inject(Router);
 
   protected readonly autenticado = this.sessaoService.autenticado;
@@ -16,6 +18,7 @@ export class Cabecalho {
 
   protected sair(): void {
     this.sessaoService.encerrar();
+    this.favoritosService.limpar();
     this.router.navigateByUrl('/');
   }
 }

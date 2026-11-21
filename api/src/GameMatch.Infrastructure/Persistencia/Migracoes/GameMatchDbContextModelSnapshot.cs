@@ -22,6 +22,59 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("GameMatch.Domain.Entidades.Avaliacao", b =>
+                {
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("text")
+                        .HasColumnName("usuario_id");
+
+                    b.Property<int>("JogoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("jogo_id");
+
+                    b.Property<DateTimeOffset>("AtualizadaEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("atualizada_em");
+
+                    b.Property<int>("Nota")
+                        .HasColumnType("integer")
+                        .HasColumnName("nota");
+
+                    b.HasKey("UsuarioId", "JogoId");
+
+                    b.HasIndex("JogoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("avaliacoes", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_avaliacoes_nota", "nota BETWEEN 1 AND 5");
+                        });
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.Favorito", b =>
+                {
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("text")
+                        .HasColumnName("usuario_id");
+
+                    b.Property<int>("JogoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("jogo_id");
+
+                    b.Property<DateTimeOffset>("CriadoEm")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("criado_em");
+
+                    b.HasKey("UsuarioId", "JogoId");
+
+                    b.HasIndex("JogoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("favoritos", (string)null);
+                });
+
             modelBuilder.Entity("GameMatch.Domain.Entidades.Jogo", b =>
                 {
                     b.Property<int>("Id")
@@ -355,6 +408,36 @@ namespace GameMatch.Infrastructure.Persistencia.Migracoes
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.Avaliacao", b =>
+                {
+                    b.HasOne("GameMatch.Domain.Entidades.Jogo", null)
+                        .WithMany()
+                        .HasForeignKey("JogoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameMatch.Domain.Entidades.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameMatch.Domain.Entidades.Favorito", b =>
+                {
+                    b.HasOne("GameMatch.Domain.Entidades.Jogo", null)
+                        .WithMany()
+                        .HasForeignKey("JogoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameMatch.Domain.Entidades.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GameMatch.Domain.Entidades.JogoCaracteristica", b =>

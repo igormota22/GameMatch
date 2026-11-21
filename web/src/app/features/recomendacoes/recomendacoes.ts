@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { mensagemDeErro } from '../../core/servicos/mensagem-erro';
+import { FavoritosService } from '../../core/servicos/favoritos.service';
 import {
   OpcaoDescoberta,
   Recomendacao,
@@ -21,11 +22,14 @@ import {
 export class Recomendacoes implements OnInit {
   private readonly recomendacoesService = inject(RecomendacoesService);
 
+  protected readonly favoritos = inject(FavoritosService);
+
   protected readonly recomendacoes = signal<Recomendacao[]>([]);
   protected readonly opcoes = signal<OpcaoDescoberta[]>([]);
   protected readonly experiencia = signal('');
   protected readonly carregando = signal(true);
   protected readonly erro = signal<string | null>(null);
+  protected readonly erroFavorito = signal<string | null>(null);
   protected readonly perfilIncompleto = signal(false);
 
   protected readonly semRecomendacoes = computed(
@@ -39,6 +43,7 @@ export class Recomendacoes implements OnInit {
   ngOnInit(): void {
     this.carregarOpcoes();
     this.carregar();
+    this.carregarFavoritos();
   }
 
   protected carregar(): void {
@@ -58,6 +63,18 @@ export class Recomendacoes implements OnInit {
   protected selecionarExperiencia(event: Event): void {
     this.experiencia.set((event.target as HTMLSelectElement).value);
     this.carregar();
+  }
+
+  protected carregarFavoritos(): void {
+    this.favoritos.carregar().subscribe({ error: () => undefined });
+  }
+
+  protected alternarFavorito(jogoId: number): void {
+    this.erroFavorito.set(null);
+
+    this.favoritos.alternar(jogoId).subscribe({
+      error: (erro) => this.erroFavorito.set(mensagemDeErro(erro)),
+    });
   }
 
   private carregarOpcoes(): void {

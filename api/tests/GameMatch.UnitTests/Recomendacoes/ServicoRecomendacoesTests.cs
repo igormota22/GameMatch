@@ -167,6 +167,68 @@ public sealed class ServicoRecomendacoesTests
     }
 
     [Fact]
+    public async Task Executar_exclui_jogos_marcados_antes_de_ordenar_e_aplicar_o_topo()
+    {
+        var repositorio = new RepositorioFake
+        {
+            Perfil = PerfilCompleto(),
+            Marcados = [1]
+        };
+        repositorio.Catalogo.AddRange(
+            JogoPerfeito(1),
+            JogoSoGenero(2),
+            JogoSoGenero(3));
+
+        var servico = CriarServico(repositorio, top: 2);
+
+        var resultado = await servico.ExecutarAsync("usuario-1", experiencia: null);
+
+        Assert.True(resultado.Sucesso);
+
+        // O jogo marcado (melhor pontuação) sai antes do topo-2 (DT-12).
+        Assert.Equal([2, 3], resultado.Itens!.Select(item => item.Jogo.Id));
+        Assert.Equal(1, repositorio.ChamadasMarcados);
+    }
+
+    [Fact]
+    public async Task Executar_sem_marcacoes_calcula_o_topo_sobre_o_catalogo_completo()
+    {
+        var repositorio = new RepositorioFake { Perfil = PerfilCompleto(), Marcados = [] };
+        repositorio.Catalogo.AddRange(
+            JogoPerfeito(1),
+            JogoSoGenero(2),
+            JogoNenhum(3));
+
+        var servico = CriarServico(repositorio);
+
+        var resultado = await servico.ExecutarAsync("usuario-1", experiencia: null);
+
+        Assert.True(resultado.Sucesso);
+        Assert.Equal([1, 2, 3], resultado.Itens!.Select(item => item.Jogo.Id));
+    }
+
+    [Fact]
+    public async Task Executar_com_jogo_avaliado_exclui_o_id_do_resultado()
+    {
+        var repositorio = new RepositorioFake
+        {
+            Perfil = PerfilCompleto(),
+            Marcados = [2]
+        };
+        repositorio.Catalogo.AddRange(
+            JogoPerfeito(1),
+            JogoSoGenero(2),
+            JogoNenhum(3));
+
+        var servico = CriarServico(repositorio);
+
+        var resultado = await servico.ExecutarAsync("usuario-1", experiencia: null);
+
+        Assert.True(resultado.Sucesso);
+        Assert.Equal([1, 3], resultado.Itens!.Select(item => item.Jogo.Id));
+    }
+
+    [Fact]
     public async Task Listar_opcoes_devolve_chave_e_rotulo_na_ordem_configurada()
     {
         var servico = CriarServico(
@@ -258,7 +320,11 @@ public sealed class ServicoRecomendacoesTests
 
         public List<JogoRecomendacao> Catalogo { get; } = [];
 
+        public List<int> Marcados { get; set; } = [];
+
         public int ChamadasCatalogo { get; private set; }
+
+        public int ChamadasMarcados { get; private set; }
 
         public Task<PerfilGamer?> ObterPreferenciasAsync(
             string usuarioId,
@@ -271,6 +337,15 @@ public sealed class ServicoRecomendacoesTests
             ChamadasCatalogo++;
 
             return Task.FromResult<IReadOnlyList<JogoRecomendacao>>(Catalogo);
+        }
+
+        public Task<IReadOnlyList<int>> ObterJogosMarcadosAsync(
+            string usuarioId,
+            CancellationToken cancellationToken = default)
+        {
+            ChamadasMarcados++;
+
+            return Task.FromResult<IReadOnlyList<int>>(Marcados);
         }
     }
 }

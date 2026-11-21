@@ -195,7 +195,12 @@ os contratos estão em [docs/tdd.md](docs/tdd.md).
 
 O sistema está disponível em `/recomendacoes` (F3): a lista usa o topo de 12
 jogos do catálogo e o seletor do Modo Descoberta adiciona o fator de
-experiência à pontuação.
+experiência à pontuação. Jogos favoritados ou avaliados pelo usuário ficam
+fora das recomendações (DT-12/INV-06).
+
+A tela `/favoritos` (F4) reúne os jogos marcados, permite removê-los da lista e
+avaliar cada um de 1 a 5 estrelas, com alteração e remoção da avaliação. O
+botão de favoritar também aparece nos cards do catálogo e das recomendações.
 
 ## Escopo inicial (MVP)
 

@@ -187,6 +187,62 @@ public sealed class RecomendacaoTests : IClassFixture<FabricaApiComBanco>
             opcao => Assert.False(string.IsNullOrWhiteSpace(opcao.Rotulo)));
     }
 
+    [Fact]
+    public async Task Favoritos_e_avaliacoes_saem_das_recomendacoes_e_voltam_apos_remocao()
+    {
+        using var cliente = _fabrica.CreateClient();
+        await AutenticarAsync(cliente, await CriarContaAsync(cliente));
+        await SalvarPerfilValidoAsync(cliente);
+
+        var inicial = await cliente.GetFromJsonAsync<RespostaRecomendacoes>(
+            "/recomendacoes");
+
+        Assert.NotNull(inicial);
+        Assert.Equal(12, inicial!.Itens.Count);
+
+        var favoritado = inicial.Itens[0].Jogo.Id;
+        var avaliado = inicial.Itens[1].Jogo.Id;
+
+        using var favorito = await cliente.PostAsync(
+            $"/favoritos/{favoritado}",
+            null);
+
+        Assert.Equal(HttpStatusCode.Created, favorito.StatusCode);
+
+        using var avaliacao = await cliente.PutAsJsonAsync(
+            $"/avaliacoes/{avaliado}",
+            new { nota = 4 });
+
+        Assert.Equal(HttpStatusCode.OK, avaliacao.StatusCode);
+
+        var semMarcados = await cliente.GetFromJsonAsync<RespostaRecomendacoes>(
+            "/recomendacoes");
+
+        Assert.NotNull(semMarcados);
+        Assert.DoesNotContain(
+            semMarcados!.Itens,
+            item => item.Jogo.Id == favoritado);
+        Assert.DoesNotContain(
+            semMarcados.Itens,
+            item => item.Jogo.Id == avaliado);
+        Assert.Equal(12, semMarcados.Itens.Count);
+
+        using var remocaoFavorito = await cliente.DeleteAsync(
+            $"/favoritos/{favoritado}");
+        using var remocaoAvaliacao = await cliente.DeleteAsync(
+            $"/avaliacoes/{avaliado}");
+
+        Assert.Equal(HttpStatusCode.NoContent, remocaoFavorito.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, remocaoAvaliacao.StatusCode);
+
+        var restaurado = await cliente.GetFromJsonAsync<RespostaRecomendacoes>(
+            "/recomendacoes");
+
+        Assert.NotNull(restaurado);
+        Assert.Contains(restaurado!.Itens, item => item.Jogo.Id == favoritado);
+        Assert.Contains(restaurado.Itens, item => item.Jogo.Id == avaliado);
+    }
+
     private async Task<string> CriarContaAsync(HttpClient cliente)
     {
         await SemearCatalogoAsync();
