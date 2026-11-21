@@ -77,14 +77,14 @@
 
 ## 6. Verificação final e documentação
 
-- [ ] 6.1 Rodar as suítes completas (`dotnet test` e `npm test`) e validar o
+- [x] 6.1 Rodar as suítes completas (`dotnet test` e `npm test`) e validar o
       TC-07 (unit + integração) e os cenários dos deltas — verificação:
       suítes verdes sem teste pendente.
-- [ ] 6.2 Atualizar `docs/tdd.md` §5.1 com `GET /favoritos/ids` e marcar F4
+- [x] 6.2 Atualizar `docs/tdd.md` §5.1 com `GET /favoritos/ids` e marcar F4
       como concluída no roadmap §8 (se TC-07 verde), e o `README.md` se
       mencionar fases — verificação: diff revisado, IDs DT-12/INV-06
       referenciados.
-- [ ] 6.3 Revisar acessibilidade básica dos fluxos novos (teclado e labels,
+- [x] 6.3 Revisar acessibilidade básica dos fluxos novos (teclado e labels,
       RNF-07) e percorrer as jornadas J-6/J-7 manualmente — verificação:
       checklist de CA-16/CA-17 anotado no PR.
 

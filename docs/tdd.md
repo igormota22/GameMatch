@@ -247,6 +247,7 @@ Todos exigem `Authorization: Bearer <token>` (DT-03) exceto onde indicado.
 | `GET` | `/recomendacoes?experiencia=` | RF-10..15 | `experiencia` opcional = uma das chaves de DT-09 | `{ itens: [RecomendacaoDto] }` — top 12 (DT-14) | 401, **409 `perfil-incompleto`** (CA-13), 404 se `experiencia` desconhecida |
 | `GET` | `/recomendacoes/opcoes` | RF-14 | — | opções do Modo Descoberta (chave + rótulo, de `Descoberta:Opcoes`) | 401 |
 | `GET` | `/favoritos?tamanho=&pagina=` | RF-18 | paginação opcional | `PaginaDto<JogoResumoDto>` | 401 |
+| `GET` | `/favoritos/ids` | RF-16 (DT-12) | — | `FavoritosIdsDto` (`{ ids: [] }`) — estado dos cards (D1 da change `favoritos-avaliacoes`) | 401 |
 | `POST` | `/favoritos/{jogoId}` | RF-16 | id do jogo | 201 na criação; **200 idempotente** se já existir (INV-05) | 401, 404 (jogo inexistente) |
 | `DELETE` | `/favoritos/{jogoId}` | RF-16 | id do jogo | 204 | 401, 404 |
 | `GET` | `/avaliacoes/{jogoId}` | RF-17 | id do jogo | `AvaliacaoDto` ou 404 | 401 |
@@ -431,7 +432,7 @@ Sem cronograma/datas (não confirmados); ordem por dependência. Marco **MVP**
 | **F2 — Catálogo** (P0) | RF-07..09 (DT-11, DT-15) | Snapshot em `seed/` (D-1) | Projeto `GameMatch.Seed` (`coletar`/`sync`) e snapshot versionado (416 jogos, 30 tags); entidade `Jogo`; endpoints `/catalogo*`; UI `/catalogo` com pesquisa, filtros e estado vazio | TC-02 verde; `sync` popula banco de forma idempotente |
 | **F2.5 — Preferências do catálogo** (P0) | RF-05, RF-06, RB-16 (DT-18) | F1 e F2 | Validação do `PUT /perfil` contra as características do catálogo; formulário `/perfil` com opções de gênero, plataforma e tag de `/catalogo/filtros`; tratamento de valores legados | TC-01 verde; CA-06/07/21/22 manual |
 | **F3 — Recomendações + Modo Descoberta** (P1) | RF-10..15 (DT-07..10, DT-12..14) | F1, F2 e F2.5 | `CalculadoraCompatibilidade` no `Domain`; endpoints `/recomendacoes*`; UI `/recomendacoes` com explicação, CTA de perfil incompleto e seletor de experiência | **concluída:** TC-03..TC-06 verdes (74 unit + 48 integração); CA-11..CA-15 verificados manualmente |
-| **F4 — Favoritos e avaliações** (P1) | RF-16..18 (DT-12) | F2 | Endpoints `/favoritos`, `/avaliacoes`; UI; ligação com exclusão nas recomendações | TC-07 verde; CA-16/17 manual |
+| **F4 — Favoritos e avaliações** (P1) | RF-16..18 (DT-12) | F2 | Endpoints `/favoritos`, `/avaliacoes`; UI `/favoritos` com estrelas e botão nos cards; ligação com exclusão nas recomendações (INV-06) | **concluída:** TC-07 verde (107 unit + 67 integração; 81 web); CA-16/17 e J-6/J-7 verificados manualmente |
 | **F5 — Verificação do MVP** | RNF-03/05/07/08, CA-18..20 | F1..F4 | Revisão de acessibilidade básica, verificação do rodapé, suítes completas, atualização de `docs/ambiente.md` | TC-08 verde; checklist do PRD §5.1 aprovado → **marco MVP** |
 
 - **Validações que bloqueiam fases:** conteúdo do snapshot (bloqueia F2 —
