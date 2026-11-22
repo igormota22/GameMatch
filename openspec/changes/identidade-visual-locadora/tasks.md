@@ -2,9 +2,9 @@
 
 ## 1. Documentos globais e preparação
 
-- [ ] 1.1 Criar a branch `feature/identidade-visual-locadora` a partir da `main` e verificar com `git branch --show-current` que é a branch ativa. **Verificação:** comando retorna o nome da branch.
-- [ ] 1.2 Registrar o requisito de identidade visual (RF-19) e seu critério de aceite (CA-23) em `docs/prd.md`, rastreando aos RNF-03/05/07 existentes. **Verificação:** `Select-String -Path docs/prd.md -Pattern 'RF-19|CA-23'` encontra as entradas nas tabelas de §7 e §10.
-- [ ] 1.3 Registrar a DT-19 (design system da locadora sobre DT-04) em `docs/tdd.md`. **Verificação:** a linha DT-19 aparece na tabela §2 e referencia DT-04.
+- [x] 1.1 Criar a branch `feature/identidade-visual-locadora` a partir da `main` e verificar com `git branch --show-current` que é a branch ativa. **Verificação:** comando retorna o nome da branch.
+- [x] 1.2 Registrar o requisito de identidade visual (RF-19) e seu critério de aceite (CA-23) em `docs/prd.md`, rastreando aos RNF-03/05/07 existentes. **Verificação:** `Select-String -Path docs/prd.md -Pattern 'RF-19|CA-23'` encontra as entradas nas tabelas de §7 e §10.
+- [x] 1.3 Registrar a DT-19 (design system da locadora sobre DT-04) em `docs/tdd.md`. **Verificação:** a linha DT-19 aparece na tabela §2 e referencia DT-04.
 
 ## 2. Fundação visual (design system)
 
