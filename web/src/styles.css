@@ -1,1 +1,74 @@
 @import "tailwindcss";
+
+/*
+ * Fontes livres (SIL OFL 1.1), auto-hospedadas — ver public/fontes/LICENCAS.md.
+ * Subconjunto latin cobre PT-BR; sem dependência de CDN.
+ */
+@font-face {
+  font-family: "Archivo";
+  src: url("/fontes/archivo-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("/fontes/bebas-neue-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-corpo);
+  }
+}
+
+
+/*
+ * Identidade visual GameMatch — locadora de videogames dos anos 90 (RF-19, DT-19).
+ *
+ * Os tokens abaixo são a fonte única de estilo da interface: cores da paleta,
+ * tipografia, raios e sombras de objeto físico. As páginas ainda não
+ * reformuladas continuam com a paleta anterior até as suas próprias changes.
+ *
+ * Contraste WCAG AA verificado (texto normal ≥ 4,5:1):
+ *   tinta/papel 14,89 · tinta/papel-escuro 12,73 · papel/marinho 13,67
+ *   papel/marinho-claro 11,71 · papel/eletrico 4,87 · tinta/amarelo 12,26
+ *   papel/vermelho 5,52 · tinta/laranja 6,57 · amarelo/marinho 11,26
+ *   tinta-suave/papel 6,30
+ */
+@theme static {
+  /* Paleta de materiais da locadora */
+  --color-papel: #f2e8d5;
+  --color-papel-escuro: #e6d7b8;
+  --color-tinta: #161616;
+  --color-tinta-suave: #57534a;
+  --color-marinho: #0a1e3c;
+  --color-marinho-claro: #102a52;
+  --color-eletrico: #1f5bd8;
+  --color-amarelo: #ffcf33;
+  --color-laranja: #ef7d1a;
+  --color-vermelho: #b31f1f;
+  --color-plastico: #cfc7b4;
+
+  /* Tipografia editorial de revista/embalagem */
+  --font-display: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+  --font-corpo: "Archivo", "Segoe UI", system-ui, sans-serif;
+
+  /* Objetos físicos: caixas, cartuchos e prateleiras */
+  --radius-caixa: 0.375rem;
+  --radius-etiqueta: 0.125rem;
+  --shadow-caixa: 0 12px 22px -14px rgba(10, 30, 60, 0.65), 0 2px 0 0 rgba(10, 30, 60, 0.28);
+  --shadow-caixa-hover: 0 22px 30px -18px rgba(10, 30, 60, 0.7), 0 3px 0 0 rgba(10, 30, 60, 0.3);
+  --shadow-prateleira: inset 0 -4px 0 0 rgba(10, 30, 60, 0.32);
+  --shadow-selo: 0 3px 0 0 rgba(10, 30, 60, 0.35);
+}

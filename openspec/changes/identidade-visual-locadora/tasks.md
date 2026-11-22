@@ -8,8 +8,8 @@
 
 ## 2. Fundação visual (design system)
 
-- [ ] 2.1 Definir os tokens da identidade em `web/src/styles.css` com `@theme` do Tailwind v4 (cores da paleta da locadora, famílias tipográficas, raios e sombras) e verificar que `ng build` compila sem erro. **Verificação:** `npm run build` conclui com sucesso e as classes derivadas (ex.: cor nova) são usáveis nos templates.
-- [ ] 2.2 Adicionar fontes livres auto-hospedadas (`woff2` subset PT-BR em `web/src/public/fontes/`) com `@font-face` e verificar que a página carrega as fontes sem depender de CDN. **Verificação:** `npm run build` inclui os arquivos de fonte e o `index.html`/CSS referencia-as localmente.
+- [x] 2.1 Definir os tokens da identidade em `web/src/styles.css` com `@theme` do Tailwind v4 (cores da paleta da locadora, famílias tipográficas, raios e sombras) e verificar que `ng build` compila sem erro. **Verificação:** `npm run build` conclui com sucesso e as classes derivadas (ex.: cor nova) são usáveis nos templates.
+- [x] 2.2 Adicionar fontes livres auto-hospedadas (`woff2` subset PT-BR em `web/src/public/fontes/`) com `@font-face` e verificar que a página carrega as fontes sem depender de CDN. **Verificação:** `npm run build` inclui os arquivos de fonte e o `index.html`/CSS referencia-as localmente.
 - [ ] 2.3 Criar as classes de materiais (texturas de papel/plástico, bordas e sombras de embalagem) e verificar o contraste WCAG AA dos pares texto/fundo principais da paleta. **Verificação:** revisão registrada dos pares de cor com razão ≥ 4.5:1 para texto normal.
 - [ ] 2.4 Criar as classes de elementos gráficos de locadora (etiqueta, selo/adesivo, carimbo, ficha de locação) e verificar sua renderização sem regressão da suíte. **Verificação:** `npm test -- --watch=false` permanece com 81 testes verdes após a etapa.
 
