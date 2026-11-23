@@ -27,9 +27,9 @@
 
 ## 5. Verificação integrada
 
-- [ ] 5.1 Executar `npm test -- --watch=false` em `web/` e confirmar todos os testes verdes (base: 81). **Verificação:** saída `81 passed`.
-- [ ] 5.2 Executar `dotnet test api/GameMatch.sln` com o banco do compose ativo (`docker compose up -d db`) e confirmar suítes verdes (base: 107 unit + 67 integração). **Verificação:** saída `Aprovado!` nos dois projetos de teste.
-- [ ] 5.3 Revisão visual manual (desktop e móvel) da página inicial e do shell nos estados visitante/autenticado: contraste, legibilidade, responsividade sem rolagem horizontal e navegação por teclado. **Verificação:** checklist registrado (capturas ou anotação) sem pendências.
+- [x] 5.1 Executar `npm test -- --watch=false` em `web/` e confirmar todos os testes verdes (base: 81). **Verificação:** saída `81 passed`.
+- [x] 5.2 Executar `dotnet test api/GameMatch.sln` com o banco do compose ativo (`docker compose up -d db`) e confirmar suítes verdes (base: 107 unit + 67 integração). **Verificação:** saída `Aprovado!` nos dois projetos de teste.
+- [x] 5.3 Revisão visual manual (desktop e móvel) da página inicial e do shell nos estados visitante/autenticado: contraste, legibilidade, responsividade sem rolagem horizontal e navegação por teclado. **Verificação:** checklist registrado (capturas ou anotação) sem pendências.
 - [ ] 5.4 Abrir o Pull Request para a `main` com o template de `.github/pull_request_template.md`, relacionando RF-19/CA-23, DT-19, os requisitos da change e os testes executados. **Verificação:** PR aberto com o template preenchido.
 
 ## Workflow follow-up
