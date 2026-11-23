@@ -21,9 +21,9 @@
 
 ## 4. Página inicial (fachada da locadora)
 
-- [ ] 4.1 Reformular `web/src/app/features/inicio/inicio.html` como fachada/vitrine da locadora (chamada promocional, destaques e elementos gráficos) mantendo a marcação funcional. **Verificação:** `npm test -- --watch=false` mantém `inicio.spec.ts` verde.
-- [ ] 4.2 Preservar os blocos funcionais na nova composição: resumo do perfil com CTAs, avisos de perfil incompleto e status da API. **Verificação:** `inicio.spec.ts` verde e verificação manual com usuário autenticado e visitante mostram todos os blocos operacionais.
-- [ ] 4.3 Implementar as interações físicas da página inicial (hover de retirar caixa da prateleira, etiquetas ao passar o mouse, abertura de ficha) respeitando `prefers-reduced-motion`. **Verificação:** manual — efeitos aparecem no hover, conteúdo essencial visível sem hover e animações respeitam movimento reduzido.
+- [x] 4.1 Reformular `web/src/app/features/inicio/inicio.html` como fachada/vitrine da locadora (chamada promocional, destaques e elementos gráficos) mantendo a marcação funcional. **Verificação:** `npm test -- --watch=false` mantém `inicio.spec.ts` verde.
+- [x] 4.2 Preservar os blocos funcionais na nova composição: resumo do perfil com CTAs, avisos de perfil incompleto e status da API. **Verificação:** `inicio.spec.ts` verde e verificação manual com usuário autenticado e visitante mostram todos os blocos operacionais.
+- [x] 4.3 Implementar as interações físicas da página inicial (hover de retirar caixa da prateleira, etiquetas ao passar o mouse, abertura de ficha) respeitando `prefers-reduced-motion`. **Verificação:** manual — efeitos aparecem no hover, conteúdo essencial visível sem hover e animações respeitam movimento reduzido.
 
 ## 5. Verificação integrada
 
