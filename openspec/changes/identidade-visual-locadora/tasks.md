@@ -15,9 +15,9 @@
 
 ## 3. Shell do site (cabeçalho e rodapé)
 
-- [ ] 3.1 Reformular `web/src/app/app.html`, `layout/cabecalho/cabecalho.html` e `layout/rodape/rodape.html` com a identidade da locadora, preservando rótulos, rotas e estados de sessão. **Verificação:** `npm test -- --watch=false` mantém `cabecalho.spec.ts` verde (textos do menu e da marca inalterados).
-- [ ] 3.2 Garantir o link de atribuição FreeToGame.com no rodapé em todas as rotas (CA-19). **Verificação:** revisão manual em `/`, `/entrar` e rota autenticada confirma link ativo; `npm test -- --watch=false` verde.
-- [ ] 3.3 Adicionar interações de hover/foco no shell com `@media (hover: hover)` e `prefers-reduced-motion`. **Verificação:** navegação por teclado percorre o menu com foco visível e, com movimento reduzido no SO, não há animação decorativa.
+- [x] 3.1 Reformular `web/src/app/app.html`, `layout/cabecalho/cabecalho.html` e `layout/rodape/rodape.html` com a identidade da locadora, preservando rótulos, rotas e estados de sessão. **Verificação:** `npm test -- --watch=false` mantém `cabecalho.spec.ts` verde (textos do menu e da marca inalterados).
+- [x] 3.2 Garantir o link de atribuição FreeToGame.com no rodapé em todas as rotas (CA-19). **Verificação:** revisão manual em `/`, `/entrar` e rota autenticada confirma link ativo; `npm test -- --watch=false` verde.
+- [x] 3.3 Adicionar interações de hover/foco no shell com `@media (hover: hover)` e `prefers-reduced-motion`. **Verificação:** navegação por teclado percorre o menu com foco visível e, com movimento reduzido no SO, não há animação decorativa.
 
 ## 4. Página inicial (fachada da locadora)
 
