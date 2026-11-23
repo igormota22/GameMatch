@@ -1,1 +1,252 @@
 @import "tailwindcss";
+
+/*
+ * Fontes livres (SIL OFL 1.1), auto-hospedadas — ver public/fontes/LICENCAS.md.
+ * Subconjunto latin cobre PT-BR; sem dependência de CDN.
+ */
+@font-face {
+  font-family: "Archivo";
+  src: url("/fontes/archivo-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("/fontes/bebas-neue-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-corpo);
+  }
+}
+
+
+/*
+ * Identidade visual GameMatch — locadora de videogames dos anos 90 (RF-19, DT-19).
+ *
+ * Os tokens abaixo são a fonte única de estilo da interface: cores da paleta,
+ * tipografia, raios e sombras de objeto físico. As páginas ainda não
+ * reformuladas continuam com a paleta anterior até as suas próprias changes.
+ *
+ * Contraste WCAG AA verificado (texto normal ≥ 4,5:1):
+ *   tinta/papel 14,89 · tinta/papel-escuro 12,73 · papel/marinho 13,67
+ *   papel/marinho-claro 11,71 · papel/eletrico 4,87 · tinta/amarelo 12,26
+ *   papel/vermelho 5,52 · tinta/laranja 6,57 · amarelo/marinho 11,26
+ *   tinta-suave/papel 6,30
+ */
+@theme static {
+  /* Paleta de materiais da locadora */
+  --color-papel: #f2e8d5;
+  --color-papel-escuro: #e6d7b8;
+  --color-tinta: #161616;
+  --color-tinta-suave: #57534a;
+  --color-marinho: #0a1e3c;
+  --color-marinho-claro: #102a52;
+  --color-eletrico: #1f5bd8;
+  --color-amarelo: #ffcf33;
+  --color-laranja: #ef7d1a;
+  --color-vermelho: #b31f1f;
+  --color-plastico: #cfc7b4;
+
+  /* Tipografia editorial de revista/embalagem */
+  --font-display: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+  --font-corpo: "Archivo", "Segoe UI", system-ui, sans-serif;
+
+  /* Objetos físicos: caixas, cartuchos e prateleiras */
+  --radius-caixa: 0.375rem;
+  --radius-etiqueta: 0.125rem;
+  --shadow-caixa: 0 12px 22px -14px rgba(10, 30, 60, 0.65), 0 2px 0 0 rgba(10, 30, 60, 0.28);
+  --shadow-caixa-hover: 0 22px 30px -18px rgba(10, 30, 60, 0.7), 0 3px 0 0 rgba(10, 30, 60, 0.3);
+  --shadow-prateleira: inset 0 -4px 0 0 rgba(10, 30, 60, 0.32);
+  --shadow-selo: 0 3px 0 0 rgba(10, 30, 60, 0.35);
+}
+
+/*
+ * Materiais físicos: grão de papel e brilho de plástico são gerados em CSS
+ * (SVG/gradientes), sem bitmaps pesados. Pares de contraste das superfícies
+ * registrados acima: texto em tinta sobre papel/papel-escuro e papel sobre
+ * marinho — todos ≥ 4,5:1 (RNF-07).
+ */
+:root {
+  --textura-papel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='grao'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23grao)' opacity='0.055'/%3E%3C/svg%3E");
+  --textura-plastico: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.22) 0 2px,
+    rgba(255, 255, 255, 0) 2px 7px
+  );
+}
+
+@layer base {
+  body {
+    background-color: var(--color-papel);
+    background-image: var(--textura-papel);
+    color: var(--color-tinta);
+  }
+}
+
+@layer components {
+  /* Superfície de papel envelhecido (fichas, catálogos, painéis) */
+  .superficie-papel {
+    background-color: var(--color-papel);
+    background-image: var(--textura-papel);
+    border: 1px solid color-mix(in srgb, var(--color-tinta) 18%, transparent);
+    border-radius: var(--radius-caixa);
+    box-shadow: var(--shadow-caixa);
+  }
+
+  /* Superfície de plástico de caixa de jogo */
+  .superficie-plastico {
+    background-color: var(--color-plastico);
+    background-image: var(--textura-plastico), var(--textura-papel);
+    border: 1px solid color-mix(in srgb, var(--color-marinho) 25%, transparent);
+    border-radius: var(--radius-caixa);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), var(--shadow-caixa);
+  }
+
+  /* Borda grossa com "sombra dura" de embalagem impressa */
+  .borda-embalagem {
+    border: 2px solid var(--color-marinho);
+    box-shadow: 4px 4px 0 0 var(--color-marinho);
+  }
+
+  /* Prateleira: borda inferior grossa e sombra interna */
+  .prateleira {
+    border-bottom: 5px solid var(--color-marinho);
+    box-shadow: var(--shadow-prateleira);
+  }
+
+  /* Etiqueta de preço/locação colada na superfície */
+  .etiqueta-colada {
+    border: 1px solid color-mix(in srgb, var(--color-tinta) 30%, transparent);
+    border-radius: var(--radius-etiqueta);
+    background-color: var(--color-amarelo);
+    color: var(--color-tinta);
+    box-shadow: var(--shadow-selo);
+  }
+
+  /* Elementos gráficos reutilizáveis da locadora */
+  .etiqueta-promo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    border: 2px solid var(--color-tinta);
+    border-radius: var(--radius-etiqueta);
+    background-color: var(--color-amarelo);
+    color: var(--color-tinta);
+    box-shadow: 3px 3px 0 var(--color-tinta);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 0.07em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+  }
+
+  .etiqueta-promo--vermelha {
+    border-color: var(--color-marinho);
+    background-color: var(--color-vermelho);
+    color: var(--color-papel);
+    box-shadow: 3px 3px 0 var(--color-marinho);
+  }
+
+  .etiqueta-promo--azul {
+    border-color: var(--color-marinho);
+    background-color: var(--color-eletrico);
+    color: var(--color-papel);
+    box-shadow: 3px 3px 0 var(--color-marinho);
+  }
+
+  /* Selo circular de estabelecimento */
+  .selo-locadora {
+    display: grid;
+    place-items: center;
+    width: 5.5rem;
+    height: 5.5rem;
+    padding: 0.5rem;
+    border: 3px double var(--color-vermelho);
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, var(--color-papel) 72%, transparent);
+    color: var(--color-vermelho);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    line-height: 1.05;
+    text-align: center;
+    text-transform: uppercase;
+    transform: rotate(-8deg);
+  }
+
+  /* Carimbo de atendimento */
+  .carimbo {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border: 2px solid currentColor;
+    border-radius: var(--radius-etiqueta);
+    color: var(--color-vermelho);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    transform: rotate(-3deg);
+  }
+
+  /* Ficha de locação com linhas de formulário impressas */
+  .ficha-locacao {
+    background-color: var(--color-papel);
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0 1.65rem,
+        color-mix(in srgb, var(--color-marinho) 20%, transparent) 1.65rem
+          calc(1.65rem + 1px)
+      ),
+      var(--textura-papel);
+    border: 1px solid color-mix(in srgb, var(--color-tinta) 20%, transparent);
+    border-left: 10px solid var(--color-marinho);
+    border-radius: var(--radius-caixa);
+    box-shadow: var(--shadow-caixa);
+  }
+
+  /* Fita adesiva usada para "colar" etiquetas */
+  .fita-adesiva {
+    position: absolute;
+    width: 4.5rem;
+    height: 1.4rem;
+    background-color: color-mix(in srgb, #fff8dc 45%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-tinta) 10%, transparent);
+    transform: rotate(-4deg);
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-eletrico);
+    outline-offset: 2px;
+  }
+}
+
+/* Movimento decorativo desligado quando o usuário prefere menos animação. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+

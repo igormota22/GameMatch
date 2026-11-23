@@ -104,6 +104,9 @@ Itens confirmados pelo solicitante como MVP:
 - Exclusão de conta (fora do MVP; ver §13).
 - Perfil público com avaliações visíveis.
 - Integração direta com a API FreeToGame em tempo real (hoje: snapshot local).
+- **Identidade visual** inspirada em locadoras de videogames dos anos 90
+  (RF-19), entregue por etapas após o MVP — fundação, shell e página inicial
+  primeiro, depois as demais páginas.
 
 ### 5.3 Fora de escopo
 
@@ -244,6 +247,12 @@ Itens confirmados pelo solicitante como MVP:
 | RF-17 | O sistema deve permitir avaliar um jogo de 1 a 5 estrelas, limitado a uma avaliação por jogo, editável e removível | P1 | RB-15 |
 | RF-18 | O sistema deve listar os favoritos do usuário | P1 | RB-14 |
 
+### Identidade visual
+
+| ID | Requisito | Prioridade | Regra de negócio / dependência |
+|---|---|---|---|
+| RF-19 | O sistema deve aplicar uma identidade visual inspirada em locadoras de videogames dos anos 90 em todas as páginas, entregue por etapas validadas (fundação, shell e página inicial primeiro), sem alterar funcionalidades, contratos, dados, acessibilidade ou responsividade | P2 | RNF-03, RNF-05, RNF-07; depende do MVP concluído |
+
 ## 8. Regras de negócio
 
 | ID | Regra |
@@ -347,6 +356,13 @@ Itens confirmados pelo solicitante como MVP:
 - **CA-17** (RF-17): Dado um jogo, quando o usuário avalia com nota válida
   (1–5), então a avaliação fica registrada; tentar nova avaliação substitui a
   anterior; nota fora de 1–5 é rejeitada; o usuário pode remover a avaliação.
+
+### Identidade visual (RF-19)
+
+- **CA-23** (RF-19): Dada qualquer página reformulada, quando exibida, então a
+  identidade da locadora é perceptível (paleta, tipografia, materiais e
+  elementos gráficos) e a navegação, a atribuição FreeToGame, a acessibilidade
+  e a responsividade permanecem íntegras.
 
 ### Não funcionais
 
