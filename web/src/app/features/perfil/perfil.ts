@@ -5,6 +5,7 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   CatalogoService,
   FiltrosCatalogo,
@@ -44,7 +45,7 @@ function foraDoCatalogo(catalogo: string[], salvos: string[]): string[] {
 
 @Component({
   selector: 'app-perfil',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './perfil.html',
 })
 export class Perfil implements OnInit {

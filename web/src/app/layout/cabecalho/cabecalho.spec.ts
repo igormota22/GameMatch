@@ -27,7 +27,7 @@ describe('Cabecalho', () => {
     expect(texto).not.toContain('Sair');
   });
 
-  it('exibe o estado autenticado com acesso ao catálogo, perfil, conta e saída', async () => {
+  it('exibe o estado autenticado com acesso ao catálogo, perfil e saída', async () => {
     TestBed.inject(SessaoService).iniciar({
       token: 'token-teste',
       expiraEm: new Date(Date.now() + 60_000).toISOString(),
@@ -43,7 +43,7 @@ describe('Cabecalho', () => {
     expect(texto).toContain('Recomendações');
     expect(texto).toContain('Favoritos');
     expect(texto).toContain('Perfil');
-    expect(texto).toContain('Minha conta');
+    expect(texto).not.toContain('Minha conta');
     expect(texto).toContain('jogador@teste.com');
     expect(texto).toContain('Sair');
     expect(texto).not.toContain('Criar conta');
