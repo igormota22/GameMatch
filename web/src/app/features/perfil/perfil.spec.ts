@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FiltrosCatalogo } from '../../core/servicos/catalogo.service';
 import { Perfil } from './perfil';
 
@@ -36,7 +37,7 @@ describe('Perfil', () => {
 
     await TestBed.configureTestingModule({
       imports: [Perfil],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Perfil);
@@ -130,6 +131,20 @@ describe('Perfil', () => {
     expect(texto).not.toContain('Perfil incompleto');
     expect(botao('Editar perfil')).toBeTruthy();
     expect(elemento().querySelector('input[type="checkbox"]')).toBeNull();
+  });
+
+  it('oferece acesso à página Minha conta', async () => {
+    await carregarCom({
+      generos: ['RPG'],
+      plataformas: ['PC (Windows)'],
+      estilos: [],
+      completo: true,
+      atualizadoEm: null,
+    });
+
+    const link = elemento().querySelector<HTMLAnchorElement>('a[href="/conta"]');
+
+    expect(link?.textContent?.trim()).toBe('Minha conta');
   });
 
   it('exibe orientação e valores não informados quando o perfil está vazio', async () => {

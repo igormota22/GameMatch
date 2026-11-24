@@ -13,19 +13,27 @@
       </p>
     </div>
 
-    @if (!carregando() && !erroCarga()) {
-      <span
-        class="rounded-full border px-3 py-1 text-xs font-medium"
-        [class.border-emerald-500/40]="completo()"
-        [class.bg-emerald-500/10]="completo()"
-        [class.text-emerald-300]="completo()"
-        [class.border-amber-500/40]="!completo()"
-        [class.bg-amber-500/10]="!completo()"
-        [class.text-amber-300]="!completo()"
+    <div class="flex flex-wrap items-center gap-2">
+      @if (!carregando() && !erroCarga()) {
+        <span
+          class="rounded-full border px-3 py-1 text-xs font-medium"
+          [class.border-emerald-500/40]="completo()"
+          [class.bg-emerald-500/10]="completo()"
+          [class.text-emerald-300]="completo()"
+          [class.border-amber-500/40]="!completo()"
+          [class.bg-amber-500/10]="!completo()"
+          [class.text-amber-300]="!completo()"
+        >
+          {{ completo() ? 'Perfil completo' : 'Perfil incompleto' }}
+        </span>
+      }
+      <a
+        routerLink="/conta"
+        class="botao-formulario botao-formulario--secundario"
       >
-        {{ completo() ? 'Perfil completo' : 'Perfil incompleto' }}
-      </span>
-    }
+        Minha conta
+      </a>
+    </div>
   </div>
 
   @if (carregando()) {
