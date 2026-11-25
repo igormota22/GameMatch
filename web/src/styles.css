@@ -480,6 +480,67 @@
     border-color: color-mix(in srgb, var(--color-laranja) 60%, var(--color-marinho));
     background-color: color-mix(in srgb, var(--color-laranja) 14%, var(--color-papel));
   }
+
+  /* Selo de pontuação sobre a capa da recomendação */
+  .selo-pontuacao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0.55rem;
+    border: 2px solid var(--color-marinho);
+    border-radius: var(--radius-etiqueta);
+    background-color: var(--color-amarelo);
+    color: var(--color-tinta);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    box-shadow: var(--shadow-selo);
+  }
+
+  /* Linha de fator na explicação da recomendação */
+  .fator-recomendacao {
+    padding: 0.5rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--color-marinho) 22%, transparent);
+    border-radius: var(--radius-etiqueta);
+    background-color: color-mix(in srgb, var(--color-papel) 88%, white);
+    color: var(--color-tinta);
+    font-size: 0.75rem;
+  }
+
+  /* Botão de estrela da avaliação (1 a 5) */
+  .botao-estrela {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--radius-etiqueta);
+    background-color: transparent;
+    color: var(--color-marinho);
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .botao-estrela:hover {
+    border-color: var(--color-marinho);
+    background-color: var(--color-papel-escuro);
+  }
+
+  .botao-estrela[aria-pressed="true"] {
+    border-color: var(--color-marinho);
+    background-color: color-mix(in srgb, var(--color-amarelo) 45%, transparent);
+  }
+
+  /* Estrela preenchida: dourada com contorno escuro para contraste AA */
+  .botao-estrela--preenchida svg {
+    fill: var(--color-laranja);
+    stroke: var(--color-marinho);
+  }
 }
 
 @layer base {
