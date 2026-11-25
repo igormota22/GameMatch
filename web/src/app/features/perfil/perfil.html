@@ -1,8 +1,13 @@
-<section class="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-12 sm:px-6">
-  <div class="flex flex-wrap items-start justify-between gap-4">
+<section class="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
+  <header class="flex flex-wrap items-start justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold text-white sm:text-3xl">Perfil gamer</h1>
-      <p class="mt-2 text-sm text-slate-400">
+      <p class="etiqueta-promo" aria-hidden="true">Ficha do locatário</p>
+      <h1
+        class="mt-3 font-display text-4xl uppercase leading-none tracking-wide text-marinho sm:text-5xl"
+      >
+        Perfil gamer
+      </h1>
+      <p class="mt-3 max-w-xl text-sm text-tinta-suave">
         @if (modoEdicao()) {
           Escolha entre as opções do catálogo os gêneros, plataformas e estilos
           que o GameMatch deve considerar nas suas recomendações.
@@ -16,42 +21,29 @@
     <div class="flex flex-wrap items-center gap-2">
       @if (!carregando() && !erroCarga()) {
         <span
-          class="rounded-full border px-3 py-1 text-xs font-medium"
-          [class.border-emerald-500/40]="completo()"
-          [class.bg-emerald-500/10]="completo()"
-          [class.text-emerald-300]="completo()"
-          [class.border-amber-500/40]="!completo()"
-          [class.bg-amber-500/10]="!completo()"
-          [class.text-amber-300]="!completo()"
+          class="etiqueta-promo"
+          [class.etiqueta-promo--azul]="completo()"
+          [class.etiqueta-promo--vermelha]="!completo()"
         >
           {{ completo() ? 'Perfil completo' : 'Perfil incompleto' }}
         </span>
       }
-      <a
-        routerLink="/conta"
-        class="botao-formulario botao-formulario--secundario"
-      >
+      <a routerLink="/conta" class="botao-formulario botao-formulario--secundario">
         Minha conta
       </a>
     </div>
-  </div>
+  </header>
 
   @if (carregando()) {
-    <p
-      class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400"
-      role="status"
-    >
+    <p class="superficie-papel p-4 text-sm text-tinta-suave" role="status">
       Carregando seu perfil...
     </p>
   } @else if (erroCarga()) {
-    <div
-      class="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
-      role="alert"
-    >
+    <div class="aviso-formulario aviso-formulario--erro" role="alert">
       <p>{{ erroCarga() }}</p>
       <button
         type="button"
-        class="mt-3 rounded-md border border-rose-400/60 px-3 py-2 text-sm font-medium transition hover:bg-rose-500/10"
+        class="botao-formulario botao-formulario--secundario mt-3"
         (click)="carregar()"
       >
         Tentar novamente
@@ -59,118 +51,197 @@
     </div>
   } @else if (perfil(); as dados) {
     @if (mensagem()) {
-      <p
-        class="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300"
-        role="status"
-      >
+      <p class="aviso-formulario aviso-formulario--sucesso" role="status">
         {{ mensagem() }}
       </p>
     }
 
     @if (modoEdicao()) {
-      <form
-        class="flex flex-col gap-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6"
-        [formGroup]="formulario"
-        (ngSubmit)="salvar()"
-        novalidate
-      >
-        <fieldset class="flex flex-col gap-5">
-          <legend class="text-base font-semibold text-white">Preferências</legend>
-          <p class="text-xs text-slate-500">
-            Campos com * são obrigatórios. As opções vêm do catálogo sincronizado.
-          </p>
+      <form class="ficha-formulario" [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+        <div class="cabecalho-ficha">
+          <span>Preferências do locatário</span>
+          <span aria-hidden="true">Ficha 003</span>
+        </div>
 
-          @if (carregandoFiltros()) {
-            <p class="text-sm text-slate-400" role="status">
-              Carregando opções do catálogo...
+        <div class="flex flex-col gap-6 p-4 sm:p-6">
+          <fieldset class="flex flex-col gap-5">
+            <legend class="font-display text-2xl uppercase tracking-wide text-marinho">
+              Preferências
+            </legend>
+            <p class="text-xs text-tinta-suave">
+              Campos com * são obrigatórios. As opções vêm do catálogo sincronizado.
             </p>
-          } @else if (erroFiltros()) {
-            <div
-              class="rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
-              role="alert"
-            >
-              <p>{{ erroFiltros() }}</p>
-              <button
-                type="button"
-                class="mt-3 rounded-md border border-rose-400/60 px-3 py-2 text-sm font-medium transition hover:bg-rose-500/10"
-                (click)="carregarFiltros()"
-              >
-                Tentar novamente
-              </button>
-            </div>
-          } @else {
-            <div class="flex flex-col gap-2 text-sm text-slate-200">
-              <span id="generos-rotulo" class="font-medium">Gêneros favoritos *</span>
-              <div
-                class="grid gap-2 sm:grid-cols-2"
-                role="group"
-                aria-labelledby="generos-rotulo"
-                aria-describedby="generos-erro"
-              >
-                @for (opcao of opcoes().generos; track opcao) {
-                  <label class="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      [attr.data-campo]="'generos'"
-                      [attr.data-valor]="opcao"
-                      [checked]="estaMarcado('generos', opcao)"
-                      (change)="alternar('generos', opcao, caixa.checked)"
-                      #caixa
-                      class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-emerald-400"
-                    />
-                    <span>{{ opcao }}</span>
-                  </label>
-                }
-              </div>
-              @if (formulario.controls.generos.touched && formulario.controls.generos.invalid) {
-                <p id="generos-erro" class="text-xs text-rose-400" role="alert">
-                  Informe ao menos um gênero.
-                </p>
-              }
-            </div>
 
-            <div class="flex flex-col gap-2 text-sm text-slate-200">
-              <span id="plataformas-rotulo" class="font-medium">Plataformas *</span>
-              <div
-                class="grid gap-2 sm:grid-cols-2"
-                role="group"
-                aria-labelledby="plataformas-rotulo"
-                aria-describedby="plataformas-erro"
-              >
-                @for (opcao of opcoes().plataformas; track opcao) {
-                  <label class="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      [attr.data-campo]="'plataformas'"
-                      [attr.data-valor]="opcao"
-                      [checked]="estaMarcado('plataformas', opcao)"
-                      (change)="alternar('plataformas', opcao, caixa.checked)"
-                      #caixa
-                      class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-emerald-400"
-                    />
-                    <span>{{ opcao }}</span>
-                  </label>
-                }
+            @if (carregandoFiltros()) {
+              <p class="text-sm text-tinta-suave" role="status">
+                Carregando opções do catálogo...
+              </p>
+            } @else if (erroFiltros()) {
+              <div class="aviso-formulario aviso-formulario--erro" role="alert">
+                <p>{{ erroFiltros() }}</p>
+                <button
+                  type="button"
+                  class="botao-formulario botao-formulario--secundario mt-3"
+                  (click)="carregarFiltros()"
+                >
+                  Tentar novamente
+                </button>
               </div>
-              @if (
-                formulario.controls.plataformas.touched && formulario.controls.plataformas.invalid
-              ) {
-                <p id="plataformas-erro" class="text-xs text-rose-400" role="alert">
-                  Informe ao menos uma plataforma.
-                </p>
-              }
-            </div>
-
-            <div class="flex flex-col gap-2 text-sm text-slate-200">
-              <span id="estilos-rotulo" class="font-medium">Estilos de gameplay</span>
-              <div class="grid gap-2 sm:grid-cols-2" role="group" aria-labelledby="estilos-rotulo">
-                @if (opcoes().estilos.length === 0) {
-                  <p class="text-xs text-slate-500">
-                    O catálogo ainda não possui estilos de gameplay.
+            } @else {
+              <div class="flex flex-col gap-2">
+                <span
+                  id="generos-rotulo"
+                  class="font-display text-lg uppercase tracking-wide text-marinho"
+                >
+                  Gêneros favoritos *
+                </span>
+                <div
+                  class="grid gap-2 sm:grid-cols-2"
+                  role="group"
+                  aria-labelledby="generos-rotulo"
+                  aria-describedby="generos-erro"
+                >
+                  @for (opcao of opcoes().generos; track opcao) {
+                    <label class="opcao-preferencia">
+                      <input
+                        type="checkbox"
+                        [attr.data-campo]="'generos'"
+                        [attr.data-valor]="opcao"
+                        [checked]="estaMarcado('generos', opcao)"
+                        (change)="alternar('generos', opcao, caixa.checked)"
+                        #caixa
+                      />
+                      <span>{{ opcao }}</span>
+                    </label>
+                  }
+                </div>
+                @if (
+                  formulario.controls.generos.touched && formulario.controls.generos.invalid
+                ) {
+                  <p id="generos-erro" class="erro-formulario" role="alert">
+                    Informe ao menos um gênero.
                   </p>
-                } @else {
-                  @for (opcao of opcoes().estilos; track opcao) {
-                    <label class="flex items-center gap-2">
+                }
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <span
+                  id="plataformas-rotulo"
+                  class="font-display text-lg uppercase tracking-wide text-marinho"
+                >
+                  Plataformas *
+                </span>
+                <div
+                  class="grid gap-2 sm:grid-cols-2"
+                  role="group"
+                  aria-labelledby="plataformas-rotulo"
+                  aria-describedby="plataformas-erro"
+                >
+                  @for (opcao of opcoes().plataformas; track opcao) {
+                    <label class="opcao-preferencia">
+                      <input
+                        type="checkbox"
+                        [attr.data-campo]="'plataformas'"
+                        [attr.data-valor]="opcao"
+                        [checked]="estaMarcado('plataformas', opcao)"
+                        (change)="alternar('plataformas', opcao, caixa.checked)"
+                        #caixa
+                      />
+                      <span>{{ opcao }}</span>
+                    </label>
+                  }
+                </div>
+                @if (
+                  formulario.controls.plataformas.touched &&
+                  formulario.controls.plataformas.invalid
+                ) {
+                  <p id="plataformas-erro" class="erro-formulario" role="alert">
+                    Informe ao menos uma plataforma.
+                  </p>
+                }
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <span
+                  id="estilos-rotulo"
+                  class="font-display text-lg uppercase tracking-wide text-marinho"
+                >
+                  Estilos de gameplay
+                </span>
+                <div class="grid gap-2 sm:grid-cols-2" role="group" aria-labelledby="estilos-rotulo">
+                  @if (opcoes().estilos.length === 0) {
+                    <p class="text-xs text-tinta-suave">
+                      O catálogo ainda não possui estilos de gameplay.
+                    </p>
+                  } @else {
+                    @for (opcao of opcoes().estilos; track opcao) {
+                      <label class="opcao-preferencia">
+                        <input
+                          type="checkbox"
+                          [attr.data-campo]="'estilos'"
+                          [attr.data-valor]="opcao"
+                          [checked]="estaMarcado('estilos', opcao)"
+                          (change)="alternar('estilos', opcao, caixa.checked)"
+                          #caixa
+                        />
+                        <span>{{ opcao }}</span>
+                      </label>
+                    }
+                  }
+                </div>
+                <p class="text-xs text-tinta-suave">
+                  Opcional. Os estilos são as tags do catálogo.
+                </p>
+              </div>
+
+              @if (temLegados()) {
+                <div
+                  class="flex flex-col gap-2 rounded-etiqueta border-2 border-laranja bg-laranja/10 p-3"
+                  role="group"
+                  aria-labelledby="legado-rotulo"
+                >
+                  <span
+                    id="legado-rotulo"
+                    class="font-display text-lg uppercase tracking-wide text-marinho"
+                  >
+                    Fora do catálogo (legado)
+                  </span>
+                  <p class="text-xs text-tinta-suave">
+                    Estes valores estão salvos no seu perfil, mas não existem mais no
+                    catálogo. Desmarque para removê-los; depois de removidos, não
+                    poderão ser recriados.
+                  </p>
+
+                  @for (opcao of legados().generos; track opcao) {
+                    <label class="opcao-preferencia opcao-preferencia--legado">
+                      <input
+                        type="checkbox"
+                        [attr.data-campo]="'generos'"
+                        [attr.data-valor]="opcao"
+                        [checked]="estaMarcado('generos', opcao)"
+                        (change)="alternar('generos', opcao, caixa.checked)"
+                        #caixa
+                      />
+                      <span>{{ opcao }} (gênero)</span>
+                    </label>
+                  }
+
+                  @for (opcao of legados().plataformas; track opcao) {
+                    <label class="opcao-preferencia opcao-preferencia--legado">
+                      <input
+                        type="checkbox"
+                        [attr.data-campo]="'plataformas'"
+                        [attr.data-valor]="opcao"
+                        [checked]="estaMarcado('plataformas', opcao)"
+                        (change)="alternar('plataformas', opcao, caixa.checked)"
+                        #caixa
+                      />
+                      <span>{{ opcao }} (plataforma)</span>
+                    </label>
+                  }
+
+                  @for (opcao of legados().estilos; track opcao) {
+                    <label class="opcao-preferencia opcao-preferencia--legado">
                       <input
                         type="checkbox"
                         [attr.data-campo]="'estilos'"
@@ -178,134 +249,75 @@
                         [checked]="estaMarcado('estilos', opcao)"
                         (change)="alternar('estilos', opcao, caixa.checked)"
                         #caixa
-                        class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-emerald-400"
                       />
-                      <span>{{ opcao }}</span>
+                      <span>{{ opcao }} (estilo)</span>
                     </label>
                   }
-                }
-              </div>
-              <p class="text-xs text-slate-500">
-                Opcional. Os estilos são as tags do catálogo.
-              </p>
-            </div>
-
-            @if (temLegados()) {
-              <div
-                class="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-100"
-                role="group"
-                aria-labelledby="legado-rotulo"
-              >
-                <span id="legado-rotulo" class="font-semibold">
-                  Fora do catálogo (legado)
-                </span>
-                <p class="text-xs text-amber-200">
-                  Estes valores estão salvos no seu perfil, mas não existem mais no
-                  catálogo. Desmarque para removê-los; depois de removidos, não
-                  poderão ser recriados.
-                </p>
-
-                @for (opcao of legados().generos; track opcao) {
-                  <label class="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      [attr.data-campo]="'generos'"
-                      [attr.data-valor]="opcao"
-                      [checked]="estaMarcado('generos', opcao)"
-                      (change)="alternar('generos', opcao, caixa.checked)"
-                      #caixa
-                      class="h-4 w-4 rounded border-amber-500/60 bg-slate-950 text-amber-500 focus:ring-amber-400"
-                    />
-                    <span>{{ opcao }} (gênero)</span>
-                  </label>
-                }
-
-                @for (opcao of legados().plataformas; track opcao) {
-                  <label class="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      [attr.data-campo]="'plataformas'"
-                      [attr.data-valor]="opcao"
-                      [checked]="estaMarcado('plataformas', opcao)"
-                      (change)="alternar('plataformas', opcao, caixa.checked)"
-                      #caixa
-                      class="h-4 w-4 rounded border-amber-500/60 bg-slate-950 text-amber-500 focus:ring-amber-400"
-                    />
-                    <span>{{ opcao }} (plataforma)</span>
-                  </label>
-                }
-
-                @for (opcao of legados().estilos; track opcao) {
-                  <label class="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      [attr.data-campo]="'estilos'"
-                      [attr.data-valor]="opcao"
-                      [checked]="estaMarcado('estilos', opcao)"
-                      (change)="alternar('estilos', opcao, caixa.checked)"
-                      #caixa
-                      class="h-4 w-4 rounded border-amber-500/60 bg-slate-950 text-amber-500 focus:ring-amber-400"
-                    />
-                    <span>{{ opcao }} (estilo)</span>
-                  </label>
-                }
-              </div>
+                </div>
+              }
             }
+          </fieldset>
+
+          @if (erroSalvar()) {
+            <p class="aviso-formulario aviso-formulario--erro" role="alert">
+              {{ erroSalvar() }}
+            </p>
           }
-        </fieldset>
 
-        @if (erroSalvar()) {
-          <p
-            class="rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
-            role="alert"
+          <div
+            class="flex flex-wrap items-center justify-between gap-3 border-t-2 border-dashed border-marinho/25 pt-4"
           >
-            {{ erroSalvar() }}
-          </p>
-        }
+            <p class="text-xs text-tinta-suave">
+              @if (atualizadoEm(); as atualizado) {
+                Atualizado em {{ formatarData(atualizado) }}.
+              } @else {
+                Perfil ainda não salvo.
+              }
+            </p>
 
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <p class="text-xs text-slate-500">
-            @if (atualizadoEm(); as atualizado) {
-              Atualizado em {{ formatarData(atualizado) }}.
-            } @else {
-              Perfil ainda não salvo.
-            }
-          </p>
-
-          <div class="flex flex-wrap gap-3">
-            <button
-              type="button"
-              class="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
-              (click)="cancelarEdicao()"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              [disabled]="enviando() || salvamentoBloqueado()"
-              class="rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {{ enviando() ? 'Salvando...' : 'Salvar perfil' }}
-            </button>
+            <div class="flex flex-wrap gap-3">
+              <button
+                type="button"
+                class="botao-formulario botao-formulario--secundario"
+                (click)="cancelarEdicao()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                [disabled]="enviando() || salvamentoBloqueado()"
+                class="botao-formulario botao-formulario--primario"
+              >
+                {{ enviando() ? 'Salvando...' : 'Salvar perfil' }}
+              </button>
+            </div>
           </div>
         </div>
       </form>
     } @else {
-      <div
-        class="flex flex-col gap-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6"
-      >
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-400">
-            Jogador
-          </p>
-          <p class="mt-1 text-xl font-semibold text-white">
-            {{ nomeExibicao() || 'Jogador' }}
-          </p>
+      <div class="superficie-papel relative p-5 sm:p-7">
+        <span class="fita-adesiva -top-3 left-6" aria-hidden="true"></span>
+
+        <div class="flex items-center gap-3">
+          <span
+            class="grid h-12 w-12 shrink-0 place-items-center rounded-full border-2 border-marinho bg-amarelo font-display text-xl uppercase text-marinho"
+            aria-hidden="true"
+          >
+            {{ (nomeExibicao() || 'Jogador').charAt(0) }}
+          </span>
+          <div>
+            <p class="font-display text-xs uppercase tracking-[0.3em] text-vermelho">
+              Jogador
+            </p>
+            <p class="mt-1 font-display text-2xl uppercase tracking-wide text-marinho">
+              {{ nomeExibicao() || 'Jogador' }}
+            </p>
+          </div>
         </div>
 
         @if (semPreferencias()) {
           <p
-            class="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200"
+            class="mt-4 rounded-etiqueta border-2 border-laranja bg-laranja/10 px-3 py-2 text-sm text-tinta"
             role="status"
           >
             Você ainda não informou preferências. Use “Editar perfil” para
@@ -313,38 +325,40 @@
           </p>
         } @else if (!completo()) {
           <p
-            class="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200"
+            class="mt-4 rounded-etiqueta border-2 border-laranja bg-laranja/10 px-3 py-2 text-sm text-tinta"
             role="status"
           >
             Informe ao menos um gênero e uma plataforma para completar o perfil.
           </p>
         }
 
-        <dl class="grid gap-4 sm:grid-cols-2">
+        <dl class="mt-5 grid gap-4 border-t-2 border-dashed border-marinho/25 pt-4 sm:grid-cols-3">
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <dt class="font-display text-xs uppercase tracking-[0.18em] text-tinta-suave">
               Gêneros favoritos
             </dt>
-            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.generos) }}</dd>
+            <dd class="mt-1 text-sm font-semibold text-tinta">{{ listar(dados.generos) }}</dd>
           </div>
 
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <dt class="font-display text-xs uppercase tracking-[0.18em] text-tinta-suave">
               Plataformas
             </dt>
-            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.plataformas) }}</dd>
+            <dd class="mt-1 text-sm font-semibold text-tinta">{{ listar(dados.plataformas) }}</dd>
           </div>
 
           <div>
-            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <dt class="font-display text-xs uppercase tracking-[0.18em] text-tinta-suave">
               Estilos de gameplay
             </dt>
-            <dd class="mt-1 text-sm text-slate-200">{{ listar(dados.estilos) }}</dd>
+            <dd class="mt-1 text-sm font-semibold text-tinta">{{ listar(dados.estilos) }}</dd>
           </div>
         </dl>
 
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <p class="text-xs text-slate-500">
+        <div
+          class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t-2 border-dashed border-marinho/25 pt-4"
+        >
+          <p class="text-xs text-tinta-suave">
             @if (atualizadoEm(); as atualizado) {
               Atualizado em {{ formatarData(atualizado) }}.
             } @else {
@@ -354,7 +368,7 @@
 
           <button
             type="button"
-            class="rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+            class="botao-formulario botao-formulario--primario"
             (click)="iniciarEdicao()"
           >
             Editar perfil
