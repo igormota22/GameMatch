@@ -397,6 +397,89 @@
   .link-formulario:hover {
     color: var(--color-eletrico);
   }
+
+  /* Card de jogo da prateleira (catálogo) */
+  .cartao-jogo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--color-papel);
+    background-image: var(--textura-papel);
+    border: 2px solid var(--color-marinho);
+    border-radius: var(--radius-caixa);
+    box-shadow: var(--shadow-caixa);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .cartao-jogo:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-caixa-hover);
+    }
+  }
+
+  /* Etiqueta de característica do jogo (gênero/tag e plataforma) */
+  .etiqueta-caracteristica {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--color-marinho);
+    border-radius: var(--radius-etiqueta);
+    background-color: var(--color-amarelo);
+    color: var(--color-tinta);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+  }
+
+  .etiqueta-caracteristica--plataforma {
+    background-color: var(--color-papel-escuro);
+    color: var(--color-marinho);
+    font-weight: 600;
+  }
+
+  /* Opção de preferência do perfil (checkbox com área de clique) */
+  .opcao-preferencia {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--color-marinho) 22%, transparent);
+    border-radius: var(--radius-etiqueta);
+    background-color: color-mix(in srgb, var(--color-papel) 82%, white);
+    color: var(--color-tinta);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .opcao-preferencia:hover {
+    border-color: var(--color-marinho);
+    background-color: var(--color-papel-escuro);
+  }
+
+  .opcao-preferencia:has(input:focus-visible) {
+    outline: 3px solid var(--color-eletrico);
+    outline-offset: 2px;
+  }
+
+  .opcao-preferencia input {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    accent-color: var(--color-marinho);
+  }
+
+  .opcao-preferencia--legado {
+    border-color: color-mix(in srgb, var(--color-laranja) 60%, var(--color-marinho));
+    background-color: color-mix(in srgb, var(--color-laranja) 14%, var(--color-papel));
+  }
 }
 
 @layer base {
