@@ -6,7 +6,7 @@
 
 ## 2. Classes compartilhadas
 
-- [ ] 2.1 Adicionar em `web/src/styles.css` (`@layer components`) as classes `cartao-jogo`, `etiqueta-caracteristica`, `etiqueta-caracteristica--plataforma` e `opcao-preferencia`, usando apenas os tokens existentes e com foco visível, hover discreto e movimento seguro. **Verificação:** `npm run build` conclui sem erro e as classes aparecem no CSS gerado.
+- [x] 2.1 Adicionar em `web/src/styles.css` (`@layer components`) as classes `cartao-jogo`, `etiqueta-caracteristica`, `etiqueta-caracteristica--plataforma` e `opcao-preferencia`, usando apenas os tokens existentes e com foco visível, hover discreto e movimento seguro. **Verificação:** `npm run build` conclui sem erro e as classes aparecem no CSS gerado.
 
 ## 3. Perfil gamer
 
@@ -24,7 +24,7 @@
 - [x] 5.1 Executar `npm test -- --watch=false` em `web/` e confirmar todos os testes verdes sem alteração de comportamento. **Verificação:** saída sem falhas.
 - [x] 5.2 Executar `npm run build` em `web/` e confirmar a compilação de produção. **Verificação:** build concluído com sucesso.
 - [x] 5.3 Revisão manual de acessibilidade, responsividade e movimento reduzido em `/perfil` e `/catalogo`: foco visível por teclado, estados anunciáveis, sem rolagem horizontal em 390px/1440px e animações desativadas com `prefers-reduced-motion`. **Verificação:** checklist registrado sem pendências.
-- [ ] 5.4 Abrir o Pull Request para a `main` com o template de `.github/pull_request_template.md`, relacionando RF-19/CA-23, DT-19, os requisitos da change e os testes executados. **Verificação:** PR aberto com o template preenchido.
+- [x] 5.4 Abrir o Pull Request para a `main` com o template de `.github/pull_request_template.md`, relacionando RF-19/CA-23, DT-19, os requisitos da change e os testes executados. **Verificação:** PR aberto com o template preenchido.
 
 ## Workflow follow-up
 
