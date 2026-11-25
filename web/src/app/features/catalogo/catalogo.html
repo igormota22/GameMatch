@@ -1,118 +1,123 @@
-<section class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 lg:px-8">
-  <header class="max-w-2xl">
-    <p class="text-sm font-semibold uppercase tracking-wide text-emerald-400">Catálogo</p>
-    <h1 class="mt-2 text-2xl font-bold text-white sm:text-3xl">
-      Jogos gratuitos para descobrir
-    </h1>
-    <p class="mt-2 text-sm text-slate-400">
-      Pesquise pelo título e combine filtros de gênero, plataforma e tag para
-      encontrar seu próximo jogo.
-    </p>
+<section class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+  <header class="flex flex-wrap items-start justify-between gap-4">
+    <div class="max-w-2xl">
+      <p class="etiqueta-promo">Catálogo</p>
+      <h1
+        class="mt-3 font-display text-4xl uppercase leading-none tracking-wide text-marinho sm:text-5xl"
+      >
+        Jogos gratuitos para descobrir
+      </h1>
+      <p class="mt-3 text-sm text-tinta-suave">
+        Pesquise pelo título e combine filtros de gênero, plataforma e tag para
+        encontrar seu próximo jogo.
+      </p>
+    </div>
+    <span class="selo-locadora hidden shrink-0 sm:grid" aria-hidden="true">
+      Prateleira<br />aberta
+    </span>
   </header>
 
-  <form class="grid gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6" [formGroup]="formulario">
-    <div class="flex flex-col gap-1 text-sm text-slate-200">
-      <label for="busca" class="font-medium">Buscar por título</label>
-      <input
-        id="busca"
-        type="search"
-        formControlName="busca"
-        placeholder="Ex.: aurora"
-        class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-      />
+  <form class="ficha-formulario" [formGroup]="formulario">
+    <div class="cabecalho-ficha">
+      <span>Balcão de busca</span>
+      <span aria-hidden="true">Filtros</span>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-3">
-      <div class="flex flex-col gap-1 text-sm text-slate-200">
-        <label for="genero" class="font-medium">Gênero</label>
-        <select
-          id="genero"
-          formControlName="genero"
-          class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-        >
-          <option value="">Todos</option>
-          @for (genero of filtros().generos; track genero) {
-            <option [value]="genero">{{ genero }}</option>
-          }
-        </select>
+    <div class="grid gap-4 p-4 sm:p-6">
+      <div class="flex flex-col gap-1">
+        <label for="busca" class="rotulo-formulario">Buscar por título</label>
+        <input
+          id="busca"
+          type="search"
+          formControlName="busca"
+          placeholder="Ex.: aurora"
+          class="entrada-formulario"
+        />
       </div>
 
-      <div class="flex flex-col gap-1 text-sm text-slate-200">
-        <label for="plataforma" class="font-medium">Plataforma</label>
-        <select
-          id="plataforma"
-          formControlName="plataforma"
-          class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-        >
-          <option value="">Todas</option>
-          @for (plataforma of filtros().plataformas; track plataforma) {
-            <option [value]="plataforma">{{ plataforma }}</option>
-          }
-        </select>
-      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="flex flex-col gap-1">
+          <label for="genero" class="rotulo-formulario">Gênero</label>
+          <select id="genero" formControlName="genero" class="entrada-formulario">
+            <option value="">Todos</option>
+            @for (genero of filtros().generos; track genero) {
+              <option [value]="genero">{{ genero }}</option>
+            }
+          </select>
+        </div>
 
-      <div class="flex flex-col gap-1 text-sm text-slate-200">
-        <label for="tag" class="font-medium">Tag</label>
-        <select
-          id="tag"
-          formControlName="tag"
-          class="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-        >
-          <option value="">Todas</option>
-          @for (tag of filtros().tags; track tag) {
-            <option [value]="tag">{{ tag }}</option>
-          }
-        </select>
+        <div class="flex flex-col gap-1">
+          <label for="plataforma" class="rotulo-formulario">Plataforma</label>
+          <select id="plataforma" formControlName="plataforma" class="entrada-formulario">
+            <option value="">Todas</option>
+            @for (plataforma of filtros().plataformas; track plataforma) {
+              <option [value]="plataforma">{{ plataforma }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label for="tag" class="rotulo-formulario">Tag</label>
+          <select id="tag" formControlName="tag" class="entrada-formulario">
+            <option value="">Todas</option>
+            @for (tag of filtros().tags; track tag) {
+              <option [value]="tag">{{ tag }}</option>
+            }
+          </select>
+        </div>
       </div>
     </div>
   </form>
 
   <div class="flex flex-wrap items-baseline justify-between gap-2">
-    <h2 #lista tabindex="-1" class="text-base font-semibold text-white outline-none">
+    <h2
+      #lista
+      tabindex="-1"
+      class="font-display text-2xl uppercase tracking-wide text-marinho outline-none"
+    >
       Jogos do catálogo
     </h2>
     @if (!carregando() && !erro()) {
-      <p class="text-sm text-slate-400" aria-live="polite">{{ contagem() }}</p>
+      <p class="text-sm text-tinta-suave" aria-live="polite">{{ contagem() }}</p>
     }
   </div>
 
   @if (erroFavorito()) {
-    <div
-      class="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
-      role="alert"
-    >
+    <div class="aviso-formulario aviso-formulario--erro" role="alert">
       {{ erroFavorito() }}
     </div>
   }
 
   @if (carregando()) {
-    <p class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400" role="status">
+    <p class="superficie-papel p-4 text-sm text-tinta-suave" role="status">
       Carregando o catálogo...
     </p>
   } @else if (erro()) {
-    <div class="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300" role="alert">
+    <div class="aviso-formulario aviso-formulario--erro" role="alert">
       <p>{{ erro() }}</p>
       <button
         type="button"
-        class="mt-3 rounded-md border border-rose-400/60 px-3 py-2 text-sm font-medium transition hover:bg-rose-500/10"
+        class="botao-formulario botao-formulario--secundario mt-3"
         (click)="carregar()"
       >
         Tentar novamente
       </button>
     </div>
   } @else if (buscaSemResultados()) {
-    <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-6 text-sm text-slate-300" role="status">
-      <p>Nenhum jogo encontrado para a busca e os filtros aplicados.</p>
+    <div class="superficie-papel p-6" role="status">
+      <p class="text-sm text-tinta">
+        Nenhum jogo encontrado para a busca e os filtros aplicados.
+      </p>
       <button
         type="button"
-        class="mt-3 rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+        class="botao-formulario botao-formulario--primario mt-4"
         (click)="limparFiltros()"
       >
         Limpar filtros
       </button>
     </div>
   } @else if (semResultados()) {
-    <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-6 text-sm text-slate-300" role="status">
+    <div class="superficie-papel p-6 text-sm text-tinta" role="status">
       <p>
         Não há jogos no catálogo. Peça ao operador para sincronizar o snapshot
         antes de navegar.
@@ -121,30 +126,30 @@
   } @else if (pagina(); as resultado) {
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Jogos do catálogo">
       @for (jogo of resultado.items; track jogo.id) {
-        <li class="flex flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
+        <li class="cartao-jogo">
           <img
             [src]="jogo.thumbnail"
             [alt]="'Capa de ' + jogo.titulo"
             loading="lazy"
-            class="aspect-video w-full object-cover"
+            class="aspect-video w-full border-b-2 border-marinho object-cover"
           />
           <div class="flex flex-1 flex-col gap-3 p-4">
             <div>
-              <h3 class="text-base font-semibold text-white">{{ jogo.titulo }}</h3>
-              <p class="mt-1 text-xs text-slate-400">{{ jogo.desenvolvedor }}</p>
+              <h3 class="font-display text-xl uppercase leading-tight tracking-wide text-marinho">
+                {{ jogo.titulo }}
+              </h3>
+              <p class="mt-1 text-xs text-tinta-suave">{{ jogo.desenvolvedor }}</p>
             </div>
 
             <ul class="flex flex-wrap gap-1" [attr.aria-label]="'Gêneros de ' + jogo.titulo">
               @for (genero of jogo.generos; track genero) {
-                <li class="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-300">
-                  {{ genero }}
-                </li>
+                <li class="etiqueta-caracteristica">{{ genero }}</li>
               }
             </ul>
 
             <ul class="flex flex-wrap gap-1" [attr.aria-label]="'Plataformas de ' + jogo.titulo">
               @for (plataforma of jogo.plataformas; track plataforma) {
-                <li class="rounded-full border border-slate-700 bg-slate-950 px-2 py-0.5 text-xs text-slate-300">
+                <li class="etiqueta-caracteristica etiqueta-caracteristica--plataforma">
                   {{ plataforma }}
                 </li>
               }
@@ -152,13 +157,9 @@
 
             <button
               type="button"
-              class="mt-auto inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition"
-              [class.border-emerald-500]="favoritos.estaFavoritado(jogo.id)"
-              [class.bg-emerald-500/10]="favoritos.estaFavoritado(jogo.id)"
-              [class.text-emerald-300]="favoritos.estaFavoritado(jogo.id)"
-              [class.border-slate-700]="!favoritos.estaFavoritado(jogo.id)"
-              [class.text-slate-300]="!favoritos.estaFavoritado(jogo.id)"
-              [class.hover:bg-slate-800]="!favoritos.estaFavoritado(jogo.id)"
+              class="botao-formulario mt-auto w-full"
+              [class.botao-formulario--primario]="favoritos.estaFavoritado(jogo.id)"
+              [class.botao-formulario--secundario]="!favoritos.estaFavoritado(jogo.id)"
               [attr.aria-pressed]="favoritos.estaFavoritado(jogo.id)"
               [attr.aria-label]="'Favoritar ' + jogo.titulo"
               (click)="alternarFavorito(jogo.id)"
@@ -187,25 +188,25 @@
 
     <nav
       aria-label="Paginação do catálogo"
-      class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4"
+      class="superficie-papel flex flex-wrap items-center justify-between gap-3 p-4"
     >
       <button
         type="button"
         [disabled]="!temAnterior()"
-        class="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+        class="botao-formulario botao-formulario--secundario"
         (click)="anterior()"
       >
         Anterior
       </button>
 
-      <p class="text-sm text-slate-300">
+      <p class="text-sm font-semibold text-tinta">
         Página {{ numeroPagina() }} de {{ totalPaginas() }}
       </p>
 
       <button
         type="button"
         [disabled]="!temProxima()"
-        class="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+        class="botao-formulario botao-formulario--secundario"
         (click)="proxima()"
       >
         Próxima
@@ -213,13 +214,13 @@
     </nav>
   }
 
-  <p class="text-xs text-slate-500">
+  <p class="text-xs text-tinta-suave">
     Dados fornecidos por
     <a
       [href]="urlFreetogame"
       target="_blank"
       rel="noopener noreferrer"
-      class="font-medium text-emerald-400 transition hover:text-emerald-300"
+      class="link-formulario"
     >
       FreeToGame.com
     </a>
