@@ -2,9 +2,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { JogoResumo } from '../../core/servicos/catalogo.service';
 import { Inicio } from './inicio';
 
 const CHAVE_SESSAO = 'gamematch.sessao';
+const FAVORITOS_URL = '/api/favoritos?pagina=1&tamanho=3';
 const SAUDE_OK = {
   status: 'Healthy',
   duracaoTotalMs: 10,
@@ -19,6 +21,25 @@ interface PerfilResposta {
   estilos: string[];
   completo: boolean;
   atualizadoEm: string | null;
+}
+
+const PERFIL_COMPLETO: PerfilResposta = {
+  generos: ['RPG', 'Ação'],
+  plataformas: ['PC (Windows)'],
+  estilos: ['turn-based'],
+  completo: true,
+  atualizadoEm: '2026-11-13T12:00:00Z',
+};
+
+function favorito(id: number, titulo: string): JogoResumo {
+  return {
+    id,
+    titulo,
+    thumbnail: `https://cdn.example/${id}.jpg`,
+    generos: ['RPG'],
+    plataformas: ['PC (Windows)'],
+    desenvolvedor: `Estúdio ${id}`,
+  };
 }
 
 describe('Inicio', () => {
@@ -66,11 +87,22 @@ describe('Inicio', () => {
     http.expectOne('/api/health').flush(SAUDE_OK);
   }
 
+  function responderFavoritos(itens: JogoResumo[] = []): void {
+    http.expectOne(FAVORITOS_URL).flush({
+      items: itens,
+      pagina: 1,
+      tamanho: 3,
+      total: itens.length,
+    });
+  }
+
   async function carregarPerfil(
     fixture: ComponentFixture<Inicio>,
     perfil: PerfilResposta,
+    favoritos: JogoResumo[] = [],
   ): Promise<void> {
     http.expectOne('/api/perfil').flush(perfil);
+    responderFavoritos(favoritos);
     await fixture.whenStable();
     fixture.detectChanges();
   }
@@ -89,10 +121,86 @@ describe('Inicio', () => {
     fixture.detectChanges();
 
     http.expectNone('/api/perfil');
+    http.expectNone(FAVORITOS_URL);
 
     const texto = elemento(fixture).textContent;
 
     expect(texto).not.toContain('Seu perfil');
+    expect(texto).toContain('Status da API');
+  });
+
+  it('convida o visitante a entrar para ver os favoritos', async () => {
+    const fixture = criar();
+
+    responderSaude();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const texto = elemento(fixture).textContent;
+
+    expect(texto).toContain('Entre para ver seus favoritos.');
+    expect(link(fixture, 'Entrar')?.getAttribute('href')).toBe('/entrar');
+    expect(texto).not.toContain('Você ainda não tem jogos favoritos.');
+  });
+
+  it('exibe até três favoritos na vitrine', async () => {
+    autenticar();
+
+    const fixture = criar();
+
+    responderSaude();
+    await carregarPerfil(fixture, PERFIL_COMPLETO, [
+      favorito(1, 'Aurora Tactics'),
+      favorito(2, 'Blue Racer'),
+      favorito(3, 'Cobalt Arena'),
+    ]);
+
+    const cartoes = elemento(fixture).querySelectorAll<HTMLAnchorElement>(
+      'a[aria-label$="nos favoritos"]',
+    );
+
+    expect(cartoes.length).toBe(3);
+    expect(cartoes[0].textContent).toContain('Aurora Tactics');
+    expect(cartoes[0].getAttribute('aria-label')).toBe('Ver Aurora Tactics nos favoritos');
+    expect(cartoes[0].querySelector('img')?.getAttribute('alt')).toBe('Capa de Aurora Tactics');
+    expect(elemento(fixture).textContent).not.toContain('Você ainda não tem jogos favoritos.');
+  });
+
+  it('orienta a explorar o catálogo quando não há favoritos', async () => {
+    autenticar();
+
+    const fixture = criar();
+
+    responderSaude();
+    await carregarPerfil(fixture, PERFIL_COMPLETO);
+
+    const texto = elemento(fixture).textContent;
+
+    expect(texto).toContain('Você ainda não tem jogos favoritos.');
+    expect(link(fixture, 'Explorar catálogo')?.getAttribute('href')).toBe('/catalogo');
+  });
+
+  it('mantém a home disponível quando os favoritos falham', async () => {
+    autenticar();
+
+    const fixture = criar();
+
+    responderSaude();
+    http.expectOne('/api/perfil').flush(PERFIL_COMPLETO);
+    http
+      .expectOne(FAVORITOS_URL)
+      .flush(
+        { title: 'Erro', detail: 'Falha ao carregar os favoritos.', status: 500 },
+        { status: 500, statusText: 'Server Error' },
+      );
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const texto = elemento(fixture).textContent;
+
+    expect(texto).toContain('Falha ao carregar os favoritos.');
+    expect(link(fixture, 'Ver favoritos')?.getAttribute('href')).toBe('/favoritos');
+    expect(texto).toContain('Seu perfil');
     expect(texto).toContain('Status da API');
   });
 
@@ -102,13 +210,7 @@ describe('Inicio', () => {
     const fixture = criar();
 
     responderSaude();
-    await carregarPerfil(fixture, {
-      generos: ['RPG', 'Ação'],
-      plataformas: ['PC (Windows)'],
-      estilos: ['turn-based'],
-      completo: true,
-      atualizadoEm: '2026-11-13T12:00:00Z',
-    });
+    await carregarPerfil(fixture, PERFIL_COMPLETO);
 
     const texto = elemento(fixture).textContent;
 
@@ -179,6 +281,7 @@ describe('Inicio', () => {
         { title: 'Erro', detail: 'Falha ao carregar o perfil.', status: 500 },
         { status: 500, statusText: 'Server Error' },
       );
+    responderFavoritos();
     await fixture.whenStable();
     fixture.detectChanges();
 
