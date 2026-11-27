@@ -47,7 +47,7 @@ export class CriarConta {
           usuario: resposta.usuario,
         });
 
-        this.router.navigateByUrl('/conta');
+        this.router.navigateByUrl('/perfil');
       },
       error: (erro) => {
         this.erro.set(mensagemDeErro(erro));

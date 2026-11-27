@@ -66,76 +66,99 @@
         </div>
       </div>
 
-      <!-- Prateleira decorativa: retirar a caixa da prateleira no hover -->
-      <div class="relative" aria-hidden="true">
-        <div class="prateleira grid grid-cols-3 items-end gap-3 border-b-amarelo/70 pb-3">
-          <div class="group">
-            <div
-              class="relative aspect-[3/4] overflow-hidden rounded-caixa border-2 border-marinho bg-marinho-claro p-2 shadow-caixa transition-transform duration-300 motion-safe:group-hover:-translate-y-3 motion-safe:group-hover:rotate-1"
+      <!-- Prateleira da locadora: favoritos do usuário ou convite para entrar -->
+      <div class="relative">
+        @if (!autenticado()) {
+          <div
+            class="prateleira flex min-h-[16rem] flex-col items-center justify-center gap-3 border-b-amarelo/70 px-4 pb-3 text-center"
+          >
+            <p class="text-sm text-papel/85">Entre para ver seus favoritos.</p>
+            <a
+              routerLink="/entrar"
+              class="inline-block border-2 border-amarelo px-4 py-2 font-display text-base uppercase tracking-[0.08em] text-amarelo transition hover:bg-amarelo hover:text-marinho focus-visible:outline-amarelo"
             >
-              <div class="h-1/2 rounded-etiqueta bg-eletrico p-2">
-                <p class="font-display text-xl uppercase leading-none text-papel">Turbo<br />Racer</p>
-              </div>
-              <p class="mt-2 font-display text-xs uppercase tracking-[0.14em] text-amarelo">
-                Corrida • 1996
-              </p>
-              <span class="etiqueta-colada absolute right-1 top-1 px-1.5 py-0.5 text-[0.6rem] font-bold">
-                R$ 3
-              </span>
-              <span
-                class="etiqueta-promo--vermelha etiqueta-promo absolute -left-2 bottom-2 px-1.5 py-0.5 text-[0.6rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              >
-                Promo
-              </span>
-            </div>
+              Entrar
+            </a>
           </div>
-
-          <div class="group">
-            <div
-              class="relative aspect-[3/4] overflow-hidden rounded-caixa border-2 border-marinho bg-vermelho p-2 shadow-caixa transition-transform duration-300 motion-safe:group-hover:-translate-y-3 motion-safe:group-hover:-rotate-1"
+          <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
+            Prateleira da locadora
+          </p>
+        } @else if (carregandoFavoritos()) {
+          <div
+            class="prateleira flex min-h-[16rem] items-center justify-center border-b-amarelo/70 px-4 pb-3"
+          >
+            <p class="text-center text-sm text-papel/85" role="status">
+              Carregando favoritos...
+            </p>
+          </div>
+          <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
+            Sua prateleira
+          </p>
+        } @else if (erroFavoritos()) {
+          <div
+            class="prateleira flex min-h-[16rem] flex-col items-center justify-center gap-3 border-b-amarelo/70 px-4 pb-3 text-center"
+          >
+            <p class="text-sm text-papel/85" role="alert">{{ erroFavoritos() }}</p>
+            <a
+              routerLink="/favoritos"
+              class="inline-block border-2 border-amarelo px-4 py-2 font-display text-base uppercase tracking-[0.08em] text-amarelo transition hover:bg-amarelo hover:text-marinho focus-visible:outline-amarelo"
             >
-              <div class="h-1/2 rounded-etiqueta bg-amarelo p-2">
-                <p class="font-display text-xl uppercase leading-none text-marinho">Duelo<br />Pixel</p>
-              </div>
-              <p class="mt-2 font-display text-xs uppercase tracking-[0.14em] text-papel">
-                Luta • 1994
-              </p>
-              <span class="etiqueta-colada absolute right-1 top-1 px-1.5 py-0.5 text-[0.6rem] font-bold">
-                R$ 4
-              </span>
-              <span
-                class="etiqueta-promo--azul etiqueta-promo absolute -left-2 bottom-2 px-1.5 py-0.5 text-[0.6rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              >
-                Novidade
-              </span>
-            </div>
+              Ver favoritos
+            </a>
           </div>
-
-          <div class="group">
-            <div
-              class="relative aspect-[3/4] overflow-hidden rounded-caixa border-2 border-marinho bg-plastico p-2 shadow-caixa transition-transform duration-300 motion-safe:group-hover:-translate-y-3 motion-safe:group-hover:rotate-1"
+          <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
+            Sua prateleira
+          </p>
+        } @else if (favoritosVitrine().length > 0) {
+          <div class="prateleira grid grid-cols-3 items-end gap-3 border-b-amarelo/70 pb-3">
+            @for (jogo of favoritosVitrine(); track jogo.id) {
+              <a
+                routerLink="/favoritos"
+                class="group block focus-visible:outline-amarelo"
+                [attr.aria-label]="'Ver ' + jogo.titulo + ' nos favoritos'"
+              >
+                <div
+                  class="relative aspect-[3/4] overflow-hidden rounded-caixa border-2 border-marinho bg-marinho-claro shadow-caixa transition-transform duration-300 motion-safe:group-hover:-translate-y-3 motion-safe:group-hover:rotate-1"
+                >
+                  <img
+                    [src]="jogo.thumbnail"
+                    [alt]="'Capa de ' + jogo.titulo"
+                    loading="lazy"
+                    class="h-full w-full object-cover"
+                  />
+                  <span
+                    class="etiqueta-colada absolute right-1 top-1 px-1.5 py-0.5 text-[0.6rem] font-bold"
+                  >
+                    Favorito
+                  </span>
+                </div>
+                <p
+                  class="mt-2 break-words font-display text-xs uppercase leading-tight tracking-[0.08em] text-papel"
+                >
+                  {{ jogo.titulo }}
+                </p>
+              </a>
+            }
+          </div>
+          <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
+            Sua prateleira
+          </p>
+        } @else {
+          <div
+            class="prateleira flex min-h-[16rem] flex-col items-center justify-center gap-3 border-b-amarelo/70 px-4 pb-3 text-center"
+          >
+            <p class="text-sm text-papel/85">Você ainda não tem jogos favoritos.</p>
+            <a
+              routerLink="/catalogo"
+              class="inline-block border-2 border-amarelo px-4 py-2 font-display text-base uppercase tracking-[0.08em] text-amarelo transition hover:bg-amarelo hover:text-marinho focus-visible:outline-amarelo"
             >
-              <div class="h-1/2 rounded-etiqueta bg-marinho p-2">
-                <p class="font-display text-xl uppercase leading-none text-amarelo">Caverna<br />Perdida</p>
-              </div>
-              <p class="mt-2 font-display text-xs uppercase tracking-[0.14em] text-marinho">
-                Aventura • 1998
-              </p>
-              <span class="etiqueta-colada absolute right-1 top-1 px-1.5 py-0.5 text-[0.6rem] font-bold">
-                R$ 3
-              </span>
-              <span
-                class="etiqueta-promo absolute -left-2 bottom-2 px-1.5 py-0.5 text-[0.6rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              >
-                Clássico
-              </span>
-            </div>
+              Explorar catálogo
+            </a>
           </div>
-        </div>
-
-        <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
-          Prateleira da semana
-        </p>
+          <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
+            Sua prateleira
+          </p>
+        }
       </div>
     </div>
     </div>

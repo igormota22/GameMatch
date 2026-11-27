@@ -1,5 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { JogoResumo } from '../../core/servicos/catalogo.service';
+import { FavoritosService } from '../../core/servicos/favoritos.service';
 import { mensagemDeErro } from '../../core/servicos/mensagem-erro';
 import { Perfil, PerfilService } from '../../core/servicos/perfil.service';
 import { SaudeService } from '../../core/servicos/saude.service';
@@ -16,6 +18,7 @@ type EstadoSaude = 'carregando' | 'ok' | 'indisponivel';
 export class Inicio implements OnInit {
   private readonly saudeService = inject(SaudeService);
   private readonly perfilService = inject(PerfilService);
+  private readonly favoritosService = inject(FavoritosService);
   private readonly sessaoService = inject(SessaoService);
 
   protected readonly estado = signal<EstadoSaude>('carregando');
@@ -29,6 +32,10 @@ export class Inicio implements OnInit {
   protected readonly perfil = signal<Perfil | null>(null);
   protected readonly carregandoPerfil = signal(false);
   protected readonly erroPerfil = signal<string | null>(null);
+
+  protected readonly favoritosVitrine = signal<readonly JogoResumo[]>([]);
+  protected readonly carregandoFavoritos = signal(false);
+  protected readonly erroFavoritos = signal<string | null>(null);
   protected readonly completo = computed(() => this.perfil()?.completo ?? false);
   protected readonly semPreferencias = computed(() => {
     const perfil = this.perfil();
@@ -46,6 +53,7 @@ export class Inicio implements OnInit {
 
     if (this.autenticado()) {
       this.carregarPerfil();
+      this.carregarFavoritos();
     }
   }
 
@@ -86,6 +94,23 @@ export class Inicio implements OnInit {
       error: (erro) => {
         this.erroPerfil.set(mensagemDeErro(erro));
         this.carregandoPerfil.set(false);
+      },
+    });
+  }
+
+  private carregarFavoritos(): void {
+    this.carregandoFavoritos.set(true);
+    this.erroFavoritos.set(null);
+
+    this.favoritosService.listar(1, 3).subscribe({
+      next: (pagina) => {
+        this.favoritosVitrine.set(pagina.items.slice(0, 3));
+        this.carregandoFavoritos.set(false);
+      },
+      error: (erro) => {
+        this.erroFavoritos.set(mensagemDeErro(erro));
+        this.favoritosVitrine.set([]);
+        this.carregandoFavoritos.set(false);
       },
     });
   }
