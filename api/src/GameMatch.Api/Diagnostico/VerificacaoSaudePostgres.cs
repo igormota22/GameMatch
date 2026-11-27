@@ -1,4 +1,6 @@
+
 using GameMatch.Infrastructure.Persistencia;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace GameMatch.Api.Diagnostico;
@@ -15,13 +17,15 @@ public sealed class VerificacaoSaudePostgres(IServiceScopeFactory escopoFactory)
         try
         {
             await using var escopo = escopoFactory.CreateAsyncScope();
-            var dbContext = escopo.ServiceProvider.GetRequiredService<GameMatchDbContext>();
 
-            var conectado = await dbContext.Database.CanConnectAsync(cancellationToken);
+            var dbContext = escopo.ServiceProvider
+                .GetRequiredService<GameMatchDbContext>();
 
-            return conectado
-                ? HealthCheckResult.Healthy("Conexão com o PostgreSQL bem-sucedida.")
-                : HealthCheckResult.Unhealthy("Não foi possível conectar ao PostgreSQL.");
+            await dbContext.Database.OpenConnectionAsync(cancellationToken);
+            await dbContext.Database.CloseConnectionAsync();
+
+            return HealthCheckResult.Healthy(
+                "Conexão com o PostgreSQL bem-sucedida.");
         }
         catch (Exception excecao)
         {

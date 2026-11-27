@@ -1,11 +1,11 @@
 {
   "/api": {
-    "target": "http://localhost:5080",
-    "secure": false,
+    "target": "https://gateway-methods-charitable-valid.trycloudflare.com",
+    "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
       "^/api": ""
     },
-    "logLevel": "info"
+    "logLevel": "debug"
   }
 }
