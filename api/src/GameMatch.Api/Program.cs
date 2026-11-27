@@ -77,15 +77,13 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.MapOpenApi();
+
+app.UseSwaggerUI(opcoes =>
 {
-    app.MapOpenApi();
-    app.UseSwaggerUI(opcoes =>
-    {
-        opcoes.SwaggerEndpoint("/openapi/v1.json", "GameMatch API v1");
-        opcoes.RoutePrefix = "swagger";
-    });
-}
+    opcoes.SwaggerEndpoint("/openapi/v1.json", "GameMatch API v1");
+    opcoes.RoutePrefix = "swagger";
+});
 
 app.Use(async (contexto, proximo) =>
 {
@@ -128,6 +126,8 @@ app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapHealthChecks("/health");
 
 app.Run();
 
