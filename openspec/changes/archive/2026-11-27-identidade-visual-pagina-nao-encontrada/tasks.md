@@ -23,7 +23,7 @@
 - [x] 4.1 Executar `npm test -- --watch=false` em `web/` e confirmar todos os testes verdes, incluindo os testes da 404, da vitrine e do cadastro. **Verificação:** saída sem falhas.
 - [x] 4.2 Executar `npm run build` em `web/` e confirmar a compilação de produção. **Verificação:** build concluído com sucesso.
 - [x] 4.3 Revisão manual da 404, da vitrine da home e do redirecionamento do cadastro: identidade da locadora, shell e atribuição FreeToGame, foco visível por teclado, contraste AA, sem rolagem horizontal em 390px/1440px e animações desativadas com `prefers-reduced-motion`. **Verificação:** checklist registrado sem pendências.
-- [ ] 4.4 Abrir o Pull Request para a `main` com o template de `.github/pull_request_template.md`, relacionando RF-19/CA-23, RF-01/CA-01, RF-16/CA-16, DT-19, os requisitos da change e os testes executados. **Verificação:** PR aberto com o template preenchido.
+- [x] 4.4 Abrir o Pull Request para a `main` com o template de `.github/pull_request_template.md`, relacionando RF-19/CA-23, RF-01/CA-01, RF-16/CA-16, DT-19, os requisitos da change e os testes executados. **Verificação:** PR aberto com o template preenchido.
 
 ## Workflow follow-up
 
