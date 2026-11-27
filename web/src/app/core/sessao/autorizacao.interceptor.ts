@@ -1,22 +1,34 @@
+
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { SessaoService } from './sessao.service';
 
-/**
- * Anexa o token JWT às chamadas da API e encerra a sessão quando a API
- * responde 401 para uma requisição autenticada.
- */
+const API_PRODUCAO = 'https://gamematch.runasp.net';
+
 export const autorizacaoInterceptor: HttpInterceptorFn = (requisicao, proximo) => {
   const sessaoService = inject(SessaoService);
   const token = sessaoService.token();
 
-  const requisicaoAutenticada =
-    token && requisicao.url.startsWith('/api')
-      ? requisicao.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-      : requisicao;
+  const ehRequisicaoApi = requisicao.url.startsWith('/api');
 
-  return proximo(requisicaoAutenticada).pipe(
+  const ehAmbienteLocal =
+    typeof window !== 'undefined' &&
+    ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+  const urlApi =
+    ehRequisicaoApi && !ehAmbienteLocal
+      ? requisicao.url.replace(/^\/api/, API_PRODUCAO)
+      : requisicao.url;
+
+  const requisicaoConfigurada = requisicao.clone({
+    url: urlApi,
+    ...(ehRequisicaoApi && token
+      ? { setHeaders: { Authorization: `Bearer ${token}` } }
+      : {}),
+  });
+
+  return proximo(requisicaoConfigurada).pipe(
     catchError((erro: unknown) => {
       if (erro instanceof HttpErrorResponse && erro.status === 401 && token) {
         sessaoService.encerrar();
