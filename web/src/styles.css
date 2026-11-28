@@ -106,15 +106,6 @@
     box-shadow: var(--shadow-caixa);
   }
 
-  /* Superfície de plástico de caixa de jogo */
-  .superficie-plastico {
-    background-color: var(--color-plastico);
-    background-image: var(--textura-plastico), var(--textura-papel);
-    border: 1px solid color-mix(in srgb, var(--color-marinho) 25%, transparent);
-    border-radius: var(--radius-caixa);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), var(--shadow-caixa);
-  }
-
   /* Borda grossa com "sombra dura" de embalagem impressa */
   .borda-embalagem {
     border: 2px solid var(--color-marinho);
