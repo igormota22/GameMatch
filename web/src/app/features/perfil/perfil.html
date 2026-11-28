@@ -1,7 +1,7 @@
 <section class="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
   <header class="flex flex-wrap items-start justify-between gap-4">
     <div>
-      <p class="etiqueta-promo" aria-hidden="true">Ficha do locatário</p>
+      <p class="etiqueta-promo" aria-hidden="true">Suas preferências</p>
       <h1
         class="mt-3 font-display text-4xl uppercase leading-none tracking-wide text-marinho sm:text-5xl"
       >
@@ -59,7 +59,7 @@
     @if (modoEdicao()) {
       <form class="ficha-formulario" [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
         <div class="cabecalho-ficha">
-          <span>Preferências do locatário</span>
+          <span>Preferências do jogador</span>
           <span aria-hidden="true">Ficha 003</span>
         </div>
 

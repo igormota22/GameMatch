@@ -16,7 +16,7 @@
       >
       <div>
         <div class="flex flex-wrap items-center gap-3">
-          <span class="etiqueta-promo">Locação aberta</span>
+          <span class="etiqueta-promo">Explore grátis</span>
           <span class="font-display text-sm uppercase tracking-[0.35em] text-amarelo">
             Desde 1994
           </span>
@@ -29,9 +29,9 @@
         </h1>
 
         <p class="mt-5 max-w-xl text-base leading-relaxed text-papel/85 sm:text-lg">
-          Entre na locadora, escolha seus gêneros e plataformas favoritos e leve
-          recomendações sob medida para casa. Sem mensalidade, sem fila e com a
-          fita sempre rebobinada.
+          Escolha seus gêneros e plataformas favoritos e receba recomendações sob
+          medida para jogar. Sem mensalidade, sem fila e com o catálogo sempre
+          disponível.
         </p>
 
         <div class="mt-7 flex flex-wrap items-center gap-3">
@@ -47,7 +47,7 @@
               routerLink="/entrar"
               class="borda-embalagem inline-block bg-amarelo px-5 py-2.5 font-display text-lg uppercase tracking-[0.08em] text-marinho transition motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-x-1 motion-safe:active:translate-y-1 focus-visible:outline-amarelo"
             >
-              Entrar na locadora
+              Entrar
             </a>
             <a
               routerLink="/criar-conta"
@@ -62,7 +62,7 @@
           <span class="selo-locadora" aria-hidden="true">
             Aberto<br />todos os dias
           </span>
-          <p class="carimbo text-sm">Fita rebobinada</p>
+          <p class="carimbo text-sm">Jogue à vontade</p>
         </div>
       </div>
 
@@ -81,7 +81,7 @@
             </a>
           </div>
           <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
-            Prateleira da locadora
+            Seus favoritos
           </p>
         } @else if (carregandoFavoritos()) {
           <div
@@ -92,7 +92,7 @@
             </p>
           </div>
           <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
-            Sua prateleira
+            Seus favoritos
           </p>
         } @else if (erroFavoritos()) {
           <div
@@ -107,7 +107,7 @@
             </a>
           </div>
           <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
-            Sua prateleira
+            Seus favoritos
           </p>
         } @else if (favoritosVitrine().length > 0) {
           <div class="prateleira grid grid-cols-3 items-end gap-3 border-b-amarelo/70 pb-3">
@@ -141,7 +141,7 @@
             }
           </div>
           <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
-            Sua prateleira
+            Seus favoritos
           </p>
         } @else {
           <div
@@ -156,7 +156,7 @@
             </a>
           </div>
           <p class="mt-3 text-center font-display text-sm uppercase tracking-[0.3em] text-amarelo">
-            Sua prateleira
+            Seus favoritos
           </p>
         }
       </div>
@@ -170,7 +170,7 @@
       >
         <span>Sem mensalidade</span>
         <span aria-hidden="true">★</span>
-        <span>Fita rebobinada</span>
+        <span>Descubra novos jogos</span>
         <span aria-hidden="true">★</span>
         <span>Recomendações sob medida</span>
       </p>
@@ -186,7 +186,7 @@
         <div class="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p class="font-display text-xs uppercase tracking-[0.3em] text-vermelho">
-              Ficha do locatário
+              Preferências do jogador
             </p>
             <h2
               id="titulo-perfil"
@@ -308,7 +308,7 @@
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p class="font-display text-xs uppercase tracking-[0.3em] text-amarelo">
-            Painel da locadora
+            Painel de status
           </p>
           <h2
             id="titulo-api"
